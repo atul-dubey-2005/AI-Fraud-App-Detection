@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+
+/* Custom Animations for the Mobile Phone Section */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-ring {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+@keyframes scan-line {
+    0% { top: 0%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.phone-container {
+    animation: float 5s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(0, 255, 102, 0.2));
+}
+
+.radar-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    transform: translate(-50%, -50%);
+}
+
+/* Original larger radar rings */
+.ring-1 { width: 250px; height: 250px; animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+.ring-2 { width: 250px; height: 250px; animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 1s; }
+.ring-3 { width: 250px; height: 250px; animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 2s; }
+
+.scanner-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #00ff66, transparent);
+    box-shadow: 0 0 10px #00ff66;
+    animation: scan-line 3s linear infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #09090b; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
