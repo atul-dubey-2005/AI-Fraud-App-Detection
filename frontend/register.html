@@ -222,8 +222,7 @@
                     document.getElementById('step-2').classList.remove('hidden');
                     document.getElementById('step-2').classList.add('flex');
                 } else {
-                    // Agar Email verification OFF hai, direct login ho jayega
-                    localStorage.setItem('userLoggedIn', 'true');
+                    // Agar Email verification OFF hai, direct login ho jayega aur homepage par jayega
                     window.location.href = 'index.html'; 
                 }
 
@@ -256,8 +255,7 @@
 
                 // Verification successful
                 alert("Email Verified Successfully!");
-                localStorage.setItem('userLoggedIn', 'true');
-                window.location.href = 'index.html';
+                window.location.href = 'index.html'; // Direct homepage par bhejein
 
             } catch (error) {
                 alert("Verification Failed: " + error.message);

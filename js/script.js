@@ -9,18 +9,18 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // Test Connection
 console.log("Supabase Connected:", supabase);
+
 // ==========================================
 // 1. NEWS FETCHING & RENDERING LOGIC
 // ==========================================
-let allFetchedArticles = []; // Yahan saari news store hogi
-let isExpanded = false; // Status check karne ke liye ki list khuli hai ya nahi
-const collapsedCount = 5; // Band hone par 5 news dikhegi
-const expandedCount = 12; // Khulne par 12 news dikhegi
+let allFetchedArticles = []; 
+let isExpanded = false; 
+const collapsedCount = 5; 
+const expandedCount = 12; 
 
 async function fetchLatestNews() {
     const newsContainer = document.getElementById('news-container');
     
-    // Multiple top cybersecurity websites ke RSS feeds
     const feeds = [
         { name: 'The Hacker News', url: 'https://feeds.feedburner.com/TheHackersNews' },
         { name: 'Krebs on Security', url: 'https://krebsonsecurity.com/feed/' },
@@ -50,7 +50,6 @@ async function fetchLatestNews() {
         }));
 
         if (allFetchedArticles.length > 0) {
-            // Taza khabar sabse upar laane ke liye time ke hisaab se sort karein
             allFetchedArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
             renderNews();
         } else {
@@ -123,10 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-// ==========================================
-// LOGIN & FORGOT PASSWORD LOGIC
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // LOGIN & FORGOT PASSWORD LOGIC
+    // ==========================================
     const loginView = document.getElementById('login-view');
     const forgotOtpView = document.getElementById('forgot-otp-view');
     const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
@@ -137,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const otpTargetEmail = document.getElementById('otp-target-email');
     const resetOtpInput = document.getElementById('reset_otp_input');
 
-    // 1. Forgot? click karne par Login view chhupao aur OTP view dikhao
     if (forgotPasswordBtn && loginView && forgotOtpView) {
         forgotPasswordBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -146,20 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Back to login click karne par wapas normal login lao
     if (backToLoginBtn && loginView && forgotOtpView) {
         backToLoginBtn.addEventListener('click', (e) => {
             e.preventDefault();
             forgotOtpView.style.display = 'none';
             loginView.style.display = 'block';
             
-            // Sub-forms reset karein
             if (forgotEmailForm) forgotEmailForm.style.display = 'block';
             if (forgotOtpForm) forgotOtpForm.style.display = 'none';
         });
     }
 
-    // 3. Email enter karke OTP bhejne ka step
     if (forgotEmailForm && forgotOtpForm) {
         forgotEmailForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -171,13 +165,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. OTP input mein sirf numbers allow karo
     if (resetOtpInput) {
         resetOtpInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
         });
     }
-});
 
     // --- REGISTRATION PAGE OTP & VALIDATION LOGIC ---
     const registerForm = document.getElementById('registerForm');
@@ -231,10 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const clearErrors = () => {
             passwordError.classList.add('hidden');
-            
             passwordInput.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
             passwordInput.classList.add('border-gray-800', 'focus:border-primary/50', 'focus:ring-primary/50');
-            
             confirmPasswordInput.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
             confirmPasswordInput.classList.add('border-gray-800', 'focus:border-primary/50', 'focus:ring-primary/50');
         };
@@ -245,54 +235,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// 1. FETCH REAL-TIME STATS (Apps Scanned, Users, etc.)
+// 3. FETCH REAL-TIME STATS (Apps Scanned, Users, etc.)
 // ==========================================
 async function fetchWebsiteLiveStats() {
-    // Ye aapke backend ka URL hoga jahan scan counts save ho rahe hain
     const statsApiUrl = '/api/live-stats'; 
-
     try {
         const response = await fetch(statsApiUrl);
-        
-        // Agar backend abhi ready nahi hai, toh ye error dega aur hum ruk jayenge
         if (!response.ok) throw new Error('Backend API not ready yet');
-        
         const data = await response.json();
 
-        // Aapke HTML elements ko update karna
         document.getElementById('stat-apps').innerText = data.totalAppsScanned;
         document.getElementById('stat-fraud').innerText = data.totalFraudDetected;
         document.getElementById('stat-safe').innerText = data.totalSafeApps;
         document.getElementById('stat-users').innerText = data.totalProtectedUsers;
-
     } catch (error) {
         console.log("Stats API Note: Backend is not connected yet. Showing default HTML values.");
     }
 }
 
 // ==========================================
-// 2. FETCH RECENTLY ANALYZED APPS (From Your Website)
+// 4. FETCH RECENTLY ANALYZED APPS (From Your Website)
 // ==========================================
 async function fetchOurRecentApps() {
     const container = document.getElementById('recent-apps-container');
     if (!container) return;
 
-    // Ye URL aapke database se wo apps layega jo abhi-abhi kisi user ne scan ki hain
     const recentAppsApiUrl = '/api/recent-apps';
-
     try {
         const response = await fetch(recentAppsApiUrl);
-        
         if (!response.ok) throw new Error('Backend API not ready yet');
         
         const appsData = await response.json();
-        
-        container.innerHTML = ''; // Loading text hatao
+        container.innerHTML = ''; 
 
-        // Loop chalakar har app ka card banao
         appsData.forEach(app => {
             const isSafe = app.status === 'Safe';
-            
             const statusColor = isSafe ? 'text-primary' : 'text-[#ff4444]';
             const statusBorder = isSafe 
                 ? 'border-primary/40 shadow-[0_0_10px_rgba(0,255,102,0.1)]' 
@@ -310,89 +287,72 @@ async function fetchOurRecentApps() {
                             <p class="text-gray-500 text-[11px] mt-0.5 tracking-wide truncate max-w-[150px]">Scanned by User</p>
                         </div>
                     </div>
-                    <!-- Status Badge -->
                     <div class="w-7 h-7 rounded-full border ${statusBorder} flex items-center justify-center bg-background shrink-0" title="Status: ${app.status}">
                         <span class="text-[10px] font-bold ${statusColor}">${statusLetter}</span>
                     </div>
                 </div>
             `;
-            
             container.insertAdjacentHTML('beforeend', cardHTML);
         });
-
     } catch (error) {
         console.log("Recent Apps API Note: Backend is not connected yet.");
-        // Jab tak backend nahi lagta, HTML mein jo default code likha hai, wahi dikhta rahega
     }
 }
 
 // ==========================================
-// PAGE LOAD HONE PAR FUNCTIONS KO CALL KAREIN
+// 5. SUPABASE ASLI DYNAMIC AUTHENTICATION
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // Pehli baar data lao
+document.addEventListener('DOMContentLoaded', async () => {
+    
     fetchWebsiteLiveStats();
     fetchOurRecentApps();
 
-    // Har 5 second mein database se naya data check karo (Live Feel ke liye)
     setInterval(() => {
         fetchWebsiteLiveStats();
         fetchOurRecentApps();
     }, 5000); 
-});
 
-// ==========================================
-// DYNAMIC AUTHENTICATION (STAY ON INDEX.HTML)
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // Elements Get Karein
     const authBtn = document.getElementById('auth-btn');
     const analyzeLink = document.getElementById('analyze-link');
     const lockIcon = document.getElementById('lock-icon');
 
-    // MOCK CHECK: Check if user is logged in (Local Storage se)
-    let isUserLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    // MOCK CHECK HATA DIYA -> ASLI DATABASE CHECK LAGA DIYA
+    const { data: { session }, error } = await supabase.auth.getSession();
+    let isUserLoggedIn = session !== null; 
 
     function updateUI() {
         if (isUserLoggedIn) {
-            // ==========================================
-            // 1. JAB USER LOGGED IN HO
-            // ==========================================
             
-            // Header Button ko 'Logout' bana do (Red style ke sath)
+            // JAB USER LOGGED IN HO
             if (authBtn) {
-                // Text aur Icon update (Exit Icon)
                 authBtn.innerHTML = `
                     <span>LOGOUT</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 `;
                 authBtn.href = "javascript:void(0)"; 
                 
-                // Green (Primary) classes hatao, Red classes lagao
-                authBtn.classList.remove('border-primary', 'text-primary', 'hover:bg-primary', 'hover:text-black');
-                authBtn.classList.add('border-red-500', 'text-red-500', 'hover:bg-red-500', 'hover:text-white', 'shadow-[0_0_15px_rgba(239,68,68,0.2)]');
+                authBtn.className = "px-6 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center space-x-2 text-sm font-bold tracking-wide shadow-[0_0_15px_rgba(239,68,68,0.2)] cursor-pointer";
                 
-                // Logout hone par wapas refresh ho aur logged out state mein aaye
-                authBtn.onclick = () => {
-                    localStorage.setItem('userLoggedIn', 'false');
+                // ASLI SUPABASE LOGOUT
+                authBtn.onclick = async (e) => {
+                    e.preventDefault();
+                    authBtn.innerHTML = "<span>LOGGING OUT...</span>";
+                    await supabase.auth.signOut();
                     window.location.reload(); 
                 };
             }
 
-            // Analyze App ka Lock hata do
             if (analyzeLink) {
                 analyzeLink.classList.remove('text-gray-400');
                 analyzeLink.classList.add('text-white'); 
+                analyzeLink.href = "#"; 
                 
                 analyzeLink.onclick = (e) => {
                     e.preventDefault();
-                    alert("✅ Analyze Feature Unlocked! You can now scan apps.");
-                    // Yahan aap scan karne wala popup/div open karwa sakte hain
+                    alert("✅ Analyze Feature Unlocked! Scanner is ready.");
                 };
             }
 
-            // Lock icon (🔒) ko green arrow mein badal do
             if (lockIcon) {
                 lockIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>';
                 lockIcon.classList.remove('text-gray-500');
@@ -400,35 +360,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } else {
-            // ==========================================
-            // 2. JAB USER LOGGED OUT HO
-            // ==========================================
-            
+            // JAB USER LOGGED OUT HO
             if (authBtn) {
-                // Button click hone par dummy login logic (Abhi ke liye bina naye page gaye login dikhane ke liye)
-                authBtn.onclick = (e) => {
-                    e.preventDefault();
-                    
-                    // Asli app mein yahan ek Login Modal (Popup) khulega. 
-                    // Demo ke liye hum isko direct login kara rahe hain:
-                    let confirmLogin = confirm("Demo Login: Click OK to simulate logging into FraudShield.");
-                    if(confirmLogin) {
-                        localStorage.setItem('userLoggedIn', 'true');
-                        window.location.reload(); // Refresh karke UI update hoga
-                    }
-                };
+                authBtn.onclick = null; 
             }
 
-            // Analyze App ko locked rakhein
             if (analyzeLink) {
                 analyzeLink.onclick = (e) => {
                     e.preventDefault();
                     alert("🔒 Please Login first to use the Analyze feature.");
+                    window.location.href = "login.html"; 
                 };
             }
         }
     }
 
-    // Har baar page load hone par check karo state
     updateUI();
 });

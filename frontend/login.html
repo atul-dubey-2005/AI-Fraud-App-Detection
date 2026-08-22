@@ -6,7 +6,6 @@
     <title>Login - FraudShield AI</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/js/script.js"></script>
     
     <!-- SUPABASE CDN ADD KIYA GAYA HAI -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -186,9 +185,8 @@
                     throw error;
                 }
 
-                // Agar login successful ho gaya:
-                localStorage.setItem('userLoggedIn', 'true'); // Isse index.html ka dashboard unlock hoga
-                window.location.href = 'index.html'; // Wapas homepage par bhejein
+                // Agar login successful ho gaya, Supabase khud session save kar lega!
+                window.location.href = 'index.html'; // Direct homepage par bhejein
 
             } catch (error) {
                 // Agar password galat ho ya user na ho

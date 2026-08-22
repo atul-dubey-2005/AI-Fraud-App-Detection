@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <!-- Supabase JS Library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/script.js"></script>
+    <script src="/js/script.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FraudShield</title>
     
@@ -50,65 +50,66 @@
             </div>
 
             <!-- Navigation -->
-            <nav class="px-3 space-y-1">
+            <nav class="px-3 space-y-1.5">
+                
                 <!-- Home (Active State - Green) -->
                 <a href="#" class="flex items-center space-x-3 px-3 py-2.5 bg-primary/10 text-primary rounded-lg border border-primary/20 transition-colors">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     <span class="font-medium text-sm">Home</span>
                 </a>
                 
-                <!-- Analyze App (Updated with ID for JS Control) -->
-<a href="login.html" id="analyze-link" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-colors cursor-pointer">
-    <div class="flex items-center space-x-3">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
-        <span class="font-medium text-sm">Analyze App</span>
-    </div>
-    <!-- Lock Icon (Taaki user ko pata chale ki ye protected feature hai) -->
-    <svg id="lock-icon" class="w-4 h-4 shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-</a>
+                <!-- Analyze App -->
+                <a href="login.html" id="analyze-link" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+                        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Analyze App</span>
+                    </div>
+                    <!-- Lock Icon -->
+                    <svg id="lock-icon" class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </a>
                 
                 <!-- Reports -->
-                <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-colors">
+                <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
                     <div class="flex items-center space-x-3">
-                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        <span class="font-medium text-sm">Reports</span>
+                        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Reports</span>
                     </div>
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    <svg class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </a>
                 
                 <!-- History -->
-                <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-colors">
+                <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
                     <div class="flex items-center space-x-3">
-                        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="font-medium text-sm">History</span>
+                        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">History</span>
                     </div>
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    <svg class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </a>
                 
-                <div class="h-4"></div> <!-- Spacer -->
+                <div class="h-3"></div> <!-- Spacer -->
                 
                 <!-- How to Detect -->
-                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-colors">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    <span class="font-medium text-sm truncate">How to Detect</span>
+                <a href="#how-to-detect" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
+                    <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <span class="font-medium text-sm truncate group-hover:translate-x-1 transition-transform duration-300">How to Detect</span>
                 </a>
                 
                 <!-- About -->
-                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-colors">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span class="font-medium text-sm">About</span>
+                <a href="#about-section" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
+                    <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">About</span>
                 </a>
                 
                 <!-- How It Works -->
-                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-colors">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    <span class="font-medium text-sm">How It Works</span>
+                <a href="#how-it-works" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
+                    <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">How It Works</span>
                 </a>
                 
                 <!-- Contact -->
-                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 transition-colors">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    <span class="font-medium text-sm">Contact</span>
+                <a href="#contact" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
+                    <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Contact</span>
                 </a>
             </nav>
         </div>
@@ -395,6 +396,384 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+<!-- 3. HOW TO DETECT / FEATURES SECTION -->
+<!-- ============================================== -->
+<div class="px-12 py-16 border-t border-gray-800/60" id="how-to-detect">
+    
+    <!-- Section Header -->
+    <div class="mb-12 flex flex-col items-center justify-center text-center">
+        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 mb-5 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+        </div>
+        <h2 class="text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">How <span class="text-primary">FraudShield</span> Detects Danger</h2>
+        <p class="text-gray-400 text-sm mt-4 max-w-xl leading-relaxed">Our multi-layered AI engine looks beyond the surface to identify malicious patterns before you click download.</p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Card 1: Sentiment Analysis -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-primary/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none group-hover:bg-primary/10 transition-colors"></div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide">AI Sentiment Analysis</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">Scans thousands of user reviews instantly to detect hidden complaints about scams, hidden subscriptions, or battery drain.</p>
+        </div>
+
+        <!-- Card 2: Permission Overreach -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-primary/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none group-hover:bg-primary/10 transition-colors"></div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide">Permission Overreach</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">Automatically flags applications that request suspicious access, like a simple calculator app asking for your camera or SMS contacts.</p>
+        </div>
+
+        <!-- Card 3: Fake Review Spikes (Fraud Example) -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-red-500/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-bl-full pointer-events-none group-hover:bg-red-500/10 transition-colors"></div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-red-500/50 transition-colors">
+                <svg class="w-6 h-6 text-[#ff4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide">Fake Review Spikes</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">Identifies unnatural surges in 5-star reviews generated by bots, commonly seen in fake OTT streaming platforms or unauthorized game top-up apps.</p>
+        </div>
+
+        <!-- Card 4: Developer History -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-primary/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none group-hover:bg-primary/10 transition-colors"></div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide">Developer History</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">Cross-references the publisher's background against a database of known malicious actors and previously banned developer accounts.</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 4. ABOUT US SECTION (EXPANDED & PREMIUM) -->
+<!-- ============================================== -->
+<div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="about-section">
+    
+    <!-- Background Glow -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- PART 1: Mission & Team Wrapper -->
+    <div class="flex flex-col xl:flex-row gap-12 relative z-10 w-full">
+        
+        <!-- Left Side: Story & Mission -->
+        <div class="xl:w-1/2 space-y-6">
+            <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-2">
+                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="text-xs font-bold text-primary tracking-widest uppercase">Our Mission</span>
+            </div>
+            
+            <h2 class="text-4xl lg:text-5xl font-black text-white tracking-wide leading-tight">
+                PROTECTING THE <br> DIGITAL <span class="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-300">ECOSYSTEM</span>
+            </h2>
+            
+            <p class="text-gray-400 text-sm leading-relaxed max-w-lg">
+                FraudShield AI was born out of a critical need to secure the digital landscape. With millions of applications available, users are increasingly vulnerable to malicious software masquerading as legitimate utilities. 
+            </p>
+            <p class="text-gray-400 text-sm leading-relaxed max-w-lg">
+                We bridge the gap between complex cybersecurity protocols and everyday users. By leveraging advanced AI and Sentiment Analysis, we dissect not just the code, but the real-world experiences of users to flag hidden threats before they cause harm.
+            </p>
+
+            <div class="pt-2 flex items-center space-x-8">
+                <div>
+                    <div class="text-3xl font-black text-white">99<span class="text-primary">%</span></div>
+                    <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Accuracy</div>
+                </div>
+                <div class="w-px h-10 bg-gray-800"></div>
+                <div>
+                    <div class="text-3xl font-black text-white">24<span class="text-primary">/7</span></div>
+                    <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Scanning</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: The Team & Tech Stack -->
+        <div class="xl:w-1/2 w-full">
+            <h3 class="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center">
+                <span class="w-8 h-px bg-primary mr-4"></span>
+                The Core Team
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+                
+                <!-- Team Member 1: Atul Dubey (Project Leader) -->
+                <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
+                    <div class="w-14 h-14 mx-auto rounded-full bg-primary/10 mb-3 overflow-hidden border-2 border-primary shadow-[0_0_15px_rgba(0,255,102,0.2)] flex items-center justify-center">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Atul&backgroundColor=09090b" alt="Atul Dubey" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-white font-bold text-sm truncate">Atul Dubey</h4>
+                    <p class="text-[9px] text-primary uppercase tracking-widest mt-1 font-bold">Project Leader</p>
+                </div>
+
+                <!-- Team Member 2: Shreeya Dubey -->
+                <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shreeya&backgroundColor=09090b" alt="Shreeya Dubey" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-white font-bold text-xs truncate">Shreeya Dubey</h4>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Software Eng.</p>
+                </div>
+
+                <!-- Team Member 3: Ayush Prajapati -->
+                <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ayush&backgroundColor=09090b" alt="Ayush Prajapati" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-white font-bold text-xs truncate">Ayush Prajapati</h4>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Software Eng.</p>
+                </div>
+
+            </div>
+
+            <!-- Mini Tech Stack Badges (Updated with MySQL Workbench) -->
+            <div class="mt-8 pt-6 border-t border-gray-800/50">
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-3">Powered By Technology</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">Python</span>
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">Tailwind CSS</span>
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">MySQL Workbench</span>
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">NLP Models</span>
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">JavaScript ES6</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PART 2: Core Principles / Values -->
+    <div class="mt-20 relative z-10 w-full">
+        <h3 class="text-lg font-bold text-white mb-8 uppercase tracking-wider flex items-center justify-center text-center">
+            <span class="w-12 h-px bg-gray-700 mr-4"></span>
+            Our Core Principles
+            <span class="w-12 h-px bg-gray-700 ml-4"></span>
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Principle 1 -->
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 text-center hover:bg-gray-800/30 transition-colors">
+                <div class="w-10 h-10 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h4 class="text-white font-bold text-sm mb-2">100% Privacy First</h4>
+                <p class="text-gray-500 text-[11px] leading-relaxed">We never store your personal data. Our scans are completely anonymous and your search history remains strictly confidential.</p>
+            </div>
+
+            <!-- Principle 2 -->
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 text-center hover:bg-gray-800/30 transition-colors">
+                <div class="w-10 h-10 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h4 class="text-white font-bold text-sm mb-2">Real-Time AI Processing</h4>
+                <p class="text-gray-500 text-[11px] leading-relaxed">Our custom NLP (Natural Language Processing) models analyze thousands of reviews in milliseconds to deliver instant verdicts.</p>
+            </div>
+
+            <!-- Principle 3 -->
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 text-center hover:bg-gray-800/30 transition-colors">
+                <div class="w-10 h-10 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                </div>
+                <h4 class="text-white font-bold text-sm mb-2">Community Driven</h4>
+                <p class="text-gray-500 text-[11px] leading-relaxed">Built by students, for the internet. Our machine learning models get smarter every day by learning from community feedback.</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- ============================================== -->
+<!-- 5. HOW IT WORKS SECTION -->
+<!-- ============================================== -->
+<div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="how-it-works">
+    
+    <!-- Section Header -->
+    <div class="mb-14 flex flex-col items-center justify-center text-center relative z-10">
+        <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-4">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span class="text-xs font-bold text-primary tracking-widest uppercase">The Process</span>
+        </div>
+        <h2 class="text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
+            4 Simple Steps to <span class="text-primary">Total Security</span>
+        </h2>
+        <p class="text-gray-400 text-sm mt-4 max-w-xl leading-relaxed">
+            See exactly how our backend architecture processes raw application data to deliver a final safety verdict in seconds.
+        </p>
+    </div>
+
+    <!-- Steps Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+        
+        <!-- Connecting Line (Visible only on large screens) -->
+        <div class="hidden lg:block absolute top-1/2 left-0 w-full h-px bg-gray-800 -z-10 -translate-y-6"></div>
+
+        <!-- Step 1 -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-8 relative overflow-hidden hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] group">
+            <div class="absolute -right-4 -bottom-8 text-8xl font-black text-gray-800/40 group-hover:text-primary/10 transition-colors select-none">01</div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all relative z-10">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide relative z-10">Input App Details</h3>
+            <p class="text-gray-500 text-xs leading-relaxed relative z-10">Enter the app name or paste the Play Store URL directly into our live scanner dashboard.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-8 relative overflow-hidden hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] group mt-0 lg:mt-8">
+            <div class="absolute -right-4 -bottom-8 text-8xl font-black text-gray-800/40 group-hover:text-primary/10 transition-colors select-none">02</div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all relative z-10">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide relative z-10">Data Extraction</h3>
+            <p class="text-gray-500 text-xs leading-relaxed relative z-10">Our backend instantly scrapes thousands of user reviews, permission requests, and developer history.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-8 relative overflow-hidden hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] group">
+            <div class="absolute -right-4 -bottom-8 text-8xl font-black text-gray-800/40 group-hover:text-primary/10 transition-colors select-none">03</div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all relative z-10">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide relative z-10">NLP Analysis</h3>
+            <p class="text-gray-500 text-xs leading-relaxed relative z-10">Machine learning models process the text, filtering out bot-generated 5-star reviews and flagging hidden complaints.</p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-8 relative overflow-hidden hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] group mt-0 lg:mt-8">
+            <div class="absolute -right-4 -bottom-8 text-8xl font-black text-gray-800/40 group-hover:text-primary/10 transition-colors select-none">04</div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all relative z-10">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide relative z-10">Final Verdict</h3>
+            <p class="text-gray-500 text-xs leading-relaxed relative z-10">Receive a comprehensive security score and a clear Safe or Fraud verdict directly on your dashboard.</p>
+        </div>
+
+    </div>
+</div>
+<!-- ============================================== -->
+<!-- 6. CONTACT US SECTION -->
+<!-- ============================================== -->
+<div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="contact">
+    
+    <!-- Background Glow -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]"></div>
+    </div>
+
+    <!-- Section Header -->
+    <div class="mb-14 flex flex-col items-center justify-center text-center relative z-10">
+        <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-4">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            <span class="text-xs font-bold text-primary tracking-widest uppercase">Get in Touch</span>
+        </div>
+        <h2 class="text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
+            Have Questions? <span class="text-primary">Contact Us</span>
+        </h2>
+        <p class="text-gray-400 text-sm mt-4 max-w-xl leading-relaxed">
+            Report a highly suspicious app manually, request API access, or just say hello. Our team is always ready to help.
+        </p>
+    </div>
+
+    <!-- Contact Content Wrapper -->
+    <div class="flex flex-col lg:flex-row gap-12 relative z-10 w-full max-w-6xl mx-auto">
+        
+        <!-- Left Side: Contact Info -->
+        <div class="lg:w-5/12 space-y-8">
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-8 hover:bg-gray-800/30 transition-colors">
+                <h3 class="text-xl font-bold text-white mb-6">Contact Information</h3>
+                
+                <div class="space-y-6">
+                    <!-- Email -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Email Us</p>
+                            <a href="mailto:support@fraudshield.ai" class="text-white text-sm font-medium hover:text-primary transition-colors">support@fraudshield.ai</a>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Location</p>
+                            <p class="text-white text-sm font-medium">Mumbai, Maharashtra, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="mt-10 pt-8 border-t border-gray-800/60">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">Follow Our Journey</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Contact Form -->
+        <div class="lg:w-7/12">
+            <form class="bg-surface border border-gray-800 rounded-3xl p-8 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    
+                    <!-- Name Input -->
+                    <div>
+                        <label for="contact-name" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
+                        <input type="text" id="contact-name" required placeholder="John Doe" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
+                    </div>
+                    
+                    <!-- Email Input -->
+                    <div>
+                        <label for="contact-email" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
+                        <input type="email" id="contact-email" required placeholder="you@example.com" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
+                    </div>
+                </div>
+
+                <!-- Subject Input -->
+                <div class="mb-6">
+                    <label for="contact-subject" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Subject</label>
+                    <input type="text" id="contact-subject" required placeholder="How can we help you?" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
+                </div>
+
+                <!-- Message Textarea -->
+                <div class="mb-6">
+                    <label for="contact-message" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Message</label>
+                    <textarea id="contact-message" rows="5" required placeholder="Write your message here..." class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors resize-none"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="button" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-4 rounded-xl transition-all duration-300 flex justify-center items-center space-x-2 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(0,255,102,0.15)] hover:shadow-[0_0_30px_rgba(0,255,102,0.3)]">
+                    <span>SEND MESSAGE</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </form>
+        </div>
+        
+    </div>
+</div>
         <!-- ============================================== -->
 <!-- CALL TO ACTION (CTA) BANNER SECTION -->
 <!-- ============================================== -->
