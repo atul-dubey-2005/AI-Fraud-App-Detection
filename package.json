@@ -1,0 +1,32 @@
+{
+  "name": "ai-fraud-app-detection",
+  "version": "1.0.0",
+  "description": "AI-Based Fraud App Detection Using Sentiment Analysis and Fraud Risk Scoring. This project analyzes Google Play Store app reviews using Machine Learning and Natural Language Processing (NLP) to classify sentiments, detect fraud-related patterns, calculate a Fraud Risk Score, and help users identify potentially fraudulent mobile applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atul-dubey-2005/AI-Fraud-App-Detection.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/atul-dubey-2005/AI-Fraud-App-Detection/issues"
+  },
+  "homepage": "https://github.com/atul-dubey-2005/AI-Fraud-App-Detection#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mysql2": "^3.24.3",
+    "nodemailer": "^9.1.1",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}

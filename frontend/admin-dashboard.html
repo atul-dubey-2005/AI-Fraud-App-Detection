@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Command Center - FraudShield AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#050507',
+                        surface: '#0f0f13',
+                        surfaceBorder: '#1c1c24',
+                        surfaceHover: '#16161c',
+                        primary: '#00ff66',
+                        'primary-dark': '#00cc52',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
+</head>
+<body class="bg-background text-gray-300 min-h-screen flex selection:bg-red-500 selection:text-white">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
+        <div class="space-y-8">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)]">
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <div>
+                    <span class="text-white font-bold text-base tracking-wide block leading-none">FraudShield</span>
+                    <span class="text-red-500 text-[10px] font-mono tracking-widest uppercase">Admin Terminal</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-2">
+                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-red-500/10 text-red-400 font-semibold text-sm border border-red-500/20">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <span>User Management</span>
+                </a>
+                <a href="#audit-logs" onclick="scrollToSection('audit-logs')" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    <span>Audit Logs</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Admin Profile Info inside Sidebar -->
+        <div class="p-4 bg-surfaceBorder/40 border border-surfaceBorder rounded-2xl flex items-center justify-between">
+            <div class="flex items-center space-x-3 overflow-hidden">
+                <div class="w-9 h-9 rounded-xl bg-red-500/20 text-red-400 font-bold flex items-center justify-center shrink-0 border border-red-500/30">A</div>
+                <div class="overflow-hidden">
+                    <h4 class="text-xs font-bold text-white truncate">System Admin</h4>
+                    <p class="text-[10px] text-red-400 uppercase font-mono">Level-4 Access</p>
+                </div>
+            </div>
+            <button onclick="handleLogout()" class="text-gray-400 hover:text-red-400 transition-colors p-1.5" title="Terminate Session">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow flex flex-col min-w-0">
+        
+        <!-- Top Header Bar -->
+        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-40">
+            <div>
+                <span class="text-xs font-mono text-red-400 uppercase tracking-widest">Restricted Zone</span>
+                <h1 class="text-lg font-bold text-white tracking-tight">System Administration Matrix</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:flex items-center space-x-2 bg-surface border border-red-500/20 px-3.5 py-2 rounded-xl text-xs text-red-400 font-mono">
+                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                    <span>Admin Session Secure</span>
+                </div>
+                <button onclick="handleLogout()" class="lg:hidden bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold px-4 py-2 rounded-xl">
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Body Content -->
+        <main class="p-8 space-y-8 flex-grow">
+            
+            <!-- Global Admin Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl relative overflow-hidden">
+                    <div class="absolute right-4 top-4 text-gray-700">
+                        <svg class="w-8 h-8 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <p class="text-xs font-mono text-gray-500 uppercase tracking-wider">Total System Accounts</p>
+                    <h4 id="stat-total-users" class="text-3xl font-extrabold text-white mt-2">Loading...</h4>
+                </div>
+
+                <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl relative overflow-hidden">
+                    <div class="absolute right-4 top-4 text-red-500/30">
+                        <svg class="w-8 h-8 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <p class="text-xs font-mono text-gray-500 uppercase tracking-wider">Node Protection Mode</p>
+                    <h4 class="text-3xl font-extrabold text-red-400 mt-2">Restricted</h4>
+                </div>
+
+                <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl relative overflow-hidden">
+                    <div class="absolute right-4 top-4 text-primary/30">
+                        <svg class="w-8 h-8 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <p class="text-xs font-mono text-gray-500 uppercase tracking-wider">Database Integrity</p>
+                    <h4 class="text-3xl font-extrabold text-primary mt-2">Optimal</h4>
+                </div>
+            </div>
+
+            <!-- User Management Table Panel -->
+            <div class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-surfaceBorder pb-6">
+                    <div>
+                        <h3 class="text-white font-bold text-lg">Registered User Accounts</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Real-time control panel for database records and account permissions.</p>
+                    </div>
+                    <button onclick="fetchAllUsers()" class="bg-surfaceBorder/60 hover:bg-surfaceBorder border border-surfaceBorder text-gray-300 text-xs font-semibold px-4 py-2.5 rounded-xl transition-all flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        <span>Refresh Table</span>
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-background/80 text-xs uppercase text-gray-500 font-mono tracking-wider border-b border-surfaceBorder">
+                            <tr>
+                                <th class="py-3.5 px-4">Full Name</th>
+                                <th class="py-3.5 px-4">Email Address</th>
+                                <th class="py-3.5 px-4">Role</th>
+                                <th class="py-3.5 px-4">Status</th>
+                                <th class="py-3.5 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="divide-y divide-surfaceBorder/60">
+                            <tr>
+                                <td colspan="5" class="py-8 text-center text-gray-500 font-mono text-xs">Fetching active user records from MySQL cluster...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- New Section: System Security Audit Logs -->
+            <div id="audit-logs" class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-surfaceBorder pb-6">
+                    <div>
+                        <h3 class="text-white font-bold text-lg">System Security Audit Logs</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Recent administrative checkpoints and security events monitored by FraudShield AI.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-mono rounded-lg">Live Feed</span>
+                </div>
+
+                <div class="space-y-3 font-mono text-xs">
+                    <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                            <span class="text-gray-300">OAuth Security Handshake verified via Google Cluster</span>
+                        </div>
+                        <span class="text-gray-500">Just now</span>
+                    </div>
+                    <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-2 h-2 rounded-full bg-primary"></span>
+                            <span class="text-gray-300">MySQL Database connection pool optimized (0 failed queries)</span>
+                        </div>
+                        <span class="text-gray-500">5 mins ago</span>
+                    </div>
+                    <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                            <span class="text-gray-300">Rate limiter checkpoint initialized for public API endpoints</span>
+                        </div>
+                        <span class="text-gray-500">12 mins ago</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        
+        <!-- Footer -->
+        <footer class="border-t border-surfaceBorder py-6 px-8 text-center text-xs text-gray-600 font-mono">
+            FraudShield AI Admin Core v2.4 &bull; Level-4 Authorized Node
+        </footer>
+    </div>
+
+    <!-- Admin Logic Script -->
+    <script>
+        if (localStorage.getItem('userLoggedIn') !== 'true' || localStorage.getItem('userRole') !== 'admin') {
+            alert("Unauthorized Access! Admins only.");
+            window.location.href = 'login.html';
+        }
+
+        async function fetchAllUsers() {
+            try {
+                const response = await fetch('http://localhost:3000/api/admin/users');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('stat-total-users').innerText = data.users.length;
+                    let rows = '';
+                    data.users.forEach(u => {
+                        const roleBadge = u.role === 'admin' 
+                            ? '<span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">Admin</span>' 
+                            : '<span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-primary/10 text-primary border border-primary/20">User</span>';
+                        
+                        const statusBadge = u.account_status === 'Banned'
+                            ? '<span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">Banned</span>'
+                            : '<span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>';
+
+                        const actionBtnText = u.account_status === 'Banned' ? 'Unban' : 'Ban';
+                        const actionBtnClass = u.account_status === 'Banned' 
+                            ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20' 
+                            : 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20';
+
+                        rows += `
+                            <tr class="hover:bg-surfaceHover/50 transition-colors">
+                                <td class="py-4 px-4 font-semibold text-white">${u.full_name}</td>
+                                <td class="py-4 px-4 text-gray-400 font-mono text-xs">${u.email}</td>
+                                <td class="py-4 px-4">${roleBadge}</td>
+                                <td class="py-4 px-4">${statusBadge}</td>
+                                <td class="py-4 px-4 text-right">
+                                    <button onclick="updateStatus('${u.user_id}', '${u.account_status === 'Banned' ? 'Active' : 'Banned'}')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${actionBtnClass}">
+                                        ${actionBtnText}
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    document.getElementById('users-table-body').innerHTML = rows;
+                }
+            } catch (err) {
+                document.getElementById('users-table-body').innerHTML = `<tr><td colspan="5" class="py-8 text-center text-red-400 font-mono text-xs">Failed to connect to backend server. Check MySQL node connection.</td></tr>`;
+            }
+        }
+
+        async function updateStatus(userId, newStatus) {
+            try {
+                const res = await fetch('http://localhost:3000/api/admin/update-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, status: newStatus })
+                });
+                const result = await res.json();
+                if (result.success) {
+                    fetchAllUsers();
+                } else {
+                    alert('Failed to modify user status.');
+                }
+            } catch (e) {
+                alert('Server error occurred.');
+            }
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        fetchAllUsers();
+
+        // Logout Handler Example
+function handleLogout() {
+    // 1. LocalStorage ya Session data clear karein
+    localStorage.removeItem('userLoggedIn');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userRole');
+    
+    // 2. Seedhe index.html par redirect karein
+    window.location.href = 'index.html';
+}
+    </script>
+</body>
+</html>

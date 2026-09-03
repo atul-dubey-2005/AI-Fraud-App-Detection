@@ -164,16 +164,11 @@
 
     </div>
 
-    <!-- ASLI SUPABASE REGISTRATION SCRIPT -->
+    <!-- NODE.JS + MYSQL BACKEND REGISTRATION SCRIPT -->
     <script>
-        // 1. Initialize Supabase
-        const supabaseUrl = 'https://snobxnunspafeflfzkrt.supabase.co';
-        const supabaseKey = 'sb_publishable_sj1haa7S9JQrrPYySeu3ow_aXxyVzzP';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        let registeredEmail = ""; 
 
-        let registeredEmail = ""; // OTP step ke liye email save karenge
-
-        // 2. Handle Step 1 (Registration Form)
+        // 1. Handle Step 1 (Registration Form Submit)
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault(); 
             
@@ -195,39 +190,35 @@
                 document.getElementById('confirm_password').classList.replace('border-red-500', 'border-gray-800');
             }
 
-            // Start Loading
+            // Start Loading State
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
             btnText.textContent = 'CREATING ACCOUNT...';
 
             try {
-                // Supabase API Call for Sign Up (Sath me name bhi save kar rahe hain)
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: fullName
-                        }
-                    }
+                // Node.js Backend API Call for Sign Up
+                const response = await fetch('http://localhost:3000/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ full_name: fullName, email, password })
                 });
 
-                if (error) throw error;
+                const data = await response.json();
 
-                // Agar Supabase Email verification bhejta hai (session null aata hai)
-                if (data.session === null) {
-                    registeredEmail = email;
-                    document.getElementById('display-user-email').innerText = email;
-                    document.getElementById('step-1').classList.add('hidden');
-                    document.getElementById('step-2').classList.remove('hidden');
-                    document.getElementById('step-2').classList.add('flex');
-                } else {
-                    // Agar Email verification OFF hai, direct login ho jayega aur homepage par jayega
-                    window.location.href = 'index.html'; 
+                if (!response.ok) {
+                    throw new Error(data.message || 'Registration failed');
                 }
+
+                // Agar OTP successfully bhej diya gaya, toh Step 2 (OTP Screen) dikhayein
+                registeredEmail = email;
+                document.getElementById('display-user-email').innerText = email;
+                document.getElementById('step-1').classList.add('hidden');
+                document.getElementById('step-2').classList.remove('hidden');
+                document.getElementById('step-2').classList.add('flex');
 
             } catch (error) {
                 alert("Sign Up Failed: " + error.message);
+                
                 // Reset Button
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
@@ -235,7 +226,7 @@
             }
         });
 
-        // 3. Handle Step 2 (OTP Verification Form)
+        // 2. Handle Step 2 (OTP Verification Form Submit)
         document.getElementById('otpForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const otpToken = document.getElementById('otp_input').value;
@@ -245,17 +236,22 @@
             submitBtn.innerText = "VERIFYING...";
 
             try {
-                const { data, error } = await supabase.auth.verifyOtp({
-                    email: registeredEmail,
-                    token: otpToken,
-                    type: 'signup'
+                // Node.js Backend API Call for OTP Verification
+                const response = await fetch('http://localhost:3000/api/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: registeredEmail, otp: otpToken })
                 });
 
-                if (error) throw error;
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Invalid OTP');
+                }
 
                 // Verification successful
-                alert("Email Verified Successfully!");
-                window.location.href = 'index.html'; // Direct homepage par bhejein
+                alert("Email Verified Successfully! Please log in.");
+                window.location.href = 'login.html'; // Login page par bhej dein
 
             } catch (error) {
                 alert("Verification Failed: " + error.message);

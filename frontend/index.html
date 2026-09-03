@@ -52,11 +52,12 @@
             <!-- Navigation -->
             <nav class="px-3 space-y-1.5">
                 
-                <!-- Home (Active State - Green) -->
-                <a href="#" class="flex items-center space-x-3 px-3 py-2.5 bg-primary/10 text-primary rounded-lg border border-primary/20 transition-colors">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    <span class="font-medium text-sm">Home</span>
-                </a>
+               <a href="index.html" class="nav-item flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer" data-target="dashboard.html">
+    <div class="flex items-center space-x-3">
+        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Home</span>
+    </div>
+</a>
                 
                 <!-- Analyze App -->
                 <a href="login.html" id="analyze-link" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
@@ -111,6 +112,13 @@
                     <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Contact</span>
                 </a>
+                <a href="#terms" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
+    <!-- Document/Terms SVG Icon -->
+    <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    </svg>
+    <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Terms</span>
+</a>
             </nav>
         </div>
 
@@ -130,6 +138,10 @@
     <main class="flex-1 overflow-y-auto flex flex-col">
         <!-- Header -->
         <header class="flex justify-end items-center p-6 space-x-4 shrink-0">
+            <a href="register.html" id="auth-btn" class="px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-sm font-bold tracking-wide">
+                <span>SIGNUP</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
             <a href="login.html" id="auth-btn" class="px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-sm font-bold tracking-wide">
                 <span>LOGIN</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
@@ -156,10 +168,10 @@
                         <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                     <input type="text" placeholder="Search any mobile application to analyze..." class="w-full bg-surface border border-gray-800 rounded-full py-4 pl-12 pr-40 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors">
-                    <button class="absolute inset-y-1.5 right-1.5 bg-primary hover:bg-primary-dark text-black font-bold px-6 rounded-full flex items-center space-x-2 transition-colors">
-                        <span>ANALYZE APP</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </button>
+                    <a href="login.html" class="absolute inset-y-1.5 right-1.5 bg-primary hover:bg-primary-dark text-black font-bold px-6 rounded-full flex items-center justify-center space-x-2 transition-colors cursor-pointer">
+    <span>ANALYZE APP</span>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+</a>
                 </div>
 
                 <div class="pt-4 flex flex-wrap gap-4">
@@ -510,12 +522,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
                 
                 <!-- Team Member 1: Atul Dubey (Project Leader) -->
-                <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)]">
-                    <div class="w-14 h-14 mx-auto rounded-full bg-primary/10 mb-3 overflow-hidden border-2 border-primary shadow-[0_0_15px_rgba(0,255,102,0.2)] flex items-center justify-center">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Atul&backgroundColor=09090b" alt="Atul Dubey" class="w-full h-full object-cover">
+                <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shreeya&backgroundColor=09090b" alt="Shreeya Dubey" class="w-full h-full object-cover">
                     </div>
-                    <h4 class="text-white font-bold text-sm truncate">Atul Dubey</h4>
-                    <p class="text-[9px] text-primary uppercase tracking-widest mt-1 font-bold">Project Leader</p>
+                    <h4 class="text-white font-bold text-xs truncate">Atul Dubey</h4>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Project Leader</p>
                 </div>
 
                 <!-- Team Member 2: Shreeya Dubey -->
@@ -686,54 +698,6 @@
 
     <!-- Contact Content Wrapper -->
     <div class="flex flex-col lg:flex-row gap-12 relative z-10 w-full max-w-6xl mx-auto">
-        
-        <!-- Left Side: Contact Info -->
-        <div class="lg:w-5/12 space-y-8">
-            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-8 hover:bg-gray-800/30 transition-colors">
-                <h3 class="text-xl font-bold text-white mb-6">Contact Information</h3>
-                
-                <div class="space-y-6">
-                    <!-- Email -->
-                    <div class="flex items-start space-x-4">
-                        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Email Us</p>
-                            <a href="mailto:support@fraudshield.ai" class="text-white text-sm font-medium hover:text-primary transition-colors">support@fraudshield.ai</a>
-                        </div>
-                    </div>
-
-                    <!-- Location -->
-                    <div class="flex items-start space-x-4">
-                        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Location</p>
-                            <p class="text-white text-sm font-medium">Mumbai, Maharashtra, India</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Social Links -->
-                <div class="mt-10 pt-8 border-t border-gray-800/60">
-                    <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">Follow Our Journey</p>
-                    <div class="flex space-x-3">
-                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"></path></svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Right Side: Contact Form -->
         <div class="lg:w-7/12">
             <form class="bg-surface border border-gray-800 rounded-3xl p-8 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
@@ -771,9 +735,119 @@
                 </button>
             </form>
         </div>
+        <!-- Left Side: Contact Info -->
+        <div class="lg:w-5/12 space-y-8">
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-8 hover:bg-gray-800/30 transition-colors">
+                <h3 class="text-xl font-bold text-white mb-6">Contact Information</h3>
+                
+                <div class="space-y-6">
+                    <!-- Email -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Email Us</p>
+                            <a href="fraudshield2026@gmail.com" class="text-white text-sm font-medium hover:text-primary transition-colors">support@fraudshield.ai</a>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Location</p>
+                            <p class="text-white text-sm font-medium">Mumbai, Maharashtra, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="mt-10 pt-8 border-t border-gray-800/60">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">Follow Our Journey</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
         
     </div>
 </div>
+
+<!-- ============================================== -->
+<!-- TERMS OF SERVICE SECTION -->
+<!-- ============================================== -->
+<section id="terms" class="py-20 bg-background relative z-10 border-t border-gray-800">
+    <div class="max-w-5xl mx-auto px-6">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center px-4 py-1.5 mb-4 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold tracking-wide uppercase">
+                Legal
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Terms of Service</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">Please read these terms carefully before using FraudShield AI's platform and services.</p>
+        </div>
+
+        <!-- Terms Grid/List -->
+        <div class="space-y-6">
+            
+            <!-- Term 1 -->
+            <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
+                <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                    <span class="text-gray-600 mr-3 text-lg">01.</span> Acceptance of Terms
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    By accessing and using FraudShield AI, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this service.
+                </p>
+            </div>
+            
+            <!-- Term 2 -->
+            <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
+                <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                    <span class="text-gray-600 mr-3 text-lg">02.</span> User Accounts & Authentication
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    To use certain features, you must register using your email or OAuth providers (Google, GitHub). You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.
+                </p>
+            </div>
+
+            <!-- Term 3 -->
+            <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
+                <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                    <span class="text-gray-600 mr-3 text-lg">03.</span> Service Usage & Restrictions
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    FraudShield AI is designed to assist in detecting fraudulent activities. You agree to use the service only for lawful purposes. You may not reverse engineer the AI models, attempt unauthorized database access, or use the platform for malicious activities.
+                </p>
+            </div>
+
+            <!-- Term 4 -->
+            <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
+                <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                    <span class="text-gray-600 mr-3 text-lg">04.</span> Data Privacy & Security
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    We respect your privacy. Any data you submit for fraud analysis is processed securely. We do not sell your personal data or authentication details to third parties. Our AI models analyze patterns without exposing raw sensitive data.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
         <!-- ============================================== -->
 <!-- CALL TO ACTION (CTA) BANNER SECTION -->
 <!-- ============================================== -->

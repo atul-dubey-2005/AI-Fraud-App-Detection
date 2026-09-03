@@ -7,9 +7,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- SUPABASE CDN ADD KIYA GAYA HAI -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <script>
         tailwind.config = {
             theme: {
@@ -106,11 +103,12 @@
 
             <!-- Social Logins -->
             <div class="grid grid-cols-2 gap-4">
-                <a href="#" class="flex justify-center items-center py-2.5 bg-[#121214] border border-gray-700 rounded-xl hover:bg-gray-800 hover:text-white transition-all duration-200 group cursor-pointer">
+                <a href="http://localhost:3000/auth/github" class="flex justify-center items-center py-2.5 bg-[#121214] border border-gray-700 rounded-xl hover:bg-gray-800 hover:text-white transition-all duration-200 group cursor-pointer">
                     <svg class="w-5 h-5 mr-2 text-gray-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
                     <span class="text-sm font-semibold text-gray-300 group-hover:text-white transition-colors">GitHub</span>
                 </a>
-                <a href="#" class="flex justify-center items-center py-2.5 bg-[#121214] border border-gray-700 rounded-xl hover:bg-gray-800 transition-all duration-200 cursor-pointer">
+                
+                <a href="http://localhost:3000/auth/google" class="flex justify-center items-center py-2.5 bg-[#121214] border border-gray-700 rounded-xl hover:bg-gray-800 transition-all duration-200 cursor-pointer">
                     <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/><path fill="none" d="M1 1h22v22H1z"/></svg>
                     <span class="text-sm font-semibold text-gray-300">Google</span>
                 </a>
@@ -122,9 +120,7 @@
             </p>
         </div>
         
-        <!-- ============================================== -->
         <!-- VIEW 2: FORGOT PASSWORD OTP VERIFICATION (Hidden by Default) -->
-        <!-- ============================================== -->
         <div id="forgot-otp-view" class="hidden flex-col items-center justify-center py-4 mt-4">
             <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 mb-4 shadow-[0_0_20px_rgba(0,255,102,0.1)]">
                 <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
@@ -139,7 +135,7 @@
                 <div>
                     <input type="email" id="forgot-email" required placeholder="Enter your email" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
                 </div>
-                <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-3.5 rounded-xl transition-all duration-300">
+                <button type="submit" id="forgotSubmitBtn" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-3.5 rounded-xl transition-all duration-300">
                     SEND OTP
                 </button>
             </form>
@@ -151,74 +147,144 @@
 
     </div>
 
-    <!-- ASLI SUPABASE AUTHENTICATION SCRIPT -->
+    <!-- SCRIPT -->
     <script>
-        // 1. Initialize Supabase
-        const supabaseUrl = 'https://snobxnunspafeflfzkrt.supabase.co';
-        const supabaseKey = 'sb_publishable_sj1haa7S9JQrrPYySeu3ow_aXxyVzzP';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); 
+        
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('loadingSpinner');
+        const submitBtn = document.getElementById('submitBtn');
 
-        // 2. Login Form Submit Logic
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault(); 
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const btnText = document.getElementById('btnText');
-            const spinner = document.getElementById('loadingSpinner');
-            const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+        btnText.textContent = 'AUTHENTICATING...';
+        spinner.classList.remove('hidden');
 
-            // Button ko loading state mein daalna
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
-            btnText.textContent = 'AUTHENTICATING...';
-            spinner.classList.remove('hidden');
+        try {
+            const response = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
 
-            try {
-                // Supabase API Call for Login
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Login failed');
 
-                if (error) {
-                    throw error;
-                }
+            localStorage.setItem('userLoggedIn', 'true');
+            localStorage.setItem('userName', data.userName || 'User');
+            const userRole = (data.role || 'user').toLowerCase();
+            localStorage.setItem('userRole', userRole);
 
-                // Agar login successful ho gaya, Supabase khud session save kar lega!
-                window.location.href = 'index.html'; // Direct homepage par bhejein
-
-            } catch (error) {
-                // Agar password galat ho ya user na ho
-                alert("Login Failed: " + error.message);
-                
-                // Button ko normal kar do
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
-                btnText.textContent = 'LOG IN TO ACCOUNT';
-                spinner.classList.add('hidden');
+            if (userRole === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                window.location.href = 'dashboard.html';
             }
-        });
 
-        // 3. Forgot Password UI Toggle Logic
-        document.getElementById('showForgotUiBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            // Hide Login Elements
-            document.getElementById('login-header-ui').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('extra-login-ui').style.display = 'none';
-            
-            // Show Forgot Password Elements
-            const forgotView = document.getElementById('forgot-otp-view');
-            forgotView.classList.remove('hidden');
-            forgotView.classList.add('flex');
-        });
+        } catch (error) {
+            alert("Login Failed: " + error.message);
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+            btnText.textContent = 'LOG IN TO ACCOUNT';
+            spinner.classList.add('hidden');
+        }
+    });
 
-        // 4. Back to Login Logic
-        document.getElementById('backToLoginBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.location.reload(); // Wapas default UI lane ke liye refresh
-        });
-    </script>
+    // Toggle to Forgot Password View
+    document.getElementById('showForgotUiBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('login-header-ui').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('extra-login-ui').style.display = 'none';
+        const forgotView = document.getElementById('forgot-otp-view');
+        forgotView.classList.remove('hidden');
+        forgotView.classList.add('flex');
+    });
+
+    document.getElementById('backToLoginBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.reload();
+    });
+
+    // Forgot Password Email & Reset Flow
+    let resetEmail = "";
+    document.getElementById('forgotEmailForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        resetEmail = document.getElementById('forgot-email').value.trim();
+        const submitBtn = document.getElementById('forgotSubmitBtn');
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "SENDING OTP...";
+
+        try {
+            const response = await fetch('http://localhost:3000/api/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: resetEmail })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Failed to send reset OTP');
+
+            alert("Password reset OTP sent! Check your email.");
+
+            // Change View to Enter OTP and New Password
+            document.getElementById('forgot-otp-view').innerHTML = `
+                <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 mb-4 shadow-[0_0_20px_rgba(0,255,102,0.1)]">
+                    <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h2 class="text-white font-bold text-2xl tracking-wide mb-2">Set New Password</h2>
+                <p class="text-gray-400 text-sm text-center mb-6">Enter the 6-digit OTP sent to your email and your new password.</p>
+                <form id="resetPasswordForm" class="w-full space-y-4">
+                    <input type="text" id="reset-otp" required maxlength="6" placeholder="••••••" class="w-full text-center tracking-[1em] font-bold text-xl bg-background border border-gray-800 rounded-xl py-3 text-white placeholder-gray-700 focus:outline-none focus:border-primary/50 transition-colors">
+                    <input type="password" id="new-password" required minlength="6" placeholder="Enter new password" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors">
+                    <button type="submit" id="resetSubmitBtn" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-3.5 rounded-xl transition-all duration-300">
+                        RESET PASSWORD
+                    </button>
+                </form>
+                <button type="button" onclick="window.location.reload()" class="mt-6 text-xs text-gray-500 hover:text-white transition-colors bg-transparent border-none cursor-pointer">
+                    &larr; Back to Login
+                </button>
+            `;
+
+            // Handle Reset Password Submit
+            document.getElementById('resetPasswordForm').addEventListener('submit', async function(resEvent) {
+                resEvent.preventDefault();
+                const otp = document.getElementById('reset-otp').value.trim();
+                const newPassword = document.getElementById('new-password').value;
+                const resetBtn = document.getElementById('resetSubmitBtn');
+
+                resetBtn.disabled = true;
+                resetBtn.textContent = "UPDATING...";
+
+                try {
+                    const resetRes = await fetch('http://localhost:3000/api/reset-password', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: resetEmail, otp, newPassword })
+                    });
+
+                    const resetData = await resetRes.json();
+                    if (!resetRes.ok) throw new Error(resetData.message || 'Password reset failed');
+
+                    alert('Password updated successfully! Please log in.');
+                    window.location.reload();
+                } catch (err) {
+                    alert("Error: " + err.message);
+                    resetBtn.disabled = false;
+                    resetBtn.textContent = "RESET PASSWORD";
+                }
+            });
+
+        } catch (error) {
+            alert("Error: " + error.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = "SEND OTP";
+        }
+    });
+</script>
 </body>
 </html>

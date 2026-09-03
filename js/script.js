@@ -1,16 +1,4 @@
 // ==========================================
-// 0. SUPABASE DATABASE CONNECTION
-// ==========================================
-const supabaseUrl = 'https://snobxnunspafeflfzkrt.supabase.co';
-const supabaseKey = 'sb_publishable_sj1haa7S9JQrrPYySeu3ow_aXxyVzzP'; 
-
-// Initialize Supabase (Window object se kyuki hum CDN use kar rahe hain)
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-// Test Connection
-console.log("Supabase Connected:", supabase);
-
-// ==========================================
 // 1. NEWS FETCHING & RENDERING LOGIC
 // ==========================================
 let allFetchedArticles = []; 
@@ -300,59 +288,74 @@ async function fetchOurRecentApps() {
 }
 
 // ==========================================
-// 5. SUPABASE ASLI DYNAMIC AUTHENTICATION
+// 5. LOCALSTORAGE & ROLE-BASED AUTHENTICATION (INDEX.HTML)
 // ==========================================
 document.addEventListener('DOMContentLoaded', async () => {
     
-    fetchWebsiteLiveStats();
-    fetchOurRecentApps();
-
-    setInterval(() => {
-        fetchWebsiteLiveStats();
-        fetchOurRecentApps();
-    }, 5000); 
+    // Agar function available hain toh stats aur recent apps fetch karein
+    if (typeof fetchWebsiteLiveStats === 'function') fetchWebsiteLiveStats();
+    if (typeof fetchOurRecentApps === 'function') fetchOurRecentApps();
 
     const authBtn = document.getElementById('auth-btn');
     const analyzeLink = document.getElementById('analyze-link');
     const lockIcon = document.getElementById('lock-icon');
 
-    // MOCK CHECK HATA DIYA -> ASLI DATABASE CHECK LAGA DIYA
-    const { data: { session }, error } = await supabase.auth.getSession();
-    let isUserLoggedIn = session !== null; 
+    // LocalStorage se check karein ki user logged in hai ya nahi
+    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    const userRole = localStorage.getItem('userRole') || 'user';
+    const userName = localStorage.getItem('userName') || 'User';
 
     function updateUI() {
-        if (isUserLoggedIn) {
+        if (isLoggedIn) {
             
-            // JAB USER LOGGED IN HO
+            // JAB USER LOGGED IN HO (Header Login Button -> Logout)
             if (authBtn) {
                 authBtn.innerHTML = `
-                    <span>LOGOUT</span>
+                    <span>LOGOUT (${userName})</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 `;
                 authBtn.href = "javascript:void(0)"; 
+                authBtn.className = "px-6 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center space-x-2 text-sm font-bold tracking-wide cursor-pointer";
                 
-                authBtn.className = "px-6 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center space-x-2 text-sm font-bold tracking-wide shadow-[0_0_15px_rgba(239,68,68,0.2)] cursor-pointer";
-                
-                // ASLI SUPABASE LOGOUT
-                authBtn.onclick = async (e) => {
+                authBtn.onclick = (e) => {
                     e.preventDefault();
-                    authBtn.innerHTML = "<span>LOGGING OUT...</span>";
-                    await supabase.auth.signOut();
+                    localStorage.clear();
                     window.location.reload(); 
                 };
             }
 
+            // Sidebar Analyze Link -> Dashboard Redirection (Unlocked)
             if (analyzeLink) {
-                analyzeLink.classList.remove('text-gray-400');
-                analyzeLink.classList.add('text-white'); 
-                analyzeLink.href = "#"; 
+                const targetDashboard = (userRole === 'admin') ? "admin-dashboard.html" : "dashboard.html";
+                analyzeLink.href = targetDashboard;
                 
                 analyzeLink.onclick = (e) => {
                     e.preventDefault();
-                    alert("✅ Analyze Feature Unlocked! Scanner is ready.");
+                    window.location.href = targetDashboard;
                 };
             }
+            
+    // Automatically highlight whichever nav item corresponds to the current page or anchor
+    const currentPath = window.location.pathname.split('/').pop();
+    const currentHash = window.location.hash;
 
+    document.querySelectorAll('.nav-item').forEach(item => {
+        const target = item.getAttribute('data-target');
+        
+        // Match either filename or hash
+        if ((currentPath && target === currentPath) || (currentHash && target === currentHash)) {
+            item.className = "nav-item flex items-center justify-between px-3 py-2.5 bg-primary/10 text-primary rounded-lg border border-primary/25 transition-colors font-medium text-sm";
+        }
+
+        // Add click listener so user sees immediate highlight selection
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.className = "nav-item flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 font-medium text-sm transition-all group cursor-pointer";
+            });
+            this.className = "nav-item flex items-center justify-between px-3 py-2.5 bg-primary/10 text-primary rounded-lg border border-primary/25 transition-colors font-medium text-sm";
+        });
+    });
+            // Remove lock icon state
             if (lockIcon) {
                 lockIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>';
                 lockIcon.classList.remove('text-gray-500');
@@ -362,13 +365,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             // JAB USER LOGGED OUT HO
             if (authBtn) {
+                authBtn.href = "login.html";
                 authBtn.onclick = null; 
             }
 
             if (analyzeLink) {
+                analyzeLink.href = "login.html";
                 analyzeLink.onclick = (e) => {
                     e.preventDefault();
-                    alert("🔒 Please Login first to use the Analyze feature.");
                     window.location.href = "login.html"; 
                 };
             }
@@ -376,4 +380,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     updateUI();
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const contactSubmitBtn = document.querySelector('#contact form button');
+    
+    if (contactSubmitBtn) {
+        contactSubmitBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const subject = document.getElementById('contact-subject').value.trim();
+            const message = document.getElementById('contact-message').value.trim();
+
+            if (!name || !email || !subject || !message) {
+                alert('Please fill in all fields before sending.');
+                return;
+            }
+
+            contactSubmitBtn.disabled = true;
+            contactSubmitBtn.textContent = 'SENDING...';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, subject, message })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    alert('✅ Message sent successfully! We will get back to you soon.');
+                    document.querySelector('#contact form').reset();
+                } else {
+                    throw new Error(data.message || 'Failed to send');
+                }
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            } finally {
+                contactSubmitBtn.disabled = false;
+                contactSubmitBtn.innerHTML = `<span>SEND MESSAGE</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
+            }
+        });
+    }
 });
