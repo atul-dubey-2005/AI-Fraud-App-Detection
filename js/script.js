@@ -425,3 +425,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Example jab response save ho raha ho:
+const auditRecord = {
+    target: data.target, // Ye package ID ya name ho sakta hai
+    appName: data.appName || data.target, // <-- Isko add karein
+    riskScore: data.riskScore,
+    status: data.status,
+    colorClass: data.colorClass,
+    threats: data.threats,
+    date: new Date().toLocaleDateString()
+};

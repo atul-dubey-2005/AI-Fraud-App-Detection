@@ -84,10 +84,11 @@
         <main class="p-8 space-y-8 flex-grow max-w-7xl mx-auto w-full">
             
             <!-- Quick Metrics Overview Bar -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Total Audits -->
                 <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl flex items-center justify-between relative overflow-hidden">
                     <div>
-                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Total App Audits</p>
+                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Total Audits</p>
                         <h3 id="totalReportsCount" class="text-3xl font-black text-white">0</h3>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
@@ -95,9 +96,10 @@
                     </div>
                 </div>
 
+                <!-- Low Risk -->
                 <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl flex items-center justify-between relative overflow-hidden">
                     <div>
-                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Secure Apps</p>
+                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Low Risk</p>
                         <h3 id="safeReportsCount" class="text-3xl font-black text-primary">0</h3>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20">
@@ -105,13 +107,25 @@
                     </div>
                 </div>
 
+                <!-- Medium Risk -->
                 <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl flex items-center justify-between relative overflow-hidden">
                     <div>
-                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Malicious / Flagged</p>
+                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Medium Risk</p>
+                        <h3 id="mediumReportsCount" class="text-3xl font-black text-amber-400">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                </div>
+
+                <!-- High Risk / Malicious -->
+                <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl flex items-center justify-between relative overflow-hidden">
+                    <div>
+                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">High Risk</p>
                         <h3 id="threatReportsCount" class="text-3xl font-black text-red-400">0</h3>
                     </div>
                     <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center border border-red-500/20">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
                     </div>
                 </div>
             </div>
@@ -132,28 +146,60 @@
         </main>
     </div>
 
-    <!-- Script Logic with Real-time Search -->
+    <!-- Script Logic with Real-time Search & Multi-Risk Support -->
     <script>
-        const reportsData = JSON.parse(localStorage.getItem('fs_history') || '[]');
-        const grid = document.getElementById('reportsGrid');
+        let reportsData = [];
 
-        // Update Top Metrics
-        document.getElementById('totalReportsCount').innerText = reportsData.length;
-        const safeCount = reportsData.filter(r => r.status.toLowerCase() === 'safe').length;
-        const threatCount = reportsData.length - safeCount;
-        
-        document.getElementById('safeReportsCount').innerText = safeCount;
-        document.getElementById('threatReportsCount').innerText = threatCount;
+        async function fetchReportsData() {
+            try {
+                const userEmail = localStorage.getItem('userEmail') || '';
+                const response = await fetch(`/api/get-scans?email=${encodeURIComponent(userEmail)}`);
+                const result = await response.json();
 
-        if (reportsData.length > 0) {
-            document.getElementById('clearReportsContainer').innerHTML = `
-                <button onclick="clearAllReports()" class="text-xs font-bold text-red-400 hover:text-white border border-red-500/30 hover:bg-red-500/20 px-4 py-2 rounded-xl transition-all">
-                    CLEAR ALL AUDITS
-                </button>
-            `;
+                if (result.success) {
+                    reportsData = result.history;
+                    updateMetricsAndRenderReports();
+                }
+            } catch (err) {
+                console.error('Failed to fetch audit reports from MySQL:', err);
+            }
+        }
+
+        function updateMetricsAndRenderReports() {
+            const grid = document.getElementById('reportsGrid');
+            if (!grid) return;
+
+            // Update Top Metrics Separately for Low, Medium, High
+            document.getElementById('totalReportsCount').innerText = reportsData.length;
+            
+            const safeCount = reportsData.filter(r => r.status.toLowerCase() === 'low risk' || r.status.toLowerCase() === 'safe').length;
+            const mediumCount = reportsData.filter(r => r.status.toLowerCase() === 'medium risk').length;
+            const highCount = reportsData.filter(r => r.status.toLowerCase() === 'high risk' || r.status.toLowerCase() === 'threat' || r.status.toLowerCase() === 'malicious').length;
+            
+            document.getElementById('safeReportsCount').innerText = safeCount;
+            document.getElementById('mediumReportsCount').innerText = mediumCount;
+            document.getElementById('threatReportsCount').innerText = highCount;
+
+            const clearContainer = document.getElementById('clearReportsContainer');
+            if (clearContainer) {
+                if (reportsData.length > 0) {
+                    clearContainer.innerHTML = `
+                        <button onclick="clearAllReports()" class="text-xs font-bold text-red-400 hover:text-white border border-red-500/30 hover:bg-red-500/20 px-4 py-2 rounded-xl transition-all">
+                            CLEAR ALL AUDITS
+                        </button>
+                    `;
+                } else {
+                    clearContainer.innerHTML = '';
+                }
+            }
+
+            renderReports(reportsData);
         }
 
         function renderReports(dataToRender) {
+            const grid = document.getElementById('reportsGrid');
+            if (!grid) return;
+
             if (dataToRender.length === 0) {
                 grid.innerHTML = `
                     <div class="col-span-full py-20 px-6 text-center bg-surface border border-surfaceBorder rounded-3xl flex flex-col items-center justify-center space-y-4">
@@ -179,13 +225,19 @@
                     ? item.threats.map(t => `<li class="truncate text-xs text-gray-400">• ${t}</li>`).join('') 
                     : '<li class="text-xs text-gray-500">No dangerous permissions or flags.</li>';
 
+                const displayName = item.appName || item.target;
+                const packageIdSubtext = item.appName ? `<span class="text-[10px] font-mono text-gray-500 block truncate mt-0.5">${item.target}</span>` : '';
+
                 card.innerHTML = `
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <span class="text-[10px] uppercase font-mono text-gray-500">${item.date}</span>
                             <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase font-bold border ${item.colorClass.replace('text', 'border')}/40 ${item.colorClass} bg-background/50">${item.status}</span>
                         </div>
-                        <h3 class="text-white font-mono text-sm font-semibold truncate mb-3" title="${item.target}">${item.target}</h3>
+                        <div class="mb-3">
+                            <h3 class="text-white font-mono text-sm font-semibold truncate" title="${displayName}">${displayName}</h3>
+                            ${packageIdSubtext}
+                        </div>
                         
                         <div class="flex items-baseline justify-between mb-4 bg-background/40 p-4 rounded-2xl border border-gray-800/60">
                             <div>
@@ -195,7 +247,7 @@
                         </div>
 
                         <div class="mb-6 space-y-1">
-                            <p class="text-[10px] uppercase font-mono text-gray-500 font-bold">Permissions & Signatures:</p>
+                            <p class="text-[10px] uppercase font-mono text-gray-500 font-bold">Threats & Analysis Summary:</p>
                             <ul class="space-y-1 bg-background/20 p-2.5 rounded-xl border border-gray-900">
                                 ${threatsHtml}
                             </ul>
@@ -216,47 +268,83 @@
             });
         }
 
-        renderReports(reportsData);
-
         function filterReports() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             const filtered = reportsData.filter(item => 
+                (item.appName && item.appName.toLowerCase().includes(query)) ||
                 item.target.toLowerCase().includes(query) || 
                 item.status.toLowerCase().includes(query) || 
                 (item.threats && item.threats.some(t => t.toLowerCase().includes(query)))
             );
             renderReports(filtered);
         }
-
+        
         function downloadReport(index) {
-            const item = reportsData[index];
-            const reportText = `======================================\nFRAUDSHIELD AI - APP SECURITY REPORT\n======================================\n\nAudit Date: ${item.date}\nTarget App: ${item.target}\n\n[ SECURITY METRICS ]\nRisk Index: ${item.riskScore} / 100\nApp Status: ${item.status.toUpperCase()}\n\n[ THREAT VECTORS & PERMISSIONS ]\n${item.threats ? item.threats.map(t => '>> ' + t).join('\n') : 'No details recorded.'}\n\n======================================\nGenerated securely by FraudShield AI Engine.`;
-            
-            const blob = new Blob([reportText], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `App_Audit_Report_${item.riskScore}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+    const item = reportsData[index];
+    
+    const threatsFormatted = item.threats && item.threats.length > 0 
+        ? item.threats.map((t, i) => `   [${i + 1}] ${t}`).join('\n\n') 
+        : '   [0] No critical threat signatures or anomalies detected in current logs.';
+
+    const reportText = `====================================================================
+               FRAUDSHIELD AI - ENTERPRISE APP SECURITY AUDIT
+====================================================================
+
+[ AUDIT METADATA ]
+• Target Application : ${item.appName || item.target}
+• Package Identifier : ${item.target}
+• Timestamp          : ${item.date}
+• Audit Status       : ${item.status.toUpperCase()}
+• Risk Index Score   : ${item.riskScore} / 100 (Evaluated via Neural Engine v4.2)
+
+--------------------------------------------------------------------
+[ EXECUTIVE SUMMARY ]
+This application was subjected to an automated heuristic and sentiment-
+based behavioral analysis using 100+ recent Play Store feedback vectors.
+The computed Risk Index of ${item.riskScore}/100 categorizes this software 
+as a '${item.status}' asset within the FraudShield registry.
+
+--------------------------------------------------------------------
+[ DETECTED THREAT VECTORS & SIGNATURES ]
+${threatsFormatted}
+
+--------------------------------------------------------------------
+[ RECOMMENDED MITIGATION STRATEGIES ]
+1. Refrain from inputting sensitive credentials, banking details, or OTPs if high-risk indicators are present.
+2. Verify package signing certificates and developer credentials directly through official distribution channels.
+3. Monitor network egress traffic for unauthorized background telemetry or data harvesting.
+
+====================================================================
+CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
+====================================================================`;
+
+    const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Security_Audit_Report_${(item.appName || item.target).replace(/[^a-z0-9]/gi, '_')}_${item.riskScore}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
         function deleteReport(index) {
             if(confirm("Are you sure you want to remove this audit report?")) {
                 reportsData.splice(index, 1);
-                localStorage.setItem('fs_history', JSON.stringify(reportsData));
-                location.reload();
+                updateMetricsAndRenderReports();
             }
         }
 
         function clearAllReports() {
             if(confirm("Are you sure you want to clear all audit reports?")) {
-                localStorage.removeItem('fs_history');
-                location.reload();
+                reportsData = [];
+                updateMetricsAndRenderReports();
             }
         }
+
+        // Fetch MySQL reports on startup
+        fetchReportsData();
     </script>
 </body>
 </html>

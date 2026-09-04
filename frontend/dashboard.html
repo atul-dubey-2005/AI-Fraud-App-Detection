@@ -301,8 +301,8 @@
 
                     const totalScans = historyData.length;
                     if (totalScans > 0) {
-                        const safeScans = historyData.filter(h => h.status.toLowerCase() === 'safe').length;
-                        const threatScans = totalScans - safeScans;
+                        const safeScans = historyData.filter(h => h.status.toLowerCase() === 'low risk' || h.status.toLowerCase() === 'safe').length;
+                        const threatScans = historyData.filter(h => h.status.toLowerCase() === 'high risk' || h.status.toLowerCase() === 'threat' || h.status.toLowerCase() === 'malicious').length;
                         const safePercent = Math.round((safeScans / totalScans) * 100);
 
                         document.getElementById('safePercentText').innerText = safePercent + '%';
@@ -380,9 +380,16 @@
                         historyData.slice(0, 3).forEach(item => {
                             const tr = document.createElement('tr');
                             tr.className = "hover:bg-surfaceBorder/30 transition-colors";
+                            
+                            const displayName = item.appName || item.target;
+                            const packageIdSubtext = item.appName ? `<span class="text-[10px] font-mono text-gray-500 block truncate mt-0.5">${item.target}</span>` : '';
+
                             tr.innerHTML = `
                                 <td class="px-4 py-3 font-mono text-xs text-gray-400 whitespace-nowrap">${item.date}</td>
-                                <td class="px-4 py-3 font-mono text-white text-xs truncate max-w-[200px]">${item.target}</td>
+                                <td class="px-4 py-3 font-mono text-white text-xs max-w-[200px]">
+                                    <div class="truncate" title="${displayName}">${displayName}</div>
+                                    ${packageIdSubtext}
+                                </td>
                                 <td class="px-4 py-3 font-mono font-bold text-xs ${item.colorClass}">${item.riskScore}/100</td>
                                 <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold border ${item.colorClass.replace('text', 'border')}/40 ${item.colorClass} bg-background/50">${item.status}</span></td>
                             `;

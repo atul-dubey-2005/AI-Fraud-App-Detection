@@ -268,16 +268,10 @@
 
         fetchAllUsers();
 
-        // Logout Handler Example
-function handleLogout() {
-    // 1. LocalStorage ya Session data clear karein
-    localStorage.removeItem('userLoggedIn');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userRole');
-    
-    // 2. Seedhe index.html par redirect karein
-    window.location.href = 'index.html';
-}
+        function handleLogout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
     </script>
 </body>
 </html>

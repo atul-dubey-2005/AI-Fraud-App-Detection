@@ -8,6 +8,9 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 const session = require('express-session');
+const gplay = require('google-play-scraper').default || require('google-play-scraper');
+const natural = require('natural');
+const fs = require('fs');
 
 const app = express();
 
@@ -204,7 +207,7 @@ app.post('/api/login', async (req, res) => {
         res.status(200).json({
             success: true,
             userName: user.full_name,
-            email: user.email, // <-- Yeh add kiya
+            email: user.email,
             role: user.role 
         });
     } catch (err) {
@@ -407,55 +410,189 @@ app.post('/api/verify-update-otp', async (req, res) => {
     }
 });
 
-// --- App Analysis API ---
+// --- Asli AI App Analysis API ---
 app.post('/api/analyze', async (req, res) => {
     const { targetUrl } = req.body;
     
     if (!targetUrl) {
-        return res.status(400).json({ success: false, message: 'Please provide a PlayStore URL or APK Package Name to scan.' });
+        return res.status(400).json({ success: false, message: 'Please provide a PlayStore URL, App Name, or Package Name.' });
     }
 
     try {
-        setTimeout(() => {
-            const riskScore = Math.floor(Math.random() * 80) + 10;
-            
-            let status = 'Safe';
-            let color = 'text-primary';
-            let threats = [];
+        let appId = targetUrl.trim();
 
-            if (riskScore < 30) {
-                status = 'Safe';
-                color = 'text-primary';
-                threats = ['Manifest signature verified clean.', 'Standard non-intrusive permissions requested.'];
-            } else if (riskScore < 70) {
-                status = 'Suspicious';
-                color = 'text-amber-400';
-                threats = ['Unusual background service execution detected.', 'Requests broad location permissions without clear context.'];
-            } else {
-                status = 'Malicious';
+        // STEP 1: URL hai ya Name, uske hisaab se App ID nikalna
+        if (appId.includes('play.google.com')) {
+            const urlObj = new URL(appId);
+            appId = urlObj.searchParams.get('id') || appId;
+        } else if (!appId.includes('.')) {
+            // Agar user ne sirf naam diya hai (jaise "spotify" ya "zomato")
+            try {
+                console.log(`🔍 Searching Play Store dynamically for: ${appId}`);
+                const searchResults = await gplay.search({ term: appId, num: 1 });
+                
+                if (searchResults && searchResults.length > 0) {
+                    appId = searchResults[0].appId;
+                    console.log(`✅ Auto-resolved to Package ID: ${appId}`);
+                } else {
+                    return res.status(404).json({ success: false, message: `App "${appId}" not found on Play Store.` });
+                }
+            } catch (searchErr) {
+                console.error('Search API Error:', searchErr);
+                return res.status(500).json({ success: false, message: 'Failed to resolve app name from Play Store.' });
+            }
+        }
+
+        console.log(`📡 Fetching latest reviews for: ${appId}`);
+
+        const reviewsData = await gplay.reviews({
+            appId: appId,
+            sort: 2, 
+            num: 100
+        });
+
+        if (!reviewsData.data || reviewsData.data.length === 0) {
+            return res.status(400).json({ success: false, message: 'Not enough reviews found to analyze this app.' });
+        }
+
+        const reviews = reviewsData.data;
+
+        const modelPath = path.join(__dirname, 'fraud_model.json');
+        if (!fs.existsSync(modelPath)) {
+            return res.status(500).json({ success: false, message: 'AI Model missing. Run trainModel.js first.' });
+        }
+
+        natural.BayesClassifier.load(modelPath, null, function(err, classifier) {
+    if (err) {
+        return res.status(500).json({ success: false, message: 'Failed to load Sentiment Engine.' });
+    }
+
+    const tokenizer = new natural.WordTokenizer();
+    let fraudCount = 0;
+    let totalRating = 0;
+    let specificThreats = new Set();
+
+    reviews.forEach(rev => {
+        totalRating += rev.score;
+        let text = rev.text ? rev.text : "";
+        
+        let cleaned = text.toLowerCase()
+                          .replace(/(https?:\/\/[^\s]+)|(www\.[^\s]+)/g, ' __LINK__ ')
+                          .replace(/(\+?\d{1,3}[-.\s]?)?(\d{10})/g, ' __PHONE__ ')
+                          .replace(/[^a-z0-9_\s]/gi, ' ')
+                          .replace(/\s+/g, ' ')
+                          .trim();
+
+        let tokens = tokenizer.tokenize(cleaned);
+        let sentiment = classifier.classify(tokens); 
+
+        if (sentiment === 'Fraud' || rev.score <= 2) {
+            fraudCount++;
+            if (cleaned.includes('otp')) specificThreats.add("CRITICAL VULNERABILITY: Multiple user reports highlighting intercepted or delayed OTPs, risking authentication hijacking.");
+            if (cleaned.includes('money') || cleaned.includes('deduct') || cleaned.includes('paisa')) specificThreats.add("FINANCIAL FRAUD INDICATOR: Verified user complaints regarding unauthorized background balance deductions or wallet scams.");
+            if (cleaned.includes('fake') || cleaned.includes('scam') || cleaned.includes('chor')) specificThreats.add("SIGNATURE ANOMALY: High concentration of community flags identifying this application as a fraudulent clone or scam software.");
+            if (cleaned.includes('__link__')) specificThreats.add("MALICIOUS INJECTION: Suspicious external phishing links or rogue landing URLs detected within user-generated reviews.");
+            if (cleaned.includes('__phone__')) specificThreats.add("SOCIAL ENGINEERING: Potential impersonation threat—scammers posting unauthorized customer service phone numbers in feedback sections.");
+        }
+    });
+
+    let avgRating = totalRating / reviews.length;
+    let fraudRatio = fraudCount / reviews.length; 
+    
+    let riskScore = Math.round(((5 - avgRating) * 12) + (fraudRatio * 70));
+    riskScore = Math.max(5, Math.min(riskScore, 98)); 
+
+    let status = 'Low Risk';
+    let color = 'text-primary';
+    let finalThreats = [];
+
+    if (riskScore >= 70) {
+        status = 'High Risk';
+        color = 'text-red-500';
+        finalThreats.push(`CRITICAL: AI Sentiment Engine flagged ${Math.round(fraudRatio * 100)}% of recent reviews as Fraudulent.`);
+    } else if (riskScore >= 35) {
+        status = 'Medium Risk';
+        color = 'text-amber-400';
+        finalThreats.push(`WARNING: AI noticed ${Math.round(fraudRatio * 100)}% reviews with negative/fraud sentiment.`);
+    } else {
+        status = 'Low Risk';
+        color = 'text-primary';
+        finalThreats.push("Majority of user sentiment is Positive and Safe.");
+    }
+
+    finalThreats.push(`Average user rating is (${avgRating.toFixed(1)}/5).`);
+    finalThreats = finalThreats.concat(Array.from(specificThreats));
+
+    if (finalThreats.length <= 2) {
+        finalThreats.push("No major behavioral anomalies detected in recent logs.");
+    }
+
+    const insertQuery = `INSERT INTO scan_history (user_email, target_url, risk_score, status, color_class, threats) VALUES (?, ?, ?, ?, ?, ?)`;
+    const userEmail = req.body.email || 'anonymous@fraudshield.com';
+
+    pool.execute(insertQuery, [userEmail, appId, riskScore, status, color, JSON.stringify(finalThreats)])
+        .catch(dbErr => console.error('Database Save Error:', dbErr));
+
+    return res.status(200).json({
+        success: true,
+        target: appId,
+        riskScore: riskScore,
+        status: status,
+        colorClass: color,
+        threats: finalThreats
+    });
+});
+
+            let avgRating = totalRating / reviews.length;
+            let fraudRatio = fraudCount / reviews.length; 
+            
+            let riskScore = Math.round(((5 - avgRating) * 12) + (fraudRatio * 70));
+            riskScore = Math.max(5, Math.min(riskScore, 98)); 
+
+            let status = 'Low Risk';
+            let color = 'text-primary';
+            let finalThreats = [];
+
+            if (riskScore >= 70) {
+                status = 'High Risk';
                 color = 'text-red-500';
-                threats = ['Dangerous permission hook: READ_SMS & CONTACTS!', 'Repackaged binary signature mismatch!', 'Hidden data exfiltration payload blocked.'];
+                finalThreats.push(`CRITICAL: AI Sentiment Engine flagged ${Math.round(fraudRatio * 100)}% of recent reviews as Fraudulent.`);
+            } else if (riskScore >= 35) {
+                status = 'Medium Risk';
+                color = 'text-amber-400';
+                finalThreats.push(`WARNING: AI noticed ${Math.round(fraudRatio * 100)}% reviews with negative/fraud sentiment.`);
+            } else {
+                status = 'Low Risk';
+                color = 'text-primary';
+                finalThreats.push("Majority of user sentiment is Positive and Safe.");
+            }
+
+            finalThreats.push(`Average user rating is (${avgRating.toFixed(1)}/5).`);
+            finalThreats = finalThreats.concat(Array.from(specificThreats));
+
+            if (finalThreats.length <= 2) {
+                finalThreats.push("No major behavioral anomalies detected in recent logs.");
             }
 
             return res.status(200).json({
                 success: true,
-                target: targetUrl,
+                target: appId,
                 riskScore: riskScore,
                 status: status,
                 colorClass: color,
-                threats: threats
+                threats: finalThreats
             });
-        }, 2500);
+        
 
     } catch (error) {
-        console.error('App Audit Error:', error);
-        return res.status(500).json({ success: false, message: 'App security engine failed.' });
+        console.error('Live App Analysis Error:', error);
+        return res.status(500).json({ success: false, message: 'Failed to fetch Play Store data or run AI analysis.' });
     }
 });
 
 // --- Save Scan History API ---
 app.post('/api/save-scan', async (req, res) => {
-    const { email, target, riskScore, status, colorClass, threats, date } = req.body;
+    const { email, target, riskScore, status, colorClass, threats } = req.body;
     try {
         await pool.execute(
             `INSERT INTO scan_history (user_email, target_url, risk_score, status, color_class, threats) VALUES (?, ?, ?, ?, ?, ?)`,
@@ -483,7 +620,6 @@ app.get('/api/get-scans', async (req, res) => {
 
         const [rows] = await pool.query(query, params);
         
-        // Format rows for frontend compatibility
         const formattedScans = rows.map(row => ({
             target: row.target_url,
             riskScore: row.risk_score,
@@ -498,7 +634,7 @@ app.get('/api/get-scans', async (req, res) => {
         console.error('Fetch Scans Error:', err);
         res.status(500).json({ success: false, message: 'Failed to fetch history' });
     }
-});// History ke liye
+});
 
 // --- SERVER START ---
 const PORT = 3000;
