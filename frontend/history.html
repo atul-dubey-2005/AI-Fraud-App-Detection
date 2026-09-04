@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Audit Logs - FraudShield AI</title>
+    <script src="/js/script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>if (localStorage.getItem('userLoggedIn') !== 'true') window.location.href = 'login.html';</script>
+    <script>
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        background: '#050507', 
+                        surface: '#0f0f13', 
+                        surfaceBorder: '#1c1c24', 
+                        primary: '#00ff66',
+                        'primary-dark': '#00cc52'
+                    }, 
+                    fontFamily: { sans: ['Inter', 'sans-serif'] } 
+                } 
+            } 
+        }
+    </script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
+</head>
+<body class="bg-background text-gray-300 min-h-screen flex selection:bg-primary selection:text-black">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
+        <div class="space-y-8">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
+                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <div>
+                    <span class="text-white font-bold text-base tracking-wide block leading-none">FraudShield</span>
+                    <span class="text-primary text-[10px] font-mono tracking-widest uppercase">App Security Engine</span>
+                </div>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <span>Overview</span>
+                </a>
+                <a href="analyze.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <span>Analyze App</span>
+                </a>
+                <a href="reports.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Reports</span>
+                </a>
+                <a href="history.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>History Logs</span>
+                </a>
+                <a href="profile.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Profile Settings</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow flex flex-col min-w-0">
+        
+        <!-- Header -->
+        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-40">
+            <div>
+                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Payload Timeline</span>
+                <h1 class="text-lg font-bold text-white tracking-tight">App Audit History Logs</h1>
+            </div>
+            <div id="clearHistoryContainer"></div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="p-8 space-y-8 flex-grow max-w-7xl mx-auto w-full">
+            
+            <!-- Quick Metrics Overview Bar -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl flex items-center justify-between relative overflow-hidden">
+                    <div>
+                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Total App Audits</p>
+                        <h3 id="totalScansCount" class="text-3xl font-black text-white">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl flex items-center justify-between relative overflow-hidden">
+                    <div>
+                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Secure Apps Passed</p>
+                        <h3 id="safeScansCount" class="text-3xl font-black text-primary">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl flex items-center justify-between relative overflow-hidden">
+                    <div>
+                        <p class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">Malicious / Flagged</p>
+                        <h3 id="threatScansCount" class="text-3xl font-black text-red-400">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center border border-red-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEARCH BAR WIDGET -->
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <input type="text" id="searchHistoryInput" onkeyup="filterHistory()" placeholder="Search package name, store link, or status in history logs..." class="w-full bg-surface border border-surfaceBorder rounded-2xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors shadow-lg">
+            </div>
+
+            <!-- History Table Container -->
+            <div class="bg-surface border border-surfaceBorder rounded-3xl overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-400">
+                        <thead class="text-xs uppercase bg-surfaceBorder/40 text-gray-400 font-mono tracking-wider border-b border-surfaceBorder">
+                            <tr>
+                                <th class="px-6 py-4">Timestamp</th>
+                                <th class="px-6 py-4">App Package / Store Target</th>
+                                <th class="px-6 py-4">Risk Index</th>
+                                <th class="px-6 py-4">Security Classification</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody" class="divide-y divide-surfaceBorder/60">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Script Logic with Real-time Search -->
+    <script>
+        const historyData = JSON.parse(localStorage.getItem('fs_history') || '[]');
+        const tbody = document.getElementById('historyTableBody');
+
+        // Update Top Metrics
+        document.getElementById('totalScansCount').innerText = historyData.length;
+        const safeCount = historyData.filter(h => h.status.toLowerCase() === 'safe').length;
+        const threatCount = historyData.length - safeCount;
+
+        document.getElementById('safeScansCount').innerText = safeCount;
+        document.getElementById('threatScansCount').innerText = threatCount;
+
+        if (historyData.length > 0) {
+            document.getElementById('clearHistoryContainer').innerHTML = `
+                <button onclick="clearAllHistory()" class="text-xs font-bold text-red-400 hover:text-white border border-red-500/30 hover:bg-red-500/20 px-4 py-2 rounded-xl transition-all">
+                    CLEAR ALL LOGS
+                </button>
+            `;
+        }
+
+        function renderHistory(dataToRender) {
+            if (dataToRender.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="px-6 py-20 text-center text-gray-500">
+                            <div class="flex flex-col items-center justify-center space-y-3">
+                                <div class="w-14 h-14 rounded-2xl bg-surfaceBorder/50 flex items-center justify-center text-gray-500">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <h4 class="text-white font-bold text-base">No Matching History Logs Found</h4>
+                                <p class="text-xs">Try adjusting your search query.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            dataToRender.forEach((item) => {
+                const originalIndex = historyData.indexOf(item);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-surfaceBorder/30 transition-colors group";
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-mono text-xs text-gray-400 whitespace-nowrap">${item.date}</td>
+                    <td class="px-6 py-4 font-mono text-white font-medium max-w-[280px] truncate" title="${item.target}">${item.target}</td>
+                    <td class="px-6 py-4 font-mono font-bold ${item.colorClass}">${item.riskScore} <span class="text-[10px] text-gray-600">/100</span></td>
+                    <td class="px-6 py-4">
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase font-bold border ${item.colorClass.replace('text', 'border')}/40 ${item.colorClass} bg-background/50">${item.status}</span>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="deleteLog(${originalIndex})" class="p-2 bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-lg transition-all" title="Delete Log">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        renderHistory(historyData);
+
+        function filterHistory() {
+            const query = document.getElementById('searchHistoryInput').value.toLowerCase().trim();
+            const filtered = historyData.filter(item => 
+                item.target.toLowerCase().includes(query) || 
+                item.status.toLowerCase().includes(query) || 
+                (item.threats && item.threats.some(t => t.toLowerCase().includes(query)))
+            );
+            renderHistory(filtered);
+        }
+
+        function deleteLog(index) {
+            if(confirm("Are you sure you want to remove this log?")) {
+                historyData.splice(index, 1);
+                localStorage.setItem('fs_history', JSON.stringify(historyData));
+                location.reload();
+            }
+        }
+
+        function clearAllHistory() {
+            if(confirm("Are you sure you want to clear all app audit logs?")) {
+                localStorage.removeItem('fs_history');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

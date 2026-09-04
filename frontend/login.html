@@ -175,6 +175,7 @@
 
             localStorage.setItem('userLoggedIn', 'true');
             localStorage.setItem('userName', data.userName || 'User');
+            localStorage.setItem('userEmail', email);
             const userRole = (data.role || 'user').toLowerCase();
             localStorage.setItem('userRole', userRole);
 

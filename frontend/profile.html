@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - FraudShield AI</title>
+    <script src="/js/script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        if (localStorage.getItem('userLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#050507',
+                        surface: '#0f0f13',
+                        surfaceBorder: '#1c1c24',
+                        primary: '#00ff66',
+                        'primary-dark': '#00cc52',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
+</head>
+<body class="bg-background text-gray-300 min-h-screen flex selection:bg-primary selection:text-black">
+
+    <!-- Sidebar Navigation (Consistent across all pages) -->
+    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
+        <div class="space-y-8">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
+                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <div>
+                    <span class="text-white font-bold text-base tracking-wide block leading-none">FraudShield</span>
+                    <span class="text-primary text-[10px] font-mono tracking-widest uppercase">AI Terminal</span>
+                </div>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <span>Overview</span>
+                </a>
+                <a href="analyze.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <span>Analyze App</span>
+                </a>
+                <a href="reports.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>Reports</span>
+                </a>
+                <a href="history.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>History Logs</span>
+                </a>
+                <a href="profile.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Profile Settings</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow flex flex-col min-w-0">
+        
+        <!-- Header -->
+        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-40">
+            <div>
+                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Account Control</span>
+                <h1 class="text-lg font-bold text-white tracking-tight">User Profile Settings</h1>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="p-8 space-y-8 flex-grow max-w-5xl mx-auto w-full">
+            
+            <!-- Profile Overview Card -->
+            <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl flex items-center space-x-6 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="w-24 h-24 rounded-2xl bg-primary/20 text-primary font-bold text-4xl flex items-center justify-center border-2 border-primary/30 shadow-[0_0_20px_rgba(0,255,102,0.15)]" id="profile-avatar">
+                    U
+                </div>
+                
+                <div class="relative z-10">
+                    <h2 id="profile-name" class="text-3xl font-extrabold text-white">Loading...</h2>
+                    <div class="flex items-center space-x-3 mt-2">
+                        <span class="px-3 py-1 bg-surfaceBorder border border-gray-700 rounded-lg text-xs font-mono text-gray-400 uppercase tracking-widest">Role: <span id="profile-role" class="text-white">User</span></span>
+                        <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-mono text-emerald-400 uppercase tracking-widest flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Active Account</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Account Details Update with OTP Flow -->
+                <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-6 flex items-center space-x-2">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <span>Account Details</span>
+                        </h3>
+                        <form id="updateProfileForm" class="space-y-4">
+                            
+                            <!-- Step 1: Request OTP -->
+                            <div id="profile-step-1" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">New Display Name</label>
+                                    <input type="text" id="update-name" required class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Verify Email</label>
+                                    <input type="email" id="update-email" required placeholder="Enter your email" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                                </div>
+                                <button type="submit" id="sendUpdateOtpBtn" class="w-full mt-2 bg-transparent border border-primary text-primary hover:bg-primary hover:text-black font-bold py-3 rounded-xl transition-all duration-300">
+                                    SEND OTP
+                                </button>
+                            </div>
+
+                            <!-- Step 2: Verify OTP (Hidden initially) -->
+                            <div id="profile-step-2" class="hidden space-y-4">
+                                <p class="text-xs text-primary text-center font-bold uppercase tracking-widest">Check your email for OTP</p>
+                                <div>
+                                    <input type="text" id="update-otp" maxlength="6" placeholder="••••••" class="w-full text-center tracking-[1em] font-bold text-xl bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                                </div>
+                                <button type="button" id="verifyUpdateBtn" class="w-full mt-2 bg-primary hover:bg-primary-dark text-black font-bold py-3 rounded-xl transition-all duration-300">
+                                    VERIFY & SAVE
+                                </button>
+                                <button type="button" id="cancelUpdateBtn" class="w-full mt-2 text-xs text-gray-500 hover:text-white transition-colors bg-transparent border-none cursor-pointer">
+                                    &larr; Cancel Request
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Security & Password -->
+                <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-white font-bold text-lg mb-6 flex items-center space-x-2">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            <span>Security</span>
+                        </h3>
+                        <p class="text-sm text-gray-400 mb-6 leading-relaxed">Update your password to keep your FraudShield AI account secure.</p>
+                        <form id="changePasswordForm" class="space-y-4">
+                            <div>
+                                <input type="email" id="confirmEmail" required placeholder="Confirm your Email" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                            </div>
+                            <div>
+                                <input type="password" id="currentPassword" required placeholder="Current Password" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                            </div>
+                            <div>
+                                <input type="password" id="newPassword" required minlength="6" placeholder="New Password" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                            </div>
+                            <button type="submit" id="updatePassBtn" class="w-full bg-red-500/10 border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white font-bold py-3 rounded-xl transition-all duration-300">
+                                UPDATE PASSWORD
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Load User Details
+        const userName = localStorage.getItem('userName') || 'FraudShield User';
+        const userRole = localStorage.getItem('userRole') || 'user';
+
+        document.getElementById('profile-name').innerText = userName;
+        document.getElementById('update-name').value = userName;
+        document.getElementById('profile-role').innerText = userRole;
+        document.getElementById('profile-avatar').innerText = userName.charAt(0).toUpperCase();
+
+        // Update Profile API with OTP Logic
+        const profileStep1 = document.getElementById('profile-step-1');
+        const profileStep2 = document.getElementById('profile-step-2');
+
+        document.getElementById('updateProfileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('update-email').value.trim();
+            const btn = document.getElementById('sendUpdateOtpBtn');
+
+            btn.disabled = true;
+            btn.textContent = "SENDING OTP...";
+
+            try {
+                const response = await fetch('http://localhost:3000/api/send-update-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    profileStep1.classList.add('hidden');
+                    profileStep2.classList.remove('hidden');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Server connection error.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "SEND OTP";
+            }
+        });
+
+        document.getElementById('verifyUpdateBtn').addEventListener('click', async function() {
+            const newName = document.getElementById('update-name').value.trim();
+            const email = document.getElementById('update-email').value.trim();
+            const otp = document.getElementById('update-otp').value.trim();
+            const btn = document.getElementById('verifyUpdateBtn');
+
+            if (!otp) return alert("Please enter the 6-digit OTP");
+
+            btn.disabled = true;
+            btn.textContent = "VERIFYING...";
+
+            try {
+                const response = await fetch('http://localhost:3000/api/verify-update-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, otp, newName })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Profile name updated successfully!');
+                    
+                    localStorage.setItem('userName', newName);
+                    document.getElementById('profile-name').innerText = newName;
+                    document.getElementById('profile-avatar').innerText = newName.charAt(0).toUpperCase();
+                    
+                    document.getElementById('update-otp').value = '';
+                    document.getElementById('update-email').value = '';
+                    profileStep2.classList.add('hidden');
+                    profileStep1.classList.remove('hidden');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Server connection error.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "VERIFY & SAVE";
+            }
+        });
+
+        document.getElementById('cancelUpdateBtn').addEventListener('click', () => {
+            profileStep2.classList.add('hidden');
+            profileStep1.classList.remove('hidden');
+            document.getElementById('update-otp').value = '';
+        });
+
+        // Change Password API Integration
+        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('confirmEmail').value.trim();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const btn = document.getElementById('updatePassBtn');
+
+            btn.disabled = true;
+            btn.textContent = "UPDATING...";
+
+            try {
+                const response = await fetch('http://localhost:3000/api/change-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, currentPassword, newPassword })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Password updated successfully! Next time, login with your new password.');
+                    document.getElementById('changePasswordForm').reset();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Server connection error.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "UPDATE PASSWORD";
+            }
+        });
+    </script>
+</body>
+</html>
