@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2309090b' stroke='%2300ff66' stroke-width='2'/><path d='M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z' fill='rgba(0,255,102,0.15)' stroke='%2300ff66' stroke-width='1.5'/><text x='16' y='17.5' font-family='sans-serif' font-weight='900' font-size='11' fill='%23ffffff' text-anchor='middle'>FS</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Master Profile - FraudShield AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Check if admin is logged in
+        if (localStorage.getItem('userLoggedIn') !== 'true' || (localStorage.getItem('userRole') || '').toLowerCase() !== 'admin') {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#050507',
+                        surface: '#0f0f13',
+                        surfaceBorder: '#1c1c24',
+                        primary: '#00ff66',
+                        'primary-dark': '#00cc52',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
+</head>
+<body class="bg-background text-gray-300 min-h-screen flex selection:bg-red-500 selection:text-white">
+
+    <!-- Admin Sidebar Navigation -->
+    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
+        <div class="space-y-8">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)]">
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <div>
+                    <span class="text-white font-bold text-base tracking-wide block leading-none">FraudShield</span>
+                    <span class="text-red-400 text-[10px] font-mono tracking-widest uppercase">Admin Terminal</span>
+                </div>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <span>Dashboard Matrix</span>
+                </a>
+                <a href="admin-profile.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-red-500/10 text-red-400 font-semibold text-sm border border-red-500/20">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <span>Root Profile</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow flex flex-col min-w-0">
+        
+        <!-- Header -->
+        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-40">
+            <div>
+                <span class="text-xs font-mono text-red-500 uppercase tracking-widest">Master Security Clearance</span>
+                <h1 class="text-lg font-bold text-white tracking-tight">Administrator Profile Credentials</h1>
+            </div>
+            <a href="admin-dashboard.html" class="text-xs font-mono text-gray-400 hover:text-white bg-surfaceBorder/40 px-3.5 py-2 rounded-xl transition-all">
+                &larr; Back to Dashboard
+            </a>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="p-8 space-y-8 flex-grow max-w-5xl mx-auto w-full">
+            
+            <!-- Admin Profile Overview Card -->
+            <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl flex items-center space-x-6 relative overflow-hidden shadow-2xl">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="w-24 h-24 rounded-2xl bg-red-500/20 text-red-400 font-bold text-4xl flex items-center justify-center border-2 border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)] font-mono">
+                    AD
+                </div>
+                
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-extrabold text-white">System Root Administrator</h2>
+                    <div class="flex items-center space-x-3 mt-2">
+                        <span class="px-3 py-1 bg-surfaceBorder border border-gray-700 rounded-lg text-xs font-mono text-gray-400 uppercase tracking-widest">Role: <span class="text-red-400">SUPER_ADMIN</span></span>
+                        <span class="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-lg text-xs font-mono text-red-400 uppercase tracking-widest flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                            <span>Full Master Privileges</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Master Details View -->
+            <div class="bg-surface border border-surfaceBorder rounded-3xl p-8 shadow-xl space-y-6">
+                <div class="border-b border-surfaceBorder pb-6 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-white font-bold text-lg">Direct Master Credentials</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Unrestricted visibility of root credentials and system keys.</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-bold text-sm font-mono">
+                        ROOT
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs">
+                    <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
+                        <span class="text-gray-500 block uppercase">Administrator Name</span>
+                        <span class="text-white font-bold text-sm">System Root Administrator</span>
+                    </div>
+
+                    <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
+                        <span class="text-gray-500 block uppercase">Master Email Access</span>
+                        <span class="text-white font-bold text-sm">admin@fraudshield.ai</span>
+                    </div>
+
+                    <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
+                        <span class="text-gray-500 block uppercase">Assigned Security Clearance</span>
+                        <span class="text-red-400 font-bold text-sm">LEVEL 1 (UNRESTRICTED)</span>
+                    </div>
+
+                    <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
+                        <span class="text-gray-500 block uppercase">Plaintext Master Password</span>
+                        <div class="flex items-center justify-between mt-1">
+                            <span id="adminDisplayPassword" class="text-red-400 font-bold text-sm tracking-wider">FraudShield@Root2026</span>
+                            <button onclick="toggleMasterPassword()" id="eyeBtn" class="text-gray-400 hover:text-white transition-all text-xs bg-surfaceBorder/40 px-2.5 py-1 rounded-lg cursor-pointer">Hide</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        let isPasswordVisible = true;
+        function toggleMasterPassword() {
+            const passSpan = document.getElementById('adminDisplayPassword');
+            const eyeBtn = document.getElementById('eyeBtn');
+            
+            if (isPasswordVisible) {
+                passSpan.textContent = "••••••••••••••••";
+                eyeBtn.textContent = "Show";
+                isPasswordVisible = false;
+            } else {
+                passSpan.textContent = "FraudShield@Root2026";
+                eyeBtn.textContent = "Hide";
+                isPasswordVisible = true;
+            }
+        }
+    </script>
+</body>
+</html>

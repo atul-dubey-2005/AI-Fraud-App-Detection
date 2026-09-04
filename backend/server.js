@@ -10,6 +10,8 @@ const GitHubStrategy = require('passport-github2').Strategy;
 const session = require('express-session');
 const gplay = require('google-play-scraper').default || require('google-play-scraper');
 const natural = require('natural');
+const multer = require('multer');
+const upload = multer({ dest: path.join(__dirname, 'uploads/') });
 const fs = require('fs');
 
 const app = express();
@@ -641,3 +643,104 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Backend running on http://localhost:${PORT}`);
 });
+
+// --- Admin: Get All Scan History Reports ---
+app.get('/api/admin/all-scans', async (req, res) => {
+    try {
+        const [scans] = await pool.query('SELECT * FROM scan_history ORDER BY scanned_at DESC');
+        
+        const formattedScans = scans.map(row => ({
+            id: row.id,
+            userEmail: row.user_email,
+            target: row.target_url,
+            riskScore: row.risk_score,
+            status: row.status,
+            colorClass: row.color_class,
+            threats: typeof row.threats === 'string' ? JSON.parse(row.threats) : row.threats,
+            date: new Date(row.scanned_at).toLocaleString()
+        }));
+
+        res.status(200).json({ success: true, scans: formattedScans });
+    } catch (err) {
+        console.error('Admin Fetch Scans Error:', err);
+        res.status(500).json({ success: false, message: 'Failed to fetch audit logs.' });
+    }
+});
+
+// --- Admin: Delete Scan Log Endpoint ---
+app.post('/api/admin/delete-scan', async (req, res) => {
+    const { scan_id } = req.body;
+    try {
+        await pool.query('DELETE FROM scan_history WHERE id = ?', [scan_id]);
+        res.status(200).json({ success: true, message: 'Scan log deleted successfully.' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to delete log.' });
+    }
+});
+
+app.post('/api/admin/train-model', upload.single('dataset'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: 'Please upload a valid dataset file.' });
+    }
+
+    const uploadedFilePath = req.file.path;
+    const originalExt = path.extname(req.file.originalname).toLowerCase();
+    
+    // Check file extension (.json or .csv)
+    const targetFileName = originalExt === '.csv' ? 'latest_uploaded.csv' : 'latest_uploaded.json';
+    const targetPath = path.join(__dirname, 'uploads/', targetFileName);
+
+    fs.rename(uploadedFilePath, targetPath, (err) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Failed to process uploaded dataset file.' });
+        }
+
+        exec('node trainModel.js', (error, stdout, stderr) => {
+            if (error) {
+                return res.status(500).json({ success: false, message: 'Model training execution failed.' });
+            }
+            return res.status(200).json({ 
+                success: true, 
+                message: 'AI Model successfully retrained and merged with new dataset!',
+                output: stdout 
+            });
+        });
+    });
+});
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/api/dashboard-stats', async (req, res) => {
+    try {
+        // 1. Total Scanned Apps Count from scan_history
+        const [totalScansRows] = await pool.query('SELECT COUNT(*) as total FROM scan_history');
+        const totalScanned = totalScansRows[0].total;
+
+        // 2. Fraud vs Safe Count (Aapke schema ke mutabiq status 'Fraud' ya 'Safe' hota hai)
+        const [fraudRows] = await pool.query("SELECT COUNT(*) as count FROM scan_history WHERE LOWER(status) LIKE '%fraud%' OR LOWER(status) LIKE '%malicious%'");
+        const totalFraud = fraudRows[0].count;
+        const totalSafe = totalScanned - totalFraud;
+
+        // 3. Total Users Count from users table
+        const [userRows] = await pool.query('SELECT COUNT(*) as total FROM users');
+        const totalUsers = userRows[0].total;
+
+        // 4. Recent Analyzed Apps (Latest 3) from scan_history using target_url as app name
+        const [recentRows] = await pool.query('SELECT target_url as app_name, status, user_email as scanned_by FROM scan_history ORDER BY id DESC LIMIT 3');
+
+        res.json({
+            success: true,
+            totalScanned,
+            totalFraud,
+            totalSafe,
+            totalUsers,
+            recentApps: recentRows
+        });
+    } catch (error) {
+        console.error("Database Error:", error);
+        res.status(500).json({ success: false, message: "Server database error" });
+    }
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));

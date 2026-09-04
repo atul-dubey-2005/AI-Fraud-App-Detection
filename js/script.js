@@ -436,3 +436,23 @@ const auditRecord = {
     threats: data.threats,
     date: new Date().toLocaleDateString()
 };
+
+function openDemoModal() {
+    const modal = document.getElementById('demoModal');
+    const video = document.getElementById('demoVideoElement');
+    modal.classList.remove('hidden');
+    video.load(); // Ensures the video source is reloaded
+    video.play().catch(error => {
+        console.log("Playback error or missing file:", error);
+    });
+};
+
+    function closeDemoModal() {
+        const modal = document.getElementById('demoModal');
+        const video = document.getElementById('demoVideoElement');
+        modal.classList.add('hidden');
+        video.pause();
+        video.currentTime = 0; // Reset video position
+    };
+
+    

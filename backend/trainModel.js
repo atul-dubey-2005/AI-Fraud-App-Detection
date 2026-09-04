@@ -3,33 +3,23 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path');
 
-// 1. Initialize NLP Sentiment & Classification Engine
 const classifier = new natural.BayesClassifier();
 const tokenizer = new natural.WordTokenizer();
 
 console.log("🚀 Initializing FraudShield Sentiment Analysis Training Pipeline...");
 
-// ==========================================
-// NLP FEATURE ENGINEERING & PREPROCESSING
-// ==========================================
 function preprocessForSentiment(text) {
     if (!text) return "";
     let processed = text.toLowerCase();
 
-    // Hum URLs aur Phone numbers ko tag kar rahe hain kyunki fraud sentiment mein
-    // users aksar in chizon ki complain karte hain (e.g., "fake number diya hai")
-    
-    // Tag Phishing Links
     const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g;
     if (urlRegex.test(processed)) processed += " __HAS_LINK__ ";
     processed = processed.replace(urlRegex, ''); 
 
-    // Tag Suspicious Contact Numbers
     const phoneRegex = /(\+?\d{1,3}[-.\s]?)?(\d{10})/g;
     if (phoneRegex.test(processed)) processed += " __HAS_PHONE__ ";
     processed = processed.replace(phoneRegex, '');
 
-    // Tag Financial Panic Words (Boosts Fraudulent Sentiment)
     const panicKeywords = ['otp', 'stole', 'fraud', 'scam', 'deducted', 'bank', 'unauthorized', 'chor', 'loot'];
     let panicScore = 0;
     panicKeywords.forEach(kw => {
@@ -40,49 +30,114 @@ function preprocessForSentiment(text) {
         processed += " __HIGH_PANIC_SENTIMENT__ ";
     }
 
-    // Clean special characters to help NLP Tokenizer focus on actual words
     let cleaned = processed.replace(/[^a-z0-9_\s]/gi, ' ').replace(/\s+/g, ' ').trim();
     return cleaned;
 }
 
-// ==========================================
-// LOAD DATASET & TRAIN SENTIMENT MODEL
-// ==========================================
-let rowCount = 0;
-const datasetPath = path.join(__dirname, '../dataset/dataset.csv');
+async function trainPipeline() {
+    let allTrainingData = [];
+    const datasetPath = path.join(__dirname, '../dataset/dataset.csv');
+    const customJsonPath = path.join(__dirname, 'custom_dataset.json');
+    
+    // Check uploaded files (can be .json or .csv)
+    const uploadedJsonPath = path.join(__dirname, 'uploads/latest_uploaded.json');
+    const uploadedCsvpath = path.join(__dirname, 'uploads/latest_uploaded.csv');
 
-// Check if dataset exists
-if (!fs.existsSync(datasetPath)) {
-    console.error(`❌ ERROR: Dataset not found at ${datasetPath}`);
-    console.log("Please create a 'dataset.csv' inside the 'dataset' folder with 'review' and 'label' columns.");
-    process.exit(1);
+    // 1. Load base CSV dataset
+    if (fs.existsSync(datasetPath)) {
+        await new Promise((resolve) => {
+            let count = 0;
+            fs.createReadStream(datasetPath)
+              .pipe(csv({ headers: ['review', 'label'] }))
+              .on('data', (row) => {
+                  if (row.review && row.label && row.review !== 'review') {
+                      allTrainingData.push({ text: row.review, label: row.label });
+                      count++;
+                  }
+              })
+              .on('end', () => {
+                  console.log(`✅ Loaded ${count} records from base dataset.csv`);
+                  resolve();
+              });
+        });
+    }
+
+    // 2. Load persistent custom JSON database
+    if (fs.existsSync(customJsonPath)) {
+        try {
+            const existingCustom = JSON.parse(fs.readFileSync(customJsonPath, 'utf8'));
+            if (Array.isArray(existingCustom)) {
+                allTrainingData = allTrainingData.concat(existingCustom);
+            }
+        } catch (e) {
+            console.error('Error reading custom_dataset.json:', e);
+        }
+    }
+
+    // 3. Handle Newly Uploaded JSON File
+    if (fs.existsSync(uploadedJsonPath)) {
+        try {
+            const newData = JSON.parse(fs.readFileSync(uploadedJsonPath, 'utf8'));
+            if (Array.isArray(newData)) {
+                allTrainingData = allTrainingData.concat(newData);
+                console.log(`📥 Merged ${newData.length} records from uploaded JSON.`);
+            }
+            fs.unlinkSync(uploadedJsonPath);
+        } catch (e) {
+            console.error('Error reading uploaded JSON:', e);
+        }
+    }
+
+    // 4. Handle Newly Uploaded CSV File
+    if (fs.existsSync(uploadedCsvpath)) {
+        await new Promise((resolve) => {
+            let newCsvCount = 0;
+            fs.createReadStream(uploadedCsvpath)
+              .pipe(csv({ headers: ['review', 'label'] }))
+              .on('data', (row) => {
+                  if (row.review && row.label && row.review !== 'review') {
+                      allTrainingData.push({ text: row.review, label: row.label });
+                      newCsvCount++;
+                  }
+              })
+              .on('end', () => {
+                  console.log(`📥 Merged ${newCsvCount} records from uploaded CSV.`);
+                  fs.unlinkSync(uploadedCsvpath);
+                  resolve();
+              });
+        });
+    }
+
+    // Save updated cumulative corpus back to persistent JSON storage
+    fs.writeFileSync(customJsonPath, JSON.stringify(allTrainingData, null, 2), 'utf8');
+
+    if (allTrainingData.length === 0) {
+        console.error("❌ ERROR: No training data found!");
+        process.exit(1);
+    }
+
+    // 5. Train Classifier
+    let documentsAdded = 0;
+    allTrainingData.forEach(item => {
+        if (item.text && item.label) {
+            let smartText = preprocessForSentiment(item.text);
+            let tokens = tokenizer.tokenize(smartText);
+            classifier.addDocument(tokens, item.label);
+            documentsAdded++;
+        }
+    });
+
+    console.log(`\n🧠 Training Sentiment Analysis Model with total ${documentsAdded} documents...`);
+    classifier.train();
+
+    const modelPath = path.join(__dirname, 'fraud_model.json');
+    classifier.save(modelPath, function(err) {
+        if (err) {
+            console.error("❌ Failed to save model:", err);
+        } else {
+            console.log(`🛡️ SUCCESS! Model updated & saved. Total active corpus: ${documentsAdded} entries.`);
+        }
+    });
 }
 
-fs.createReadStream(datasetPath)
-  .pipe(csv({ headers: ['review', 'label'] }))
-  .on('data', (row) => {
-      if (row.review && row.label) {
-          let smartText = preprocessForSentiment(row.review);
-          let tokens = tokenizer.tokenize(smartText);
-          classifier.addDocument(tokens, row.label);
-          rowCount++;
-      }
-  })
-  .on('end', () => {
-      console.log(`\n✅ Loaded ${rowCount} reviews from dataset.`);
-      console.log("🧠 Training Sentiment Analysis Model... Please wait.");
-      
-      // Train the NLP Model
-      classifier.train();
-
-      // Save the trained brain to a JSON file
-      const modelPath = path.join(__dirname, 'fraud_model.json');
-      classifier.save(modelPath, function(err, classifier) {
-          if (err) {
-              console.error("❌ Failed to save model:", err);
-          } else {
-              console.log("🛡️ SUCCESS! Sentiment Model saved as 'fraud_model.json'.");
-              console.log("Your AI is now ready to detect fraudulent sentiment in live Play Store reviews!");
-          }
-      });
-  });
+trainPipeline();
