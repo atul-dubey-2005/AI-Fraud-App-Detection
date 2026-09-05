@@ -36,7 +36,6 @@
 <body class="bg-background text-gray-300 h-screen flex overflow-hidden selection:bg-primary selection:text-black">
 
     <!-- Sidebar -->
-    <!-- Yahan w-64 ko w-56 kar diya gaya hai -->
     <aside class="w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background">
         <div>
             <!-- Logo -->
@@ -307,7 +306,6 @@
 <!-- ============================================== -->
 <!-- 2. TRENDING SECTION -->
 <!-- ============================================== -->
-<!-- Alignment matched with News Section (px-12) -->
 <div class="px-12 pt-10 pb-10 ">
     
     <div class="mb-6 flex items-center justify-between">
@@ -322,10 +320,6 @@
                 <span class="text-white">RECENTLY ANALYZED</span>
             </h2>
         </div>
-        <a href="#" class="text-[10px] font-bold text-primary uppercase tracking-[0.15em] hover:text-white transition-colors flex items-center space-x-1">
-            <span>All Reports</span>
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </a>
     </div>
 
     <!-- JS will inject real-time cards into this container -->
@@ -381,10 +375,10 @@
 
     </div>
 </div>
-    
-</div> <!-- END OF PADDING WRAPPER -->
 
-        <!-- News & Updates Section -->
+<!-- ============================================== -->
+<!-- News & Updates Section -->
+<!-- ============================================== -->
         <div class="px-12 py-10 ">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center space-x-3">
@@ -393,7 +387,6 @@
                     </div>
                     <h2 class="text-lg font-bold"><span class="text-primary">NOTICE</span> : LATEST FRAUD & CYBERSECURITY NEWS</h2>
                 </div>
-                <!-- UPDATED BUTTON: Ids add kiye gaye hain aur arrow change kiya gaya hai -->
                 <a href="#" id="view-toggle-btn" class="text-primary text-sm font-semibold flex items-center space-x-2 hover:underline select-none">
                     <span id="view-toggle-text">VIEW MORE</span>
                     <svg id="view-toggle-icon" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -551,7 +544,7 @@
 
             </div>
 
-            <!-- Mini Tech Stack Badges (Updated with MySQL Workbench) -->
+            <!-- Mini Tech Stack Badges -->
             <div class="mt-8 pt-6 border-t border-gray-800/50">
                 <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-3">Powered By Technology</p>
                 <div class="flex flex-wrap gap-2">
@@ -749,7 +742,7 @@
                         </div>
                         <div>
                             <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Email Us</p>
-                            <a href="fraudshield2026@gmail.com" class="text-white text-sm font-medium hover:text-primary transition-colors">support@fraudshield.ai</a>
+                            <a href="mailto:fraudshield2026@gmail.com" class="text-white text-sm font-medium hover:text-primary transition-colors">support@fraudshield.ai</a>
                         </div>
                     </div>
 
@@ -999,6 +992,8 @@
         </footer>
 
     </main>
+
+    <!-- PERFECTED API & UI FETCH SCRIPT (WITH L, M, H STATUS) -->
     <script>
     document.addEventListener("DOMContentLoaded", () => {
         fetchRealMySQLData();
@@ -1011,35 +1006,53 @@
 
             if (data.success) {
                 // 1. Update Live Counters
-                document.getElementById('stat-apps').innerText = data.totalScanned;
-                document.getElementById('stat-fraud').innerText = data.totalFraud;
-                document.getElementById('stat-safe').innerText = data.totalSafe;
-                document.getElementById('stat-users').innerText = data.totalUsers;
+                document.getElementById('stat-apps').innerText = data.totalScanned || 0;
+                document.getElementById('stat-fraud').innerText = data.totalFraud || 0;
+                document.getElementById('stat-safe').innerText = data.totalSafe || 0;
+                document.getElementById('stat-users').innerText = data.totalUsers || 0;
 
                 // 2. Update Trending / Recently Analyzed Apps Container
                 const container = document.getElementById('recent-apps-container');
                 if (container && data.recentApps && data.recentApps.length > 0) {
-                    container.innerHTML = ''; // Hardcoded placeholders hatayein
+                    container.innerHTML = ''; // Dummy placeholders hata diye
 
                     data.recentApps.forEach(app => {
-                        const status = (app.status || 'Safe').toLowerCase();
-                        const isSafe = status === 'safe';
-                        const statusColor = isSafe ? 'text-primary border-primary/40 shadow-[0_0_10px_rgba(0,255,102,0.1)]' : 'text-[#ff4444] border-[#ff4444]/40 shadow-[0_0_10px_rgba(255,68,68,0.15)]';
-                        const statusLetter = isSafe ? 'S' : 'F';
+                        const statusStr = (app.status || 'Low Risk').toLowerCase();
+                        
+                        let statusColor, statusBorder, statusLetter;
+
+                        // 🟢 YAHAN L, M, aur H KA LOGIC AUR COLORS SET KIYE HAIN
+                        if (statusStr.includes('high') || statusStr.includes('fraud')) {
+                            statusLetter = 'H'; // High Risk
+                            statusColor = 'text-[#ff4444]'; // Red
+                            statusBorder = 'border-[#ff4444]/40 shadow-[0_0_10px_rgba(255,68,68,0.15)]';
+                        } else if (statusStr.includes('medium')) {
+                            statusLetter = 'M'; // Medium Risk
+                            statusColor = 'text-amber-400'; // Yellow/Amber
+                            statusBorder = 'border-amber-400/40 shadow-[0_0_10px_rgba(251,191,36,0.15)]';
+                        } else {
+                            statusLetter = 'L'; // Low Risk
+                            statusColor = 'text-primary'; // Green
+                            statusBorder = 'border-primary/40 shadow-[0_0_10px_rgba(0,255,102,0.1)]';
+                        }
+
+                        // Asli Icon aur Naam
+                        const iconUrl = app.app_icon || 'https://cdn-icons-png.flaticon.com/512/888/888839.png';
+                        const appName = app.app_name || 'Unknown App';
 
                         const cardHTML = `
                             <div class="bg-surface border border-gray-800 rounded-xl p-3.5 flex items-center justify-between hover:border-gray-700 hover:bg-gray-800/30 transition-all cursor-pointer">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shrink-0 overflow-hidden shadow-inner p-1.5">
-                                        <img src="${app.icon_url || 'https://cdn-icons-png.flaticon.com/512/888/888839.png'}" alt="${app.app_name}" class="w-full h-full object-contain">
+                                        <img src="${iconUrl}" alt="${appName}" class="w-full h-full object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/888/888839.png'">
                                     </div>
                                     <div>
-                                        <h3 class="text-white font-bold text-xs tracking-wide">${app.app_name}</h3>
-                                        <p class="text-gray-500 text-[10px] mt-0.5 tracking-wide">Scanned by ${app.scanned_by || 'User'}</p>
+                                        <h3 class="text-white font-bold text-xs tracking-wide truncate max-w-[120px]">${appName}</h3>
+                                        <p class="text-gray-500 text-[10px] mt-0.5 tracking-wide truncate max-w-[120px]">Recently Analyzed</p>
                                     </div>
                                 </div>
-                                <div class="w-6 h-6 rounded-full border ${statusColor} flex items-center justify-center bg-background shrink-0" title="Status: ${app.status}">
-                                    <span class="text-[9px] font-bold">${statusLetter}</span>
+                                <div class="w-6 h-6 rounded-full border ${statusBorder} flex items-center justify-center bg-background shrink-0" title="Status: ${app.status}">
+                                    <span class="text-[9px] font-bold ${statusColor}">${statusLetter}</span>
                                 </div>
                             </div>
                         `;
@@ -1051,6 +1064,6 @@
             console.error("Failed to connect to backend API:", error);
         }
     }
-</script>
+    </script>
 </body>
 </html>

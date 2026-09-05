@@ -248,42 +248,48 @@ async function fetchOurRecentApps() {
     const container = document.getElementById('recent-apps-container');
     if (!container) return;
 
-    const recentAppsApiUrl = '/api/recent-apps';
     try {
-        const response = await fetch(recentAppsApiUrl);
-        if (!response.ok) throw new Error('Backend API not ready yet');
+        const response = await fetch('http://localhost:3000/api/dashboard-stats'); 
+        const data = await response.json();
         
-        const appsData = await response.json();
-        container.innerHTML = ''; 
+        if (data.success && data.recentApps && data.recentApps.length > 0) {
+            container.innerHTML = ''; // Dummy apps hatane ke liye
 
-        appsData.forEach(app => {
-            const isSafe = app.status === 'Safe';
-            const statusColor = isSafe ? 'text-primary' : 'text-[#ff4444]';
-            const statusBorder = isSafe 
-                ? 'border-primary/40 shadow-[0_0_10px_rgba(0,255,102,0.1)]' 
-                : 'border-[#ff4444]/40 shadow-[0_0_10px_rgba(255,68,68,0.15)]';
-            const statusLetter = isSafe ? 'S' : 'F';
+            data.recentApps.forEach(app => {
+                const statusStr = (app.status || 'Safe').toLowerCase();
+                const isSafe = !statusStr.includes('high') && !statusStr.includes('fraud');
+                
+                const statusColor = isSafe ? 'text-primary' : 'text-[#ff4444]';
+                const statusBorder = isSafe 
+                    ? 'border-primary/40 shadow-[0_0_10px_rgba(0,255,102,0.1)]' 
+                    : 'border-[#ff4444]/40 shadow-[0_0_10px_rgba(255,68,68,0.15)]';
+                const statusLetter = isSafe ? 'S' : 'F';
 
-            const cardHTML = `
-                <div class="bg-surface border border-gray-800 rounded-2xl p-5 flex items-center justify-between hover:border-gray-700 hover:bg-gray-800/30 transition-all cursor-pointer">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shrink-0 overflow-hidden shadow-inner p-1">
-                            <img src="${app.iconUrl}" alt="${app.appName}" class="w-full h-full object-contain">
+                const iconUrl = app.app_icon || 'https://cdn-icons-png.flaticon.com/512/888/888839.png';
+                const appName = app.app_name || 'Unknown App';
+                
+                // 🟢 YAHAN SE NAAM HATA DIYA HAI AUR "Analyzed by AI" LIKH DIYA HAI
+                const cardHTML = `
+                    <div class="bg-surface border border-gray-800 rounded-2xl p-5 flex items-center justify-between hover:border-gray-700 hover:bg-gray-800/30 transition-all cursor-pointer">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shrink-0 overflow-hidden shadow-inner p-1.5">
+                                <img src="${iconUrl}" alt="${appName}" class="w-full h-full object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/888/888839.png'">
+                            </div>
+                            <div>
+                                <h3 class="text-white font-bold text-sm tracking-wide truncate max-w-[150px]">${appName}</h3>
+                                <p class="text-gray-500 text-[11px] mt-0.5 tracking-wide truncate max-w-[150px]">Analyzed by AI</p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="text-white font-bold text-sm tracking-wide truncate max-w-[150px]">${app.appName}</h3>
-                            <p class="text-gray-500 text-[11px] mt-0.5 tracking-wide truncate max-w-[150px]">Scanned by User</p>
+                        <div class="w-7 h-7 rounded-full border ${statusBorder} flex items-center justify-center bg-background shrink-0" title="Status: ${app.status}">
+                            <span class="text-[10px] font-bold ${statusColor}">${statusLetter}</span>
                         </div>
                     </div>
-                    <div class="w-7 h-7 rounded-full border ${statusBorder} flex items-center justify-center bg-background shrink-0" title="Status: ${app.status}">
-                        <span class="text-[10px] font-bold ${statusColor}">${statusLetter}</span>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', cardHTML);
-        });
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
     } catch (error) {
-        console.log("Recent Apps API Note: Backend is not connected yet.");
+        console.error("Recent Apps fetch error:", error);
     }
 }
 
@@ -428,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Example jab response save ho raha ho:
 // Example jab response save ho raha ho (Moved inside function/scope where 'data' is defined or commented out):
-const auditRecord = {
+/*const auditRecord = {
     target: data?.target, // Ye package ID ya name ho sakta hai
     appName: data?.appName || data?.target, // <-- Isko add karein
     riskScore: data?.riskScore,
@@ -437,7 +443,7 @@ const auditRecord = {
     threats: data?.threats,
     date: new Date().toLocaleDateString()
 };
-
+*/
 
 function openDemoModal() {
     const modal = document.getElementById('demoModal');

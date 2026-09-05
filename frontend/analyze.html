@@ -236,12 +236,13 @@
             // 2. Sync to Database (MySQL)
             const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('userName') + '@fraudshield.com';
             try {
-                await fetch('http://localhost:3000/api/save-scan', {
+                await fetch('/api/save-scan', { // Localhost hata kar relative path kar diya best practice ke liye
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         email: userEmail, 
-                        target: currentScanData.target,
+                        target: currentScanData.target, // Backend se aaya Asli Naam
+                        icon: currentScanData.icon,     // 🆕 LOGO ADD KIYA (Database mein save hone ke liye)
                         riskScore: currentScanData.riskScore,
                         status: currentScanData.status,
                         colorClass: currentScanData.colorClass,
@@ -252,7 +253,13 @@
                 console.error("Failed to sync scan history to database:", err);
             }
 
-            document.getElementById('resultTarget').innerText = data.target;
+            // 3. 🆕 UI Update: Asli Logo aur Naam Dikhana
+            const resultTargetEl = document.getElementById('resultTarget');
+            // Agar backend ne logo bheja hai, toh image tag banega
+            const iconHtml = data.icon ? `<img src="${data.icon}" class="w-6 h-6 rounded-md inline-block mr-2 align-middle bg-white/10 p-0.5">` : '';
+            resultTargetEl.innerHTML = `${iconHtml}<span class="align-middle">${data.target}</span>`;
+            
+            // Baaki purana UI code
             document.getElementById('riskScore').innerText = data.riskScore;
             
             const statusEl = document.getElementById('statusText');
@@ -281,22 +288,6 @@
                 threatList.appendChild(li);
             });
         }
-
-        document.getElementById('downloadReportBtn').addEventListener('click', () => {
-            if (!currentScanData) return;
-
-            const reportText = `======================================\nFRAUDSHIELD AI - APP SECURITY REPORT\n======================================\n\nScan Date: ${currentScanData.date}\nTarget App: ${currentScanData.target}\n\n[ AUDIT METRICS ]\nRisk Index: ${currentScanData.riskScore} / 100\nApp Status: ${currentScanData.status.toUpperCase()}\n\n[ VULNERABILITIES & PERMISSIONS ]\n${currentScanData.threats.map(t => '>> ' + t).join('\n')}\n\n======================================\nGenerated securely by FraudShield AI Engine.`;
-            
-            const blob = new Blob([reportText], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `App_Audit_Report_${currentScanData.riskScore}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
 
         function resetScanner() {
             resultsState.classList.add('hidden');
