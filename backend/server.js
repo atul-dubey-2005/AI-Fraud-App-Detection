@@ -13,6 +13,7 @@ const natural = require('natural');
 const multer = require('multer');
 const upload = multer({ dest: path.join(__dirname, 'uploads/') });
 const fs = require('fs');
+const { exec } = require('child_process');
 
 const app = express();
 
@@ -545,47 +546,6 @@ app.post('/api/analyze', async (req, res) => {
     });
 });
 
-            let avgRating = totalRating / reviews.length;
-            let fraudRatio = fraudCount / reviews.length; 
-            
-            let riskScore = Math.round(((5 - avgRating) * 12) + (fraudRatio * 70));
-            riskScore = Math.max(5, Math.min(riskScore, 98)); 
-
-            let status = 'Low Risk';
-            let color = 'text-primary';
-            let finalThreats = [];
-
-            if (riskScore >= 70) {
-                status = 'High Risk';
-                color = 'text-red-500';
-                finalThreats.push(`CRITICAL: AI Sentiment Engine flagged ${Math.round(fraudRatio * 100)}% of recent reviews as Fraudulent.`);
-            } else if (riskScore >= 35) {
-                status = 'Medium Risk';
-                color = 'text-amber-400';
-                finalThreats.push(`WARNING: AI noticed ${Math.round(fraudRatio * 100)}% reviews with negative/fraud sentiment.`);
-            } else {
-                status = 'Low Risk';
-                color = 'text-primary';
-                finalThreats.push("Majority of user sentiment is Positive and Safe.");
-            }
-
-            finalThreats.push(`Average user rating is (${avgRating.toFixed(1)}/5).`);
-            finalThreats = finalThreats.concat(Array.from(specificThreats));
-
-            if (finalThreats.length <= 2) {
-                finalThreats.push("No major behavioral anomalies detected in recent logs.");
-            }
-
-            return res.status(200).json({
-                success: true,
-                target: appId,
-                riskScore: riskScore,
-                status: status,
-                colorClass: color,
-                threats: finalThreats
-            });
-        
-
     } catch (error) {
         console.error('Live App Analysis Error:', error);
         return res.status(500).json({ success: false, message: 'Failed to fetch Play Store data or run AI analysis.' });
@@ -636,12 +596,6 @@ app.get('/api/get-scans', async (req, res) => {
         console.error('Fetch Scans Error:', err);
         res.status(500).json({ success: false, message: 'Failed to fetch history' });
     }
-});
-
-// --- SERVER START ---
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Backend running on http://localhost:${PORT}`);
 });
 
 // --- Admin: Get All Scan History Reports ---
@@ -708,9 +662,6 @@ app.post('/api/admin/train-model', upload.single('dataset'), async (req, res) =>
     });
 });
 
-app.use(cors());
-app.use(express.json());
-
 app.get('/api/dashboard-stats', async (req, res) => {
     try {
         // 1. Total Scanned Apps Count from scan_history
@@ -743,4 +694,8 @@ app.get('/api/dashboard-stats', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+// --- SERVER START ---
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`🚀 Backend running on http://localhost:${PORT}`);
+});

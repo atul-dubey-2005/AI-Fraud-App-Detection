@@ -427,15 +427,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Example jab response save ho raha ho:
+// Example jab response save ho raha ho (Moved inside function/scope where 'data' is defined or commented out):
 const auditRecord = {
-    target: data.target, // Ye package ID ya name ho sakta hai
-    appName: data.appName || data.target, // <-- Isko add karein
-    riskScore: data.riskScore,
-    status: data.status,
-    colorClass: data.colorClass,
-    threats: data.threats,
+    target: data?.target, // Ye package ID ya name ho sakta hai
+    appName: data?.appName || data?.target, // <-- Isko add karein
+    riskScore: data?.riskScore,
+    status: data?.status,
+    colorClass: data?.colorClass,
+    threats: data?.threats,
     date: new Date().toLocaleDateString()
 };
+
 
 function openDemoModal() {
     const modal = document.getElementById('demoModal');
