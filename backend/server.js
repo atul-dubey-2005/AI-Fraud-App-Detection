@@ -45,6 +45,7 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
+//Database connection test
 // Test Connection on startup
 async function testConnection() {
     try {
