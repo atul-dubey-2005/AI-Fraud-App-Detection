@@ -33,23 +33,31 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const db = mysql.createConnection({
+// --- Database Pool Connection (Permanent Solution) ---
+const pool = mysql.createPool({
     host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
     user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
     password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || '',
     database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'test',
-    port: process.env.MYSQLPORT || process.env.DB_PORT || 3306
+    port: process.env.MYSQLPORT || process.env.DB_PORT || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-db.connect((err) => {
-    if (err) {
+// Test Connection on startup
+async function testConnection() {
+    try {
+        const connection = await pool.getConnection();
+        console.log('✅ Database connected successfully!');
+        connection.release();
+    } catch (err) {
         console.error('❌ Database connection failed:', err.message);
-        return;
     }
-    console.log('✅ Database connected successfully!');
-});
+}
+testConnection();
 
-module.exports = db;
+module.exports = pool;
     
 // --- Gmail SMTP Setup (App Password) ---
 const transporter = nodemailer.createTransport({
