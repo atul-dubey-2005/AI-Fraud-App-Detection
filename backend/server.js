@@ -33,9 +33,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// --- Database Connection ---
-const mysql = require('mysql2');
-
 const db = mysql.createConnection({
     host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
     user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
