@@ -104,7 +104,11 @@
                 <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Dashboard Matrix</span>
                 <h1 class="text-lg font-bold text-white tracking-tight">Security Command Center</h1>
             </div>
+            
             <div class="flex items-center space-x-4">
+                <!-- Pro Plan Dynamic Status Widget -->
+                <div id="proStatusWidget"></div>
+
                 <div class="hidden md:flex items-center space-x-2 bg-surface border border-surfaceBorder px-3.5 py-2 rounded-xl text-xs text-emerald-400 font-mono">
                     <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
                     <span>API Pipeline Online</span>
@@ -406,15 +410,65 @@
         loadDashboardData();
 
         function handleLogout() {
-    // Sirf authentication state clear karein, sab kuch wipe out na karein agar zaroori na ho
-    localStorage.removeItem('userLoggedIn');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userEmail');
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            window.location.replace('index.html');
+        }
 
-    // Smooth redirection
-    window.location.replace('index.html');
+        async function checkProStatusOnDashboard() {
+    const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('userName') + '@fraudshield.com';
+    const widget = document.getElementById('proStatusWidget');
+    if (!widget) return;
+
+    try {
+        const response = await fetch('/api/user-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: userEmail })
+        });
+        const data = await response.json();
+
+        if (data.success && data.isPro) {
+            localStorage.setItem('fs_pro_active', 'true');
+            
+            // Time remaining calculate karein
+            let timeRemainingText = "Active Plan";
+            if (data.expiryDate) {
+                const diffTime = new Date(data.expiryDate) - new Date();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays > 0) {
+                    timeRemainingText = `Pro Active (${diffDays} days left)`;
+                } else {
+                    timeRemainingText = `Expiring Soon`;
+                }
+            }
+
+            widget.innerHTML = `
+                <div class="hidden md:flex items-center space-x-2 bg-primary/10 border border-primary/30 px-3.5 py-2 rounded-xl text-xs text-primary font-mono shadow-[0_0_15px_rgba(0,255,102,0.1)]">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span>${timeRemainingText}</span>
+                </div>
+            `;
+        } else {
+            // Agar time khatam ho gaya ya Free user hai toh LocalStorage flag clear karke Upgrade button dikhayein
+            localStorage.removeItem('fs_pro_active');
+            widget.innerHTML = `
+                <a href="payment.html" class="hidden md:flex items-center space-x-2 bg-primary/15 hover:bg-primary/25 border border-primary/40 px-3.5 py-2 rounded-xl text-xs text-primary font-mono transition-all shadow-[0_0_15px_rgba(0,255,102,0.1)]">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span>Upgrade to Pro</span>
+                </a>
+            `;
+        }
+    } catch (err) {
+        console.error("Failed to fetch user status:", err);
+    }
 }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkProStatusOnDashboard();
+        });
     </script>
 </body>
 </html>

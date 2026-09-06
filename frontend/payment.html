@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout - FraudShield AI Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#050507',
+                        surface: '#0f0f13',
+                        surfaceBorder: '#1c1c24',
+                        primary: '#00ff66',
+                        'primary-dark': '#00cc52',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
+</head>
+<body class="bg-background text-gray-300 min-h-screen flex items-center justify-center p-6 selection:bg-primary selection:text-black">
+
+    <!-- Background Glow Effect -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px]"></div>
+    </div>
+
+    <!-- Checkout Container -->
+    <div class="max-w-xl w-full bg-surface border border-surfaceBorder rounded-3xl p-8 relative z-10 shadow-[0_0_80px_rgba(0,0,0,0.8)]">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center pb-6 border-b border-surfaceBorder mb-6">
+            <div>
+                <h1 class="text-white font-black text-2xl uppercase tracking-tight">Complete Order</h1>
+                <p class="text-gray-500 text-xs mt-0.5">Secure 256-bit Encrypted Checkout</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+        </div>
+
+        <!-- Billing Cycle Selector (Monthly / Yearly) -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <button type="button" onclick="setPlan('monthly')" id="monthlyBtn" class="p-4 rounded-2xl border border-primary bg-primary/10 text-left transition-all cursor-pointer relative">
+                <div class="absolute top-3 right-3 w-4 h-4 rounded-full border border-primary flex items-center justify-center" id="monthlyRadio">
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                </div>
+                <span class="text-gray-400 text-xs uppercase tracking-wider block font-semibold mb-1">Monthly</span>
+                <span class="text-white font-black text-xl">₹499</span>
+                <span class="text-gray-500 text-[10px] block">Billed monthly</span>
+            </button>
+
+            <button type="button" onclick="setPlan('yearly')" id="yearlyBtn" class="p-4 rounded-2xl border border-surfaceBorder bg-background text-left transition-all cursor-pointer relative">
+                <div class="absolute top-3 right-3 w-4 h-4 rounded-full border border-gray-600 flex items-center justify-center" id="yearlyRadio">
+                    <div class="w-2 h-2 rounded-full bg-transparent"></div>
+                </div>
+                <span class="text-primary text-xs uppercase tracking-wider block font-semibold mb-1">Yearly (Save 33%)</span>
+                <span class="text-white font-black text-xl">₹3,999</span>
+                <span class="text-gray-500 text-[10px] block">₹333 /mo billed annually</span>
+            </button>
+        </div>
+
+        <!-- Order Summary Card -->
+        <div class="bg-background border border-surfaceBorder rounded-2xl p-5 mb-8">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-white font-bold text-sm" id="planTitle">FraudShield Pro Plan (Monthly)</span>
+                <span class="text-primary font-black text-lg" id="planPrice">₹499</span>
+            </div>
+            <ul class="text-gray-400 text-xs space-y-2 border-t border-surfaceBorder pt-3">
+                <li class="flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <span>Unlimited AI App Scans & Sentiment Analysis</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <span>Real-time Permission & Threat Reports</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <span>Priority 24/7 Security Support</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3">
+            <!-- Razorpay Real Payment Button -->
+            <button id="payButton" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center space-x-2 shadow-[0_0_25px_rgba(0,255,102,0.3)] cursor-pointer">
+                <span id="payBtnText">PAY ₹499 SECURELY</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+
+            <!-- Test / Bypass Button -->
+            <button onclick="simulateSuccess()" class="w-full bg-surface border border-surfaceBorder hover:border-gray-600 text-gray-400 hover:text-white font-bold py-3 rounded-xl transition-colors text-xs uppercase tracking-widest cursor-pointer">
+                Simulate Successful Payment (Test Mode)
+            </button>
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="dashboard.html" class="text-gray-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors">
+                &larr; Back
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Default selected plan
+        let selectedPlan = 'monthly';
+        let planAmount = 49900; // in paise (₹499)
+
+        function setPlan(type) {
+            selectedPlan = type;
+            const monthlyBtn = document.getElementById('monthlyBtn');
+            const yearlyBtn = document.getElementById('yearlyBtn');
+            const monthlyRadio = document.getElementById('monthlyRadio').querySelector('div');
+            const yearlyRadio = document.getElementById('yearlyRadio').querySelector('div');
+            const planTitle = document.getElementById('planTitle');
+            const planPrice = document.getElementById('planPrice');
+            const payBtnText = document.getElementById('payBtnText');
+
+            if (type === 'monthly') {
+                planAmount = 49900;
+                monthlyBtn.className = "p-4 rounded-2xl border border-primary bg-primary/10 text-left transition-all cursor-pointer relative";
+                monthlyRadio.className = "w-2 h-2 rounded-full bg-primary";
+                yearlyBtn.className = "p-4 rounded-2xl border border-surfaceBorder bg-background text-left transition-all cursor-pointer relative";
+                yearlyRadio.className = "w-2 h-2 rounded-full bg-transparent";
+                
+                planTitle.innerText = "FraudShield Pro Plan (Monthly)";
+                planPrice.innerText = "₹499";
+                payBtnText.innerText = "PAY ₹499 SECURELY";
+            } else {
+                planAmount = 399900; // ₹3,999 in paise
+                yearlyBtn.className = "p-4 rounded-2xl border border-primary bg-primary/10 text-left transition-all cursor-pointer relative";
+                yearlyRadio.className = "w-2 h-2 rounded-full bg-primary";
+                monthlyBtn.className = "p-4 rounded-2xl border border-surfaceBorder bg-background text-left transition-all cursor-pointer relative";
+                monthlyRadio.className = "w-2 h-2 rounded-full bg-transparent";
+
+                planTitle.innerText = "FraudShield Pro Plan (Yearly)";
+                planPrice.innerText = "₹3,999";
+                payBtnText.innerText = "PAY ₹3,999 SECURELY";
+            }
+        }
+
+        // 1. Success Handler
+        async function handleSuccessfulPayment() {
+            const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('userName') + '@fraudshield.com';
+
+            try {
+                await fetch('/api/verify-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail, plan: selectedPlan })
+                });
+            } catch (err) {
+                console.error("Failed to update Pro status in DB:", err);
+            }
+
+            localStorage.removeItem('fs_limit_reached');
+            
+            alert(`🎉 Payment Successful! Your account has been upgraded to FraudShield Pro (${selectedPlan.toUpperCase()} plan).`);
+            window.location.href = 'dashboard.html';
+        }
+
+        // 2. Test/Mock Payment Trigger
+        function simulateSuccess() {
+            handleSuccessfulPayment();
+        }
+
+        // 3. Real Razorpay Integration Trigger
+        document.getElementById('payButton').onclick = function(e) {
+            var options = {
+                "key": "YOUR_RAZORPAY_KEY_ID", 
+                "amount": planAmount, 
+                "currency": "INR",
+                "name": "FraudShield AI",
+                "description": `Pro Plan Subscription (${selectedPlan.toUpperCase()})`,
+                "image": "https://cdn-icons-png.flaticon.com/512/888/888839.png",
+                "handler": function (response){
+                    handleSuccessfulPayment();
+                },
+                "prefill": {
+                    "name": localStorage.getItem('userName') || "Valued User",
+                    "email": localStorage.getItem('userEmail') || "user@fraudshield.com",
+                },
+                "theme": {
+                    "color": "#00ff66"
+                }
+            };
+            
+            try {
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
+            } catch (err) {
+                alert("Razorpay API Key missing. Switching to Test Mode simulation.");
+                simulateSuccess();
+            }
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>

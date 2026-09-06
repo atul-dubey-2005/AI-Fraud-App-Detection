@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade to Pro - FraudShield AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#050507',
+                        surface: '#0f0f13',
+                        surfaceBorder: '#1c1c24',
+                        primary: '#00ff66',
+                        'primary-dark': '#00cc52',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
+</head>
+<body class="bg-background text-gray-300 min-h-screen flex items-center justify-center p-6 selection:bg-primary selection:text-black">
+
+    <!-- Background Glow Effect -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px]"></div>
+    </div>
+
+    <!-- Upgrade Card Container -->
+    <div class="max-w-md w-full bg-surface border border-primary/40 rounded-3xl p-8 relative z-10 shadow-[0_0_80px_rgba(0,255,102,0.15)] text-center">
+        
+        <!-- Glowing Lock Icon -->
+        <div class="w-20 h-20 bg-primary/10 border border-primary/30 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(0,255,102,0.2)]">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        </div>
+        
+        <h1 class="text-white font-black text-3xl mb-3 uppercase tracking-tight">Free Trial Expired</h1>
+        <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+            You have used all <span class="text-white font-bold">3 free AI security scans</span>. Upgrade to FraudShield Pro to unlock unlimited app analysis and deep threat inspection.
+        </p>
+        
+        <!-- Upgrade / Payment Button -->
+<button onclick="window.location.href='payment.html'" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 mb-4 flex items-center justify-center space-x-2 shadow-[0_0_25px_rgba(0,255,102,0.3)] cursor-pointer">
+    <span>UPGRADE PLAN</span>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+</button>
+        
+        <!-- Back to Dashboard -->
+        <a href="dashboard.html" class="text-gray-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors inline-block">
+            Return to Dashboard
+        </a>
+    </div>
+
+</body>
+</html>

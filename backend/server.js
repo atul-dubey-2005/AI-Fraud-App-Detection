@@ -309,7 +309,7 @@ app.post('/api/contact', async (req, res) => {
 // --- Admin API ---
 app.get('/api/admin/users', async (req, res) => {
     try {
-        const [users] = await pool.query('SELECT user_id, full_name, email, role, account_status, created_at FROM users');
+        const [users] = await pool.query('SELECT user_id, full_name, email, role, account_status,is_pro, created_at FROM users');
         res.status(200).json({ success: true, users });
     } catch (err) {
         res.status(500).json({ message: 'Database error' });
@@ -417,10 +417,29 @@ app.post('/api/verify-update-otp', async (req, res) => {
 // 1. ASLI AI APP ANALYSIS API (Updated with Logo)
 // ==========================================
 app.post('/api/analyze', async (req, res) => {
-    const { targetUrl } = req.body;
+    const { targetUrl, email } = req.body;
     if (!targetUrl) return res.status(400).json({ success: false, message: 'Please provide an App URL or Name.' });
 
     try {
+        const userEmail = email || 'anonymous@fraudshield.com';
+        
+        // 1. Check if user is Pro
+        const [userRows] = await pool.query('SELECT is_pro FROM users WHERE email = ?', [userEmail]);
+        const isPro = userRows.length > 0 && userRows[0].is_pro === 1;
+
+        // 2. If not Pro, check trial limit
+        if (!isPro) {
+            const [scanRows] = await pool.query('SELECT COUNT(*) as scanCount FROM scan_history WHERE user_email = ?', [userEmail]);
+            
+            if (scanRows[0].scanCount >= 3) {
+                return res.status(403).json({ 
+                    success: false, 
+                    message: 'Free trial limit reached.', 
+                    limitReached: true 
+                });
+            }
+        }
+
         let appId = targetUrl.trim();
         if (appId.includes('play.google.com')) {
             appId = new URL(appId).searchParams.get('id') || appId;
@@ -430,7 +449,6 @@ app.post('/api/analyze', async (req, res) => {
             else return res.status(404).json({ success: false, message: 'App not found.' });
         }
 
-        // 🆕 Play Store se Asli Naam aur Logo dono nikal rahe hain
         const appDetails = await gplay.app({ appId: appId });
         const appName = appDetails.title || appId;
         const appIcon = appDetails.icon || '';
@@ -473,15 +491,19 @@ app.post('/api/analyze', async (req, res) => {
                 ...Array.from(specificThreats)
             ];
 
-            // 🟢 Yahan se Frontend ko Asli Naam aur Logo bhej rahe hain
             return res.status(200).json({
                 success: true,
-                target: appName,  // Asli Naam
-                icon: appIcon,    // Asli Logo
-                riskScore, status, colorClass: color, threats: finalThreats
+                target: appName,
+                icon: appIcon,
+                riskScore, 
+                status, 
+                colorClass: color, 
+                threats: finalThreats
             });
         });
+
     } catch (error) {
+        console.error("Analysis Error:", error);
         return res.status(500).json({ success: false, message: 'Analysis failed.' });
     }
 });
@@ -628,6 +650,56 @@ app.get('/api/dashboard-stats', async (req, res) => {
     } catch (error) {
         console.error("Database Error:", error);
         res.status(500).json({ success: false, message: "Server database error" });
+    }
+});
+//--Payment Verification--
+app.post('/api/verify-payment', async (req, res) => {
+    const { email, plan } = req.body; // plan = 'monthly' ya 'yearly'
+    if (!email) return res.status(400).json({ success: false, message: 'Email required' });
+
+    try {
+        // Expiry calculation
+        const now = new Date();
+        if (plan === 'yearly') {
+            now.setFullYear(now.getFullYear() + 1); // 1 Year validity
+        } else {
+            now.setMonth(now.getMonth() + 1); // 1 Month validity
+        }
+
+        // Database mein is_pro = 1 aur expiry date update karein
+        await pool.query(
+            'UPDATE users SET is_pro = 1, pro_expiry_date = ? WHERE email = ?',
+            [now, email]
+        );
+
+        res.json({ success: true, message: 'Pro status activated', expiry: now });
+    } catch (err) {
+        console.error("Payment verification error:", err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.post('/api/user-status', async (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ success: false, isPro: false });
+
+    try {
+        const [rows] = await pool.query('SELECT is_pro, pro_expiry_date FROM users WHERE email = ?', [email]);
+        if (rows.length === 0) return res.json({ success: false, isPro: false });
+
+        const user = rows[0];
+        let isPro = user.is_pro === 1;
+        let expiryDate = user.pro_expiry_date ? new Date(user.pro_expiry_date) : null;
+
+        // Agar time khatam ho gaya hai, toh automatic free tier par shift kar do
+        if (isPro && expiryDate && new Date() > expiryDate) {
+            await pool.query('UPDATE users SET is_pro = 0, pro_expiry_date = NULL WHERE email = ?', [email]);
+            isPro = false;
+        }
+
+        res.json({ success: true, isPro: isPro, expiryDate: expiryDate });
+    } catch (err) {
+        res.status(500).json({ success: false, isPro: false });
     }
 });
 

@@ -173,6 +173,17 @@
         const scanBtn = document.getElementById('scanBtn');
         let currentScanData = null; 
 
+        // Global helper to get valid user email safely
+        function getSafeUserEmail() {
+            let email = localStorage.getItem('userEmail');
+            if (!email || email === 'null' || email.includes('undefined')) {
+                const name = localStorage.getItem('userName') || 'user';
+                email = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() + '@fraudshield.com';
+                localStorage.setItem('userEmail', email);
+            }
+            return email;
+        }
+
         // Core execution function for scan
         async function executeScan(targetUrl) {
             if (!targetUrl) return;
@@ -183,18 +194,24 @@
             resultsState.classList.remove('flex');
             loadingState.classList.remove('hidden');
 
+            const userEmail = getSafeUserEmail();
+
             try {
-                const response = await fetch('http://localhost:3000/api/analyze', {
+                const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ targetUrl })
+                    body: JSON.stringify({ targetUrl: targetUrl, email: userEmail })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
                     displayResults(data);
-                } else {
+                } 
+                else if (response.status === 403 || data.limitReached) {
+                    window.location.href = 'upgrade.html';
+                }
+                else {
                     alert('App audit failed: ' + data.message);
                     resetScanner();
                 }
@@ -234,15 +251,15 @@
             localStorage.setItem('fs_history', JSON.stringify(history));
 
             // 2. Sync to Database (MySQL)
-            const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('userName') + '@fraudshield.com';
+            const userEmail = getSafeUserEmail();
             try {
-                await fetch('/api/save-scan', { // Localhost hata kar relative path kar diya best practice ke liye
+                await fetch('/api/save-scan', { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         email: userEmail, 
-                        target: currentScanData.target, // Backend se aaya Asli Naam
-                        icon: currentScanData.icon,     // 🆕 LOGO ADD KIYA (Database mein save hone ke liye)
+                        target: currentScanData.target, 
+                        icon: currentScanData.icon, 
                         riskScore: currentScanData.riskScore,
                         status: currentScanData.status,
                         colorClass: currentScanData.colorClass,
@@ -253,13 +270,11 @@
                 console.error("Failed to sync scan history to database:", err);
             }
 
-            // 3. 🆕 UI Update: Asli Logo aur Naam Dikhana
+            // 3. UI Update: Asli Logo aur Naam Dikhana
             const resultTargetEl = document.getElementById('resultTarget');
-            // Agar backend ne logo bheja hai, toh image tag banega
             const iconHtml = data.icon ? `<img src="${data.icon}" class="w-6 h-6 rounded-md inline-block mr-2 align-middle bg-white/10 p-0.5">` : '';
             resultTargetEl.innerHTML = `${iconHtml}<span class="align-middle">${data.target}</span>`;
             
-            // Baaki purana UI code
             document.getElementById('riskScore').innerText = data.riskScore;
             
             const statusEl = document.getElementById('statusText');
