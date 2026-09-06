@@ -79,12 +79,12 @@
             <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl flex items-center space-x-6 relative overflow-hidden shadow-2xl">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
                 
-                <div class="w-24 h-24 rounded-2xl bg-red-500/20 text-red-400 font-bold text-4xl flex items-center justify-center border-2 border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)] font-mono">
+                <div class="w-24 h-24 rounded-2xl bg-red-500/20 text-red-400 font-bold text-4xl flex items-center justify-center border-2 border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)] font-mono" id="adminAvatarInitials">
                     AD
                 </div>
                 
                 <div class="relative z-10">
-                    <h2 class="text-3xl font-extrabold text-white">System Root Administrator</h2>
+                    <h2 class="text-3xl font-extrabold text-white" id="profileNameDisplay">Loading...</h2>
                     <div class="flex items-center space-x-3 mt-2">
                         <span class="px-3 py-1 bg-surfaceBorder border border-gray-700 rounded-lg text-xs font-mono text-gray-400 uppercase tracking-widest">Role: <span class="text-red-400">SUPER_ADMIN</span></span>
                         <span class="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-lg text-xs font-mono text-red-400 uppercase tracking-widest flex items-center space-x-1.5">
@@ -100,7 +100,7 @@
                 <div class="border-b border-surfaceBorder pb-6 flex items-center justify-between">
                     <div>
                         <h3 class="text-white font-bold text-lg">Direct Master Credentials</h3>
-                        <p class="text-xs text-gray-500 mt-0.5">Unrestricted visibility of root credentials and system keys.</p>
+                        <p class="text-xs text-gray-500 mt-0.5">Unrestricted visibility of root credentials and system keys from database.</p>
                     </div>
                     <div class="w-10 h-10 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-bold text-sm font-mono">
                         ROOT
@@ -110,12 +110,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs">
                     <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
                         <span class="text-gray-500 block uppercase">Administrator Name</span>
-                        <span class="text-white font-bold text-sm">System Root Administrator</span>
+                        <span class="text-white font-bold text-sm" id="adminNameText">Loading...</span>
                     </div>
 
                     <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
                         <span class="text-gray-500 block uppercase">Master Email Access</span>
-                        <span class="text-white font-bold text-sm">admin@fraudshield.ai</span>
+                        <span class="text-white font-bold text-sm" id="adminEmailText">Loading...</span>
                     </div>
 
                     <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
@@ -124,10 +124,10 @@
                     </div>
 
                     <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
-                        <span class="text-gray-500 block uppercase">Plaintext Master Password</span>
+                        <span class="text-gray-500 block uppercase">Password</span>
                         <div class="flex items-center justify-between mt-1">
-                            <span id="adminDisplayPassword" class="text-red-400 font-bold text-sm tracking-wider">FraudShield@Root2026</span>
-                            <button onclick="toggleMasterPassword()" id="eyeBtn" class="text-gray-400 hover:text-white transition-all text-xs bg-surfaceBorder/40 px-2.5 py-1 rounded-lg cursor-pointer">Hide</button>
+                            <span id="adminDisplayPassword" class="text-red-400 font-bold text-sm tracking-wider">••••••••••••••••</span>
+                            <button onclick="toggleMasterPassword()" id="eyeBtn" class="text-gray-400 hover:text-white transition-all text-xs bg-surfaceBorder/40 px-2.5 py-1 rounded-lg cursor-pointer">Show</button>
                         </div>
                     </div>
                 </div>
@@ -137,21 +137,76 @@
     </div>
 
     <script>
-        let isPasswordVisible = true;
+        let fetchedPassword = "**************"; // Default masked password
+        let isPasswordVisible = false;
+
+        async function loadAdminProfileFromDB() {
+            const currentEmail = localStorage.getItem('userEmail');
+            if (!currentEmail) {
+                // Fallback to localStorage data if email is not available
+                const fallbackName = localStorage.getItem('userName') || 'System Root Administrator';
+                document.getElementById('profileNameDisplay').textContent = fallbackName;
+                document.getElementById('adminNameText').textContent = fallbackName;
+                document.getElementById('adminEmailText').textContent = 'admin@fraudshield.ai';
+                document.getElementById('adminAvatarInitials').textContent = fallbackName.substring(0, 2).toUpperCase();
+                return;
+            }
+
+            try {
+                // Backend se profile data fetch karne ki request
+                const response = await fetch(`http://localhost:3000/api/admin/profile?email=${encodeURIComponent(currentEmail)}`);
+                const data = await response.json();
+
+                if (data.success && data.admin) {
+                    const admin = data.admin;
+                    document.getElementById('profileNameDisplay').textContent = admin.full_name;
+                    document.getElementById('adminNameText').textContent = admin.full_name;
+                    document.getElementById('adminEmailText').textContent = admin.email;
+                    
+                    // Avatar initials set karein
+                    const initials = admin.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                    document.getElementById('adminAvatarInitials').textContent = initials;
+
+                    // Database se mila hua password store karein
+                    if (admin.password) {
+                        fetchedPassword = admin.password;
+                    }
+                } else {
+                    // Fallback to localStorage values
+                    const fallbackName = localStorage.getItem('userName') || 'System Root Administrator';
+                    document.getElementById('profileNameDisplay').textContent = fallbackName;
+                    document.getElementById('adminNameText').textContent = fallbackName;
+                    document.getElementById('adminEmailText').textContent = currentEmail;
+                    document.getElementById('adminAvatarInitials').textContent = fallbackName.substring(0, 2).toUpperCase();
+                }
+            } catch (err) {
+                console.error("Failed to connect to server for admin profile:", err);
+                const fallbackName = localStorage.getItem('userName') || 'System Root Administrator';
+                document.getElementById('profileNameDisplay').textContent = fallbackName;
+                document.getElementById('adminNameText').textContent = fallbackName;
+                document.getElementById('adminEmailText').textContent = currentEmail;
+                document.getElementById('adminAvatarInitials').textContent = fallbackName.substring(0, 2).toUpperCase();
+            }
+        }
+
         function toggleMasterPassword() {
             const passSpan = document.getElementById('adminDisplayPassword');
             const eyeBtn = document.getElementById('eyeBtn');
             
             if (isPasswordVisible) {
-                passSpan.textContent = "••••••••••••••••";
+                passSpan.textContent = "****************";
                 eyeBtn.textContent = "Show";
                 isPasswordVisible = false;
             } else {
-                passSpan.textContent = "FraudShield@Root2026";
+                passSpan.textContent = fetchedPassword;
                 eyeBtn.textContent = "Hide";
                 isPasswordVisible = true;
             }
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAdminProfileFromDB();
+        });
     </script>
 </body>
 </html>

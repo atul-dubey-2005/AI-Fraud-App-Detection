@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const nodemailer = require('nodemailer');
 const mysql = require('mysql2/promise');
@@ -24,7 +25,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Session Middleware setup
 app.use(session({
-    secret: 'fraudshield2026TCSCPROJECTG620',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));
@@ -34,18 +35,24 @@ app.use(passport.session());
 
 // --- Database Connection ---
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'FraudShieldDB'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
+// Database connection test check
+pool.query('SELECT 1')
+    .then(() => console.log('✅ Database connected successfully!'))
+    .catch(err => console.error('❌ Database connection failed:', err.message));
 
+    
 // --- Gmail SMTP Setup (App Password) ---
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'fraudshield2026@gmail.com',
-        pass: 'jumkfbymellmrffw'
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD
     }
 });
 
@@ -66,9 +73,9 @@ passport.deserializeUser(async (email, done) => {
 // PASSPORT: GOOGLE STRATEGY
 // ==========================================
 passport.use(new GoogleStrategy({
-    clientID: '821973187720-8aj2shi47814cetse8jj16scrv9frcl4.apps.googleusercontent.com',
-    clientSecret: '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',
-    callbackURL: 'http://localhost:3000/auth/google/callback'
+    clientID: process.env.GOOGLE_CLIENT_ID,
+clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+callbackURL: process.env.GOOGLE_CALLBACK_URL
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         const email = profile.emails[0].value;
@@ -96,9 +103,9 @@ passport.use(new GoogleStrategy({
 // PASSPORT: GITHUB STRATEGY
 // ==========================================
 passport.use(new GitHubStrategy({
-    clientID: 'Ov23li9Sihlgj33jrkWG',
-    clientSecret: '8807cbe5653178643003ae8e6c0d2ff931de2077',
-    callbackURL: 'http://localhost:3000/auth/github/callback',
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: process.env.GITHUB_CALLBACK_URL,
     scope: ['user:email']
 }, async (accessToken, refreshToken, profile, done) => {
     try {
@@ -621,23 +628,45 @@ app.post('/api/admin/train-model', upload.single('dataset'), async (req, res) =>
     });
 });
 
+// --- Admin: Get Profile Credentials API ---
+app.get('/api/admin/profile', async (req, res) => {
+    const email = req.query.email;
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Email query parameter required' });
+    }
+
+    try {
+        const [rows] = await pool.query('SELECT full_name, email, password, role FROM users WHERE email = ?', [email]);
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Admin profile not found' });
+        }
+
+        res.status(200).json({ success: true, admin: rows[0] });
+    } catch (err) {
+        console.error('Admin Profile Fetch Error:', err);
+        res.status(500).json({ success: false, message: 'Database server error' });
+    }
+});
+
 app.get('/api/dashboard-stats', async (req, res) => {
     try {
-        // 1. Total Scanned Apps
         const [totalScansRows] = await pool.query('SELECT COUNT(*) as total FROM scan_history');
         const totalScanned = totalScansRows[0].total;
 
-        // 2. Fraud vs Safe
         const [fraudRows] = await pool.query("SELECT COUNT(*) as count FROM scan_history WHERE LOWER(status) LIKE '%fraud%' OR LOWER(status) LIKE '%malicious%'");
         const totalFraud = fraudRows[0].count;
         const totalSafe = totalScanned - totalFraud;
 
-        // 3. Total Users
         const [userRows] = await pool.query('SELECT COUNT(*) as total FROM users');
         const totalUsers = userRows[0].total;
 
-        // 4. 🔥 YAHAN CHANGE KIYA HAI: 'app_icon' database se manga liya
-        const [recentRows] = await pool.query('SELECT target_url as app_name, app_icon, status, user_email as scanned_by FROM scan_history ORDER BY id DESC LIMIT 3');
+        const [trendingRows] = await pool.query(`
+            SELECT target_url as app_name, app_icon, status, COUNT(*) as scan_count 
+            FROM scan_history 
+            GROUP BY target_url, app_icon, status 
+            ORDER BY scan_count DESC 
+            LIMIT 3
+        `);
 
         res.json({
             success: true,
@@ -645,7 +674,7 @@ app.get('/api/dashboard-stats', async (req, res) => {
             totalFraud,
             totalSafe,
             totalUsers,
-            recentApps: recentRows
+            recentApps: trendingRows
         });
     } catch (error) {
         console.error("Database Error:", error);
