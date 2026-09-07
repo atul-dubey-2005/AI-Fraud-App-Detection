@@ -204,7 +204,7 @@
             btn.textContent = "SENDING OTP...";
 
             try {
-                const response = await fetch('http://localhost:3000/api/send-update-otp', {
+                const response = await fetch('/api/send-update-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email })
@@ -237,7 +237,7 @@
             btn.textContent = "VERIFYING...";
 
             try {
-                const response = await fetch('http://localhost:3000/api/verify-update-otp', {
+                const response = await fetch('/api/verify-update-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, otp, newName })
@@ -284,7 +284,7 @@
             btn.textContent = "UPDATING...";
 
             try {
-                const response = await fetch('http://localhost:3000/api/change-password', {
+                const response = await fetch('/api/change-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, currentPassword, newPassword })

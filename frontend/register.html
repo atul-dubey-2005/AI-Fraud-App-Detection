@@ -198,7 +198,7 @@
 
             try {
                 // Node.js Backend API Call for Sign Up
-                const response = await fetch('http://localhost:3000/api/register', {
+                const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ full_name: fullName, email, password })
@@ -238,7 +238,7 @@
 
             try {
                 // Node.js Backend API Call for OTP Verification
-                const response = await fetch('http://localhost:3000/api/verify-otp', {
+                const response = await fetch('/api/verify-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: registeredEmail, otp: otpToken })
