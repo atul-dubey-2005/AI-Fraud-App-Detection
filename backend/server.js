@@ -21,7 +21,12 @@ const app = express();
 // --- Middlewares ---
 app.use(express.json());
 app.use(cors());
+
+// Root level ke sabhi folders ko properly serve karne ke liye:
 app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/css', express.static(path.join(__dirname, '../css')));
+app.use('/js', express.static(path.join(__dirname, '../js')));
+app.use('/videos', express.static(path.join(__dirname, '../videos')));
 
 // Session Middleware setup
 app.use(session({
