@@ -65,11 +65,11 @@ testConnection();
 
 module.exports = pool;
     
-// --- Gmail SMTP Setup (App Password) ---
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, // Port 465 ke liye true hona chahiye
+    port: 587,           // 465 ki jagah 587 use karein
+    secure: false,       // Port 587 ke liye isko 'false' rakhna zaroori hai
+    requireTLS: true,    // TLS enable karein
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
@@ -77,10 +77,11 @@ const transporter = nodemailer.createTransport({
     tls: {
         rejectUnauthorized: false
     },
-    family: 4, // 👇 BAS YEH NAYI LINE ADD KARNI HAI (Force IPv4)
-    connectionTimeout: 10000, 
+    family: 4,
+    connectionTimeout: 10000,
     socketTimeout: 10000
 });
+
 
 
 // ==========================================
