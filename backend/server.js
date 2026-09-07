@@ -374,12 +374,16 @@ app.get('/auth/google/callback',
     }
 );
 
+// 👇 BAS YEH EK LINE ADD KARNI HAI 👇
+app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+
 app.get('/auth/github/callback', 
     passport.authenticate('github', { failureRedirect: '/login.html' }),
     (req, res) => { 
         res.redirect(`/dashboard.html?oauth=true&name=${encodeURIComponent(req.user.full_name)}&role=${req.user.role}&email=${encodeURIComponent(req.user.email)}`); 
     }
 );
+
 
 // --- Profile: Change Password API ---
 app.post('/api/change-password', async (req, res) => {
