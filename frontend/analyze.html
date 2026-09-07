@@ -174,20 +174,59 @@
         let currentScanData = null; 
 
         document.getElementById('downloadReportBtn').addEventListener('click', () => {
-    // Yahan report ka content define karein jo text file mein aayega
-    const reportContent = `--- AI FRAUD DETECTION REPORT ---\n` +
-                          `Generated On: ${new Date().toLocaleString()}\n\n` +
-                          `Status: App Analysis Complete\n` +
-                          `Details: All security checks and scan logs processed successfully.\n`;
+    const activeScanData = window.currentScanResult || (typeof latestScanResult !== 'undefined' ? latestScanResult : null);
 
-    // Blob create karke file download trigger karein
-    const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
+    if (!activeScanData) {
+        alert('Download ke liye koi current scan report available nahi hai!');
+        return;
+    }
+
+    const threatsFormatted = activeScanData.threats && activeScanData.threats.length > 0 
+        ? activeScanData.threats.map((t, i) => `   [${i + 1}] ${t}`).join('\n\n') 
+        : '   [0] No critical threat signatures or anomalies detected in current logs.';
+
+    const reportText = `====================================================================
+               FRAUDSHIELD AI - ENTERPRISE APP SECURITY AUDIT
+====================================================================
+
+[ AUDIT METADATA ]
+• Target Application : ${activeScanData.appName || activeScanData.target}
+• Package Identifier : ${activeScanData.target}
+• Timestamp          : ${activeScanData.date || new Date().toLocaleString()}
+• Audit Status       : ${(activeScanData.status || 'SAFE').toUpperCase()}
+• Risk Index Score   : ${activeScanData.riskScore} / 100 (Evaluated via Neural Engine v4.2)
+
+--------------------------------------------------------------------
+[ EXECUTIVE SUMMARY ]
+This application was subjected to an automated heuristic and sentiment-
+based behavioral analysis using 100+ recent Play Store feedback vectors.
+The computed Risk Index of ${activeScanData.riskScore}/100 categorizes this software 
+as a '${activeScanData.status}' asset within the FraudShield registry.
+
+--------------------------------------------------------------------
+[ DETECTED THREAT VECTORS & SIGNATURES ]
+${threatsFormatted}
+
+--------------------------------------------------------------------
+[ RECOMMENDED MITIGATION STRATEGIES ]
+1. Refrain from inputting sensitive credentials, banking details, or OTPs if high-risk indicators are present.
+2. Verify package signing certificates and developer credentials directly through official distribution channels.
+3. Monitor network egress traffic for unauthorized background telemetry or data harvesting.
+
+====================================================================
+CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
+====================================================================`;
+
+    const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'ai-fraud-report.txt';
+    a.download = `Security_Audit_Report_${(activeScanData.appName || activeScanData.target).replace(/[^a-z0-9]/gi, '_')}_${activeScanData.riskScore}.txt`;
     document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});
     
     // Cleanup
     window.URL.revokeObjectURL(url);
