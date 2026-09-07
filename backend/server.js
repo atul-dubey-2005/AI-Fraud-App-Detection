@@ -330,7 +330,14 @@ app.post('/api/contact', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to send message. Server error.' });
     }
 });
-
+app.get('/api/live-stats', async (req, res) => {
+    try {
+        const [totalScansRows] = await pool.query('SELECT COUNT(*) as total FROM scan_history');
+        res.json({ success: true, totalScanned: totalScansRows[0].total });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+});
 // --- Admin API ---
 app.get('/api/admin/users', async (req, res) => {
     try {
