@@ -77,9 +77,11 @@ const transporter = nodemailer.createTransport({
     tls: {
         rejectUnauthorized: false
     },
-    connectionTimeout: 10000, // 10 second timeout taaki request 2 minute hang na ho
+    family: 4, // 👇 BAS YEH NAYI LINE ADD KARNI HAI (Force IPv4)
+    connectionTimeout: 10000, 
     socketTimeout: 10000
 });
+
 
 // ==========================================
 // PASSPORT: USER SERIALIZATION
