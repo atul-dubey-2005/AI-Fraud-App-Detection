@@ -154,7 +154,7 @@
 
             try {
                 // Backend se profile data fetch karne ki request
-                const response = await fetch(`http://localhost:3000/api/admin/profile?email=${encodeURIComponent(currentEmail)}`);
+                const response = await fetch(`/api/admin/profile?email=${encodeURIComponent(currentEmail)}`);
                 const data = await response.json();
 
                 if (data.success && data.admin) {

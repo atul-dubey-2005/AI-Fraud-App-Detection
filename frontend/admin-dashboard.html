@@ -260,7 +260,7 @@
 
         async function fetchAllUsers() {
             try {
-                const response = await fetch('http://localhost:3000/api/admin/users');
+                const response = await fetch('/api/admin/users');
                 const data = await response.json();
                 
                 if (data.success) {
@@ -309,7 +309,7 @@
 
         async function fetchAllSystemScans() {
             try {
-                const response = await fetch('http://localhost:3000/api/admin/all-scans');
+                const response = await fetch('/api/admin/all-scans');
                 const data = await response.json();
 
                 if (data.success) {
@@ -320,7 +320,7 @@
                     const threatCount = scans.filter(s => s.status.toLowerCase() === 'high risk' || s.status.toLowerCase() === 'threat').length;
                     const statTotalThreats = document.getElementById('stat-total-threats');
                     if(statTotalThreats) statTotalThreats.innerText = threatCount;
-
+                    
                     let scanRows = '';
                     if (scans.length === 0) {
                         scanRows = `<tr><td colspan="5" class="py-8 text-center text-gray-500 font-mono text-xs">No scan logs recorded in database.</td></tr>`;
@@ -347,7 +347,7 @@
 
         async function updateStatus(userId, newStatus) {
             try {
-                const res = await fetch('http://localhost:3000/api/admin/update-status', {
+                const res = await fetch('/api/admin/update-status', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId, status: newStatus })
@@ -393,7 +393,7 @@
         statusMessage.innerText = "⚡ Uploading dataset to server and executing incremental training...";
 
         try {
-            const response = await fetch('http://localhost:3000/api/admin/train-model', {
+            const response = await fetch('/api/admin/train-model', {
                 method: 'POST',
                 body: formData
             });
