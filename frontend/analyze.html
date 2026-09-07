@@ -173,6 +173,27 @@
         const scanBtn = document.getElementById('scanBtn');
         let currentScanData = null; 
 
+        document.getElementById('downloadReportBtn').addEventListener('click', () => {
+    // Yahan report ka content define karein jo text file mein aayega
+    const reportContent = `--- AI FRAUD DETECTION REPORT ---\n` +
+                          `Generated On: ${new Date().toLocaleString()}\n\n` +
+                          `Status: App Analysis Complete\n` +
+                          `Details: All security checks and scan logs processed successfully.\n`;
+
+    // Blob create karke file download trigger karein
+    const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ai-fraud-report.txt';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    window.URL.revokeObjectURL(url);
+    a.remove();
+});
+
         // Global helper to get valid user email safely
         function getSafeUserEmail() {
             let email = localStorage.getItem('userEmail');

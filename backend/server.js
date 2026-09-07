@@ -67,12 +67,17 @@ module.exports = pool;
     
 // --- Gmail SMTP Setup (App Password) ---
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // Port 465 ke liye true hona chahiye
     auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD
+        pass: process.env.SMTP_PASS
     },
-    connectionTimeout: 10000, // Fail after 10 seconds instead of hanging
+    tls: {
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 10000, // 10 second timeout taaki request 2 minute hang na ho
     socketTimeout: 10000
 });
 
