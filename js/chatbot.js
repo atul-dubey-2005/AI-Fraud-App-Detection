@@ -7,6 +7,14 @@ class FraudShieldAiChatbot extends HTMLElement {
   connectedCallback() {
     this.render();
     this.initEvents();
+
+    // Page load hone ke 1 second baad welcome tooltip/bubble ko animate karke dikhana
+    setTimeout(() => {
+      const tooltip = this.shadowRoot.getElementById('welcome-tooltip');
+      if (tooltip) {
+        tooltip.classList.add('show');
+      }
+    }, 1000);
   }
 
   render() {
@@ -19,7 +27,7 @@ class FraudShieldAiChatbot extends HTMLElement {
           font-family: 'Inter', sans-serif, system-ui;
         }
 
-        /* Logo Attention Animation */
+        /* Logo Attention Animation (Halka sa pulse/bounce) */
         @keyframes logoAttention {
           0%, 100% {
             transform: scale(1) translateY(0);
@@ -32,10 +40,16 @@ class FraudShieldAiChatbot extends HTMLElement {
         }
 
         /* Floating Toggle Button */
-        .chat-toggle-btn {
+        .chat-toggle-wrapper {
           position: fixed;
           bottom: 20px;
           right: 20px;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+        }
+
+        .chat-toggle-btn {
           width: 56px;
           height: 56px;
           background: #00ff66;
@@ -47,7 +61,6 @@ class FraudShieldAiChatbot extends HTMLElement {
           align-items: center;
           justify-content: center;
           box-shadow: 0 4px 20px rgba(0, 255, 102, 0.4);
-          z-index: 9999;
           animation: logoAttention 2.5s infinite ease-in-out;
           transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
         }
@@ -55,7 +68,66 @@ class FraudShieldAiChatbot extends HTMLElement {
         .chat-toggle-btn:hover {
           transform: scale(1.12);
           background: #00cc52;
-          animation: none; /* Hover par animation pause ho jayegi taaki click karne mein asani ho */
+          animation: none;
+        }
+
+        /* Welcome Tooltip Bubble with Indicator Arrow */
+        .welcome-tooltip {
+          position: absolute;
+          right: 70px;
+          bottom: 5px;
+          background: #121214;
+          border: 1px solid #00ff66/40;
+          border-color: rgba(0, 255, 102, 0.4);
+          color: #ffffff;
+          padding: 10px 14px;
+          border-radius: 12px;
+          font-size: 0.8rem;
+          width: 220px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          transform: translateX(10px) scale(0.95);
+          pointer-events: none;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .welcome-tooltip.show {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+          pointer-events: auto;
+        }
+
+        .welcome-tooltip .tooltip-title {
+          font-weight: 700;
+          color: #00ff66;
+          margin-bottom: 2px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .welcome-tooltip .close-tip {
+          background: none;
+          border: none;
+          color: #9ca3af;
+          cursor: pointer;
+          font-size: 0.9rem;
+        }
+        .welcome-tooltip .close-tip:hover {
+          color: #fff;
+        }
+
+        /* Tooltip Arrow pointing to button */
+        .welcome-tooltip::after {
+          content: '';
+          position: absolute;
+          right: -6px;
+          bottom: 18px;
+          width: 0;
+          height: 0;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-left: 6px solid #121214;
         }
 
         /* Chat Container with Smooth Pop-up Animation */
@@ -219,10 +291,21 @@ class FraudShieldAiChatbot extends HTMLElement {
         }
       </style>
 
-      <!-- Floating Bubble Button with Logo Animation -->
-      <button class="chat-toggle-btn" id="toggle-btn" title="AI Chat Assistant">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-      </button>
+      <!-- Floating Bubble Wrapper with Intro Tooltip -->
+      <div class="chat-toggle-wrapper">
+        <!-- Intro Tooltip Bubble -->
+        <div class="welcome-tooltip" id="welcome-tooltip">
+          <div class="tooltip-title">
+            <span>FraudShield AI 🛡️</span>
+            <button class="close-tip" id="close-tip">&times;</button>
+          </div>
+          <p style="color: #d1d5db; line-height: 1.3;">Hey! Click here to chat with me & protect your apps.</p>
+        </div>
+
+        <button class="chat-toggle-btn" id="toggle-btn" title="AI Chat Assistant">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </button>
+      </div>
 
       <!-- Chat Box Window -->
       <div class="chat-container" id="chat-container">
@@ -252,11 +335,15 @@ class FraudShieldAiChatbot extends HTMLElement {
   initEvents() {
     const toggleBtn = this.shadowRoot.getElementById('toggle-btn');
     const closeBtn = this.shadowRoot.getElementById('close-btn');
+    const closeTipBtn = this.shadowRoot.getElementById('close-tip');
     const chatContainer = this.shadowRoot.getElementById('chat-container');
+    const tooltip = this.shadowRoot.getElementById('welcome-tooltip');
     const input = this.shadowRoot.getElementById('user-input');
     const sendBtn = this.shadowRoot.getElementById('send-btn');
 
+    // Toggle open/close chat box & hide tooltip on open
     toggleBtn.addEventListener('click', () => {
+      tooltip.classList.remove('show'); // Tooltip hide ho jayega jab user click karega
       chatContainer.classList.toggle('open');
       if (chatContainer.classList.contains('open')) {
         input.focus();
@@ -265,6 +352,12 @@ class FraudShieldAiChatbot extends HTMLElement {
 
     closeBtn.addEventListener('click', () => {
       chatContainer.classList.remove('open');
+    });
+
+    // Tooltip close button
+    closeTipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      tooltip.classList.remove('show');
     });
 
     sendBtn.addEventListener('click', () => this.sendMessage());
@@ -297,7 +390,7 @@ class FraudShieldAiChatbot extends HTMLElement {
         this.appendMessage('Koyi response nahi mila.', 'bot-message');
       }
     } catch (error) {
-      this.appendMessage('Server se connect nahi ho paya.', 'bot-message');
+        this.appendMessage('Server se connect nahi ho paya.', 'bot-message');
     } finally {
       this.showTyping(false);
     }
