@@ -19,6 +19,18 @@ class FraudShieldAiChatbot extends HTMLElement {
           font-family: 'Inter', sans-serif, system-ui;
         }
 
+        /* Logo Attention Animation */
+        @keyframes logoAttention {
+          0%, 100% {
+            transform: scale(1) translateY(0);
+            box-shadow: 0 4px 20px rgba(0, 255, 102, 0.4);
+          }
+          50% {
+            transform: scale(1.08) translateY(-4px);
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.7);
+          }
+        }
+
         /* Floating Toggle Button */
         .chat-toggle-btn {
           position: fixed;
@@ -36,12 +48,14 @@ class FraudShieldAiChatbot extends HTMLElement {
           justify-content: center;
           box-shadow: 0 4px 20px rgba(0, 255, 102, 0.4);
           z-index: 9999;
+          animation: logoAttention 2.5s infinite ease-in-out;
           transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
         }
 
         .chat-toggle-btn:hover {
-          transform: scale(1.08);
+          transform: scale(1.12);
           background: #00cc52;
+          animation: none; /* Hover par animation pause ho jayegi taaki click karne mein asani ho */
         }
 
         /* Chat Container with Smooth Pop-up Animation */
@@ -205,9 +219,9 @@ class FraudShieldAiChatbot extends HTMLElement {
         }
       </style>
 
-      <!-- Floating Bubble Button -->
+      <!-- Floating Bubble Button with Logo Animation -->
       <button class="chat-toggle-btn" id="toggle-btn" title="AI Chat Assistant">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'"></path><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
       </button>
 
       <!-- Chat Box Window -->
@@ -221,7 +235,7 @@ class FraudShieldAiChatbot extends HTMLElement {
         </div>
         
         <div class="chat-messages" id="chat-messages">
-          <div class="message bot-message">Hello! Main FraudShield AI Assistant hoon. Aapki kya madad kar sakta hoon?</div>
+          <div class="message bot-message">Hey! Main FraudShield AI hoon. Aapki kya madad kar sakta hoon?</div>
           <div class="typing-indicator" id="typing-indicator">FraudShield AI soch raha hai...</div>
         </div>
         
@@ -242,7 +256,6 @@ class FraudShieldAiChatbot extends HTMLElement {
     const input = this.shadowRoot.getElementById('user-input');
     const sendBtn = this.shadowRoot.getElementById('send-btn');
 
-    // Toggle open/close
     toggleBtn.addEventListener('click', () => {
       chatContainer.classList.toggle('open');
       if (chatContainer.classList.contains('open')) {
