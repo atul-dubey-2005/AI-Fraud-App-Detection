@@ -5,9 +5,9 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2309090b' stroke='%2300ff66' stroke-width='2'/><path d='M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z' fill='rgba(0,255,102,0.15)' stroke='%2300ff66' stroke-width='1.5'/><text x='16' y='17.5' font-family='sans-serif' font-weight='900' font-size='11' fill='%23ffffff' text-anchor='middle'>FS</text></svg>">
     <link rel="stylesheet" href="/css/style.css">
     <!-- Supabase JS Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/js/script.js"></script>
-    <script src="js/chatbot.js"></script>
+<script src="js/chatbot.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FraudShield</title>
@@ -36,7 +36,6 @@
     </script>
 </head>
 <body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row overflow-x-hidden selection:bg-primary selection:text-black">
-    
     <!-- Mobile Header Bar -->
     <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-gray-800 flex justify-between items-center p-4 lg:hidden">
         <div class="flex items-center space-x-3">
@@ -53,8 +52,10 @@
     <!-- Overlay Background -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
 
+
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out h-screen">
+   <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out h-screen">
+
         <div>
             <!-- Logo -->
             <div class="p-6 flex items-center space-x-3">
@@ -69,12 +70,13 @@
 
             <!-- Navigation -->
             <nav class="px-3 space-y-1.5">
-                <a href="index.html" class="nav-item flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer" data-target="dashboard.html">
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Home</span>
-                    </div>
-                </a>
+
+               <a href="index.html" class="nav-item flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer" data-target="dashboard.html">
+    <div class="flex items-center space-x-3">
+        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Home</span>
+    </div>
+</a>
 
                 <!-- Analyze App -->
                 <a href="analyze.html" id="analyze-link" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
@@ -82,28 +84,29 @@
                         <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
                         <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Analyze App</span>
                     </div>
+                    <!-- Lock Icon -->
                     <svg id="lock-icon" class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </a>
 
-                <!-- Reports Link -->
-                <a href="login.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Reports</span>
-                    </div>
-                    <svg class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                </a>
+                <!-- Reports Link Fix -->
+<a href="login.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
+    <div class="flex items-center space-x-3">
+        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Reports</span>
+    </div>
+    <svg class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+</a>
 
-                <!-- History Link -->
-                <a href="login.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">History</span>
-                    </div>
-                    <svg class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                </a>
+<!-- History Link Fix -->
+<a href="login.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
+    <div class="flex items-center space-x-3">
+        <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">History</span>
+    </div>
+    <svg class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+</a>
 
-                <div class="h-3"></div>
+                <div class="h-3"></div> <!-- Spacer -->
 
                 <!-- How to Detect -->
                 <a href="#how-to-detect" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
@@ -128,14 +131,13 @@
                     <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Contact</span>
                 </a>
-                
-                <!-- Terms -->
                 <a href="#terms" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
-                    <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Terms</span>
-                </a>
+    <!-- Document/Terms SVG Icon -->
+    <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    </svg>
+    <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Terms</span>
+</a>
             </nav>
         </div>
 
@@ -155,21 +157,24 @@
     <main class="flex-1 overflow-y-auto flex flex-col pt-16 lg:pt-0 lg:ml-56 w-full">
 
         <!-- Header -->
-        <header class="flex justify-end items-center p-4 lg:p-6 space-x-3 lg:space-x-4 shrink-0">
-            <a href="register.html" class="px-4 lg:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-xs lg:text-sm font-bold tracking-wide">
-                <span>SIGNUP</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </a>
-            <a href="login.html" class="px-4 lg:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-xs lg:text-sm font-bold tracking-wide">
-                <span>LOGIN</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </a>
-        </header>
+<header class="flex justify-end items-center p-4 lg:p-6 space-x-3 lg:space-x-4 shrink-0">
+    <!-- Signup Button (ID removed) -->
+    <a href="register.html" class="px-4 lg:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-xs lg:text-sm font-bold tracking-wide">
+        <span>SIGNUP</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+    </a>
+
+    <!-- Login Button (ID removed) -->
+    <a href="login.html" class="px-4 lg:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-xs lg:text-sm font-bold tracking-wide">
+        <span>LOGIN</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+    </a>
+</header>
 
         <!-- Hero Section -->
-        <div class="px-6 lg:px-12 pb-8 pt-6 lg:pt-2 flex flex-col lg:flex-row items-center justify-between min-h-[500px] lg:min-h-[657px]">
+        <div class="px-6 lg:px-12 pb-12 pt-6 lg:pt-2 flex flex-col lg:flex-row items-center justify-between min-h-[657px]">
             <!-- Text Content -->
-            <div class="lg:w-1/2 space-y-5 text-left w-full mt-2 lg:mt-0">
+            <div class="lg:w-1/2 space-y-6 text-left w-full">
                 <h1 class="text-3xl sm:text-4xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
                     DETECTING <br class="hidden sm:inline">
                     FRAUDULENT APPS <br class="hidden sm:inline">
@@ -181,33 +186,33 @@
                 </p>
 
                 <!-- Search Bar -->
-                <div class="relative max-w-xl mt-6">
+                <div class="relative max-w-xl mt-8">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="text" placeholder="Search any mobile application..." class="w-full bg-surface border border-gray-800 rounded-full py-3.5 pl-12 pr-32 sm:pr-40 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors">
+                    <input type="text" placeholder="Search any mobile application..." class="w-full bg-surface border border-gray-800 rounded-full py-4 pl-12 pr-32 sm:pr-40 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors">
                     <a href="login.html" class="absolute inset-y-1.5 right-1.5 bg-primary hover:bg-primary-dark text-black font-bold px-4 sm:px-6 rounded-full flex items-center justify-center space-x-1 sm:space-x-2 transition-colors cursor-pointer text-xs sm:text-sm">
                         <span>ANALYZE</span>
                         <svg class="w-4 h-4 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </a>
                 </div>
 
-                <div class="pt-2 flex flex-row items-center gap-4">
-                    <!-- Watch Demo Link -->
-                    <a href="javascript:void(0)" onclick="openDemoModal()" id="watchDemoBtn" class="flex-1 sm:flex-none px-4 lg:px-6 py-2.5 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center justify-center space-x-2 text-xs lg:text-sm font-semibold tracking-wider transition-colors cursor-pointer text-center">
-                        <span>WATCH DEMO</span>
-                        <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </a>
+                <div class="pt-4 flex flex-row items-center gap-4">
+    <!-- Watch Demo Link -->
+<a href="javascript:void(0)" onclick="openDemoModal()" id="watchDemoBtn" class="flex-1 sm:flex-none px-5 lg:px-6 py-3 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center justify-center space-x-2 text-xs lg:text-sm font-semibold tracking-wider transition-colors cursor-pointer text-center">
+    <span>WATCH DEMO</span>
+    <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+</a>
 
-                    <!-- Free Trial Link -->
-                    <a href="register.html" class="flex-1 sm:flex-none px-4 lg:px-6 py-2.5 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center justify-center space-x-2 text-xs lg:text-sm font-semibold tracking-wider transition-colors cursor-pointer text-center">
-                        <span>FREE TRIAL(Signup)</span>
-                        <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </a>
-                </div>
+    <!-- Free Trial Link -->
+    <a href="register.html" class="flex-1 sm:flex-none px-5 lg:px-6 py-3 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center justify-center space-x-2 text-xs lg:text-sm font-semibold tracking-wider transition-colors cursor-pointer text-center">
+        <span>FREE TRIAL(Signup)</span>
+        <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </a>
+</div>
             </div>
 
-            <!-- Animated Mobile Graphic (Hidden on Mobile, Visible on PC) -->
+            <!-- Animated Mobile Graphic (SMALLER VERSION) -->
             <div class="lg:w-1/2 hidden lg:flex justify-center mt-16 lg:mt-0 relative">
                 <!-- Radar Rings -->
                 <div class="radar-ring ring-1"></div>
@@ -224,175 +229,799 @@
 
                 <!-- Phone Container -->
                 <div class="phone-container relative w-48 h-[350px] border-[3px] border-gray-800 rounded-[2rem] bg-[#09090b]/80 backdrop-blur-sm shadow-[0_0_50px_rgba(0,255,102,0.1)] overflow-hidden flex flex-col items-center justify-center">
+
+                    <!-- Top Notch -->
                     <div class="absolute top-0 w-24 h-5 bg-gray-800 rounded-b-xl"></div>
+
+                    <!-- Scanner Line Animation -->
                     <div class="scanner-line"></div>
+
                     <div class="absolute top-8 text-[9px] text-gray-400 tracking-[0.3em] font-medium">. . . S C A N . . .</div>
+
+                    <!-- Glowing Shield Graphic -->
                     <div class="w-24 h-24 rounded-2xl border-2 border-primary bg-primary/10 flex items-center justify-center shadow-[0_0_30px_rgba(0,255,102,0.3)] relative">
-                        <div class="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
-                        <svg class="w-12 h-12 text-primary relative z-10" viewBox="0 0 32 32">
-                            <rect width="32" height="32" rx="8" fill="#09090b" stroke="#00ff66" stroke-width="2"></rect>
-                            <path d="M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z" fill="rgba(0,255,102,0.15)" stroke="#00ff66" stroke-width="1.5"></path>
-                            <text x="16" y="17.5" font-family="sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">FS</text>
-                        </svg>
-                    </div>
+    <div class="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
+    <svg class="w-12 h-12 text-primary relative z-10" viewBox="0 0 32 32">
+        <rect width="32" height="32" rx="8" fill="#09090b" stroke="#00ff66" stroke-width="2"></rect>
+        <path d="M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z" fill="rgba(0,255,102,0.15)" stroke="#00ff66" stroke-width="1.5"></path>
+                <text x="16" y="17.5" font-family="sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">FS</text>
+    </svg>
+</div>
+
+                    <!-- Small code text inside phone -->
                     <div class="absolute bottom-6 left-5 text-[12px] text-gray-600 font-mono">81101</div>
                     <div class="absolute bottom-6 right-5 text-[12px] text-gray-600 font-mono">81011</div>
                 </div>
             </div>
         </div>
+<!-- ============================================== -->
+<!-- 1. STATS DASHBOARD SECTION -->
+<!-- ============================================== -->
+<div class="px-6 lg:px-12 mb-10 mt-6 border-t border-gray-800/60">
 
-        <!-- 1. STATS DASHBOARD SECTION -->
-        <div class="px-6 lg:px-12 mb-6 mt-2 border-t border-gray-800/60">
-            <div class="mb-3 mt-4 flex items-center justify-between ">
-                <div class="flex items-center space-x-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-background border border-gray-800 flex items-center justify-center">
-                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                    </div>
-                    <h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
-                        <span class="text-primary tracking-wider">LIVE</span> 
-                        <span class="text-gray-500">:</span> 
-                        <span class="text-white">DATA OVERVIEW</span>
-                    </h2>
-                </div>
+    <!-- NEW: DATA HEADING SECTION -->
+    <div class="mb-6 mt-10 flex items-center justify-between ">
+        <div class="flex items-center space-x-2.5">
+            <!-- Data/Database Icon Box -->
+            <div class="w-8 h-8 rounded-lg bg-background border border-gray-800 flex items-center justify-center">
+                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                </svg>
             </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
+    <span class="text-primary tracking-wider">LIVE</span> 
+    <span class="text-gray-500">:</span> 
+    <span class="text-white">DATA OVERVIEW</span>
+</h2>
+        </div>
+    </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-24 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
-                    <div class="flex justify-between items-start"><svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h4l3-9 5 18 3-9h6"></path></svg><span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#00ff66]"></span></div>
-                    <div><div id="stat-apps" class="text-2xl sm:text-3xl font-black text-white leading-none mb-1 tracking-tight">0</div><div class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.15em]">Apps Scanned</div></div>
-                </div>
-                <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-24 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
-                    <div class="flex justify-between items-start"><svg class="w-5 h-5 text-[#ff4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg><span class="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_#00ff66]"></span></div>
-                    <div><div id="stat-fraud" class="text-2xl sm:text-3xl font-black text-white leading-none mb-1 tracking-tight">0</div><div class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.15em]">Fraud Detected</div></div>
-                </div>
-                <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-24 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
-                    <div class="flex justify-between items-start"><svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><span class="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_#00ff66]"></span></div>
-                    <div><div id="stat-safe" class="text-2xl sm:text-3xl font-black text-white leading-none mb-1 tracking-tight">0</div><div class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.15em]">Verified Safe</div></div>
-                </div>
-                <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-24 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
-                    <div class="flex justify-between items-start"><svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#00ff66]"></span></div>
-                    <div><div id="stat-users" class="text-2xl sm:text-3xl font-black text-white leading-none mb-1 tracking-tight">0</div><div class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.15em]">Protected Users</div></div>
-                </div>
+    <!-- 4 Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <!-- Card 1: Apps Scanned -->
+        <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-28 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+            <div class="flex justify-between items-start">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h4l3-9 5 18 3-9h6"></path></svg>
+                <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#00ff66]"></span>
+            </div>
+            <div>
+                <div id="stat-apps" class="text-3xl font-black text-white leading-none mb-1 tracking-tight">0</div>
+                <div class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.15em]">Apps Scanned</div>
             </div>
         </div>
 
-        <!-- 2. TRENDING SECTION -->
-        <div class="px-6 lg:px-12 pt-4 pb-4">
-            <div class="mb-3 flex items-center justify-between">
-                <div class="flex items-center space-x-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-background border border-gray-800 flex items-center justify-center">
-                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                    </div>
-                    <h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
-                        <span class="text-primary tracking-wider">TRENDING</span> 
-                        <span class="text-gray-500">:</span> 
-                        <span class="text-white">Most Scanned Apps</span>
-                    </h2>
-                </div>
+        <!-- Card 2: Fraud Detected -->
+        <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-28 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+            <div class="flex justify-between items-start">
+                <svg class="w-5 h-5 text-[#ff4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <span class="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_#00ff66]"></span>
             </div>
-            <div id="recent-apps-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- App items dynamically loaded -->
+            <div>
+                <div id="stat-fraud" class="text-3xl font-black text-white leading-none mb-1 tracking-tight">0</div>
+                <div class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.15em]">Fraud Detected</div>
             </div>
         </div>
 
-        <!-- News & Updates Section -->
-        <div class="px-6 lg:px-12 py-4">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
+        <!-- Card 3: Verified Safe -->
+        <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-28 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+            <div class="flex justify-between items-start">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <span class="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_#00ff66]"></span>
+            </div>
+            <div>
+                <div id="stat-safe" class="text-3xl font-black text-white leading-none mb-1 tracking-tight">0</div>
+                <div class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.15em]">Verified Safe</div>
+            </div>
+        </div>
+
+        <!-- Card 4: Protected Users -->
+        <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-28 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+            <div class="flex justify-between items-start">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#00ff66]"></span>
+            </div>
+            <div>
+                <div id="stat-users" class="text-3xl font-black text-white leading-none mb-1 tracking-tight">0</div>
+                <div class="text-[9px] font-bold text-gray-500 uppercase tracking-[0.15em]">Protected Users</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 2. TRENDING SECTION -->
+<!-- ============================================== -->
+<div class="px-6 lg:px-12 pt-10 pb-10 ">
+
+    <div class="mb-6 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+            <!-- Trending Icon Box -->
+            <div class="w-8 h-8 rounded-lg bg-background border border-gray-800 flex items-center justify-center">
+                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
+    <span class="text-primary tracking-wider">TRENDING</span> 
+    <span class="text-gray-500">:</span> 
+    <span class="text-white">Most Scanned Apps</span>
+</h2>
+        </div>
+    </div>
+
+    <!-- JS will inject real-time cards into this container -->
+    <div id="recent-apps-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <!-- Placeholder 1: Google Wallet -->
+        <div class="bg-surface border border-gray-800 rounded-xl p-3.5 flex items-center justify-between hover:border-gray-700 hover:bg-gray-800/30 transition-all cursor-pointer">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shrink-0 overflow-hidden shadow-inner p-1.5">
+                    <img src="https://static-00.iconduck.com/assets.00/google-wallet-icon-2048x2048-w08xed8f.png" alt="Google Wallet" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-xs tracking-wide">Google Wallet</h3>
+                    <p class="text-gray-500 text-[10px] mt-0.5 tracking-wide">Scanned by User</p>
+                </div>
+            </div>
+            <div class="w-6 h-6 rounded-full border border-primary/40 flex items-center justify-center bg-background shrink-0 shadow-[0_0_10px_rgba(0,255,102,0.1)]" title="Status: Safe">
+                <span class="text-[9px] font-bold text-primary">S</span>
+            </div>
+        </div>
+
+        <!-- Placeholder 2: WhatsApp Business -->
+        <div class="bg-surface border border-gray-800 rounded-xl p-3.5 flex items-center justify-between hover:border-gray-700 hover:bg-gray-800/30 transition-all cursor-pointer">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-[#25D366] rounded-lg flex items-center justify-center shrink-0 overflow-hidden shadow-inner p-2">
+                    <svg class="w-full h-full text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12.012 2C6.483 2 2 6.484 2 12.015c0 1.764.462 3.486 1.34 5.002L2 22l5.122-1.344A9.957 9.957 0 0012.012 22c5.528 0 10-4.484 10-10.015S17.54 2 12.012 2zM16.5 15.5c-.322.9-1.636 1.488-2.316 1.547-.68.06-1.57-.156-3.83-1.1-2.735-1.144-4.512-3.953-4.652-4.14-.14-.188-1.11-1.48-1.11-2.822 0-1.343.698-2.003.945-2.268.247-.265.538-.332.717-.332.18 0 .358 0 .506.006.166.007.387-.066.606.463.22.53 1.054 2.578 1.143 2.755.09.176.15.385.045.596-.105.21-.157.344-.314.53-.157.187-.332.41-.476.56-.157.166-.322.348-.14.662.18.314.805 1.332 1.724 2.152 1.186 1.057 2.186 1.385 2.5 1.54.315.157.498.133.687-.083.188-.215.806-.944 1.024-1.267.218-.323.435-.269.726-.16.29.11 1.838.868 2.152 1.024.314.156.524.234.6.365.075.132.075.766-.247 1.666z"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-xs tracking-wide">WhatsApp Business</h3>
+                    <p class="text-gray-500 text-[10px] mt-0.5 tracking-wide">Scanned by User</p>
+                </div>
+            </div>
+            <div class="w-6 h-6 rounded-full border border-primary/40 flex items-center justify-center bg-background shrink-0 shadow-[0_0_10px_rgba(0,255,102,0.1)]" title="Status: Safe">
+                <span class="text-[9px] font-bold text-primary">S</span>
+            </div>
+        </div>
+
+        <!-- Placeholder 3: Fake/Fraud App Example -->
+        <div class="bg-surface border border-gray-800 rounded-xl p-3.5 flex items-center justify-between hover:border-gray-700 hover:bg-gray-800/30 transition-all cursor-pointer">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shrink-0 overflow-hidden shadow-inner p-1">
+                    <img src="https://cdn-icons-png.flaticon.com/512/888/888839.png" alt="GB WhatsApp Pro" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-xs tracking-wide">GB WhatsApp Pro</h3>
+                    <p class="text-gray-500 text-[10px] mt-0.5 tracking-wide">Scanned by User</p>
+                </div>
+            </div>
+            <div class="w-6 h-6 rounded-full border border-[#ff4444]/40 flex items-center justify-center bg-background shrink-0 shadow-[0_0_10px_rgba(255,68,68,0.15)]" title="Status: Fraud">
+                <span class="text-[9px] font-bold text-[#ff4444]">F</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- News & Updates Section -->
+<!-- ============================================== -->
+        <div class="px-6 lg:px-12 py-10 ">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                 <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-lg border border-gray-800 bg-surface flex items-center justify-center text-primary shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                    <div class="w-10 h-10 rounded-lg border border-gray-800 bg-surface flex items-center justify-center text-primary shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
                     </div>
-                    <h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
-                        <span class="text-primary tracking-wider">NOTICE</span> 
-                        <span class="text-gray-500">:</span> 
-                        <span class="text-white">Latest Fraud & Cybersecurity News</span>
-                    </h2>
-                </div>
-                <a href="#" id="view-toggle-btn" class="text-primary text-xs font-semibold flex items-center space-x-1 hover:underline select-none">
+<h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
+            <span class="text-primary tracking-wider">NOTICE</span> 
+            <span class="text-gray-500">:</span> 
+            <span class="text-white">Latest Fraud & Cybersecurity News</span>
+        </h2>                </div>
+                <a href="#" id="view-toggle-btn" class="text-primary text-sm font-semibold flex items-center space-x-2 hover:underline select-none">
                     <span id="view-toggle-text">VIEW MORE</span>
-                    <svg id="view-toggle-icon" class="w-3.5 h-3.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <svg id="view-toggle-icon" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </a>
             </div>
+
+            <!-- News List (Dynamic Container) -->
             <div id="news-container" class="space-y-0 border border-gray-800 rounded-xl overflow-hidden bg-surface">
-                <div class="p-4 text-center text-gray-500 text-xs animate-pulse">
+                <!-- Jab tak news load ho rahi hai, ye dikhega -->
+                <div class="p-5 text-center text-gray-500 text-sm animate-pulse">
                     Fetching latest cybersecurity news...
                 </div>
             </div>
         </div>
 
-        <!-- 3. HOW TO DETECT / FEATURES SECTION -->
-        <div class="px-6 lg:px-12 py-8 border-t border-gray-800/60" id="how-to-detect">
-            <div class="mb-6 flex flex-col items-center justify-center text-center">
-                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 mb-2 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
-                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
-                </div>
-                <h2 class="text-2xl sm:text-3xl font-black text-white tracking-wide uppercase">How <span class="text-primary">FraudShield</span> Detects Danger</h2>
-                <p class="text-gray-400 text-xs sm:text-sm mt-2 max-w-xl leading-relaxed">Our multi-layered AI engine looks beyond the surface to identify malicious patterns before you click download.</p>
+        <!-- ============================================== -->
+<!-- 3. HOW TO DETECT / FEATURES SECTION -->
+<!-- ============================================== -->
+<div class="px-6 lg:px-12 py-16 border-t border-gray-800/60" id="how-to-detect">
+
+    <!-- Section Header -->
+    <div class="mb-12 flex flex-col items-center justify-center text-center">
+        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 mb-5 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+        </div>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">How <span class="text-primary">FraudShield</span> Detects Danger</h2>
+        <p class="text-gray-400 text-xs sm:text-sm mt-4 max-w-xl leading-relaxed">Our multi-layered AI engine looks beyond the surface to identify malicious patterns before you click download.</p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Card 1: Sentiment Analysis -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-primary/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none group-hover:bg-primary/10 transition-colors"></div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide">AI Sentiment Analysis</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">Scans thousands of user reviews instantly to detect hidden complaints about scams, hidden subscriptions, or battery drain.</p>
+        </div>
+
+        <!-- Card 2: Permission Overreach -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-primary/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none group-hover:bg-primary/10 transition-colors"></div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide">Permission Overreach</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">Automatically flags applications that request suspicious access, like a simple calculator app asking for your camera or SMS contacts.</p>
+        </div>
+
+        <!-- Card 3: Fake Review Spikes (Fraud Example) -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-red-500/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-red-500/5 rounded-bl-full pointer-events-none group-hover:bg-red-500/10 transition-colors"></div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-red-500/50 transition-colors">
+                <svg class="w-6 h-6 text-[#ff4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide">Fake Review Spikes</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">Identifies unnatural surges in 5-star reviews generated by bots, commonly seen in fake OTT streaming platforms or unauthorized game top-up apps.</p>
+        </div>
+
+        <!-- Card 4: Developer History -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-primary/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none group-hover:bg-primary/10 transition-colors"></div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
+                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide">Developer History</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">Cross-references the publisher's background against a database of known malicious actors and previously banned developer accounts.</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 4. ABOUT US SECTION (EXPANDED & PREMIUM) -->
+<!-- ============================================== -->
+<div class="px-6 lg:px-12 py-16 border-t border-gray-800/60 relative" id="about-section">
+
+    <!-- Background Glow -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- PART 1: Mission & Team Wrapper -->
+    <div class="flex flex-col xl:flex-row gap-12 relative z-10 w-full">
+
+        <!-- Left Side: Story & Mission -->
+        <div class="xl:w-1/2 space-y-6">
+            <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-2">
+                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="text-xs font-bold text-primary tracking-widest uppercase">Our Mission</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-surface border border-gray-800 rounded-2xl p-5 hover:border-primary/50 transition-all">
-                    <h3 class="text-white font-bold text-sm mb-1.5">AI Sentiment Analysis</h3>
-                    <p class="text-gray-500 text-xs">Scans thousands of user reviews instantly to detect hidden complaints about scams or fake apps.</p>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-wide leading-tight">
+                PROTECTING THE <br> DIGITAL <span class="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-300">ECOSYSTEM</span>
+            </h2>
+
+            <p class="text-gray-400 text-sm leading-relaxed max-w-lg">
+                FraudShield AI was born out of a critical need to secure the digital landscape. With millions of applications available, users are increasingly vulnerable to malicious software masquerading as legitimate utilities. 
+            </p>
+            <p class="text-gray-400 text-sm leading-relaxed max-w-lg">
+                We bridge the gap between complex cybersecurity protocols and everyday users. By leveraging advanced AI and Sentiment Analysis, we dissect not just the code, but the real-world experiences of users to flag hidden threats before they cause harm.
+            </p>
+
+            <div class="pt-2 flex items-center space-x-8">
+                <div>
+                    <div class="text-3xl font-black text-white">99<span class="text-primary">%</span></div>
+                    <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Accuracy</div>
                 </div>
-                <div class="bg-surface border border-gray-800 rounded-2xl p-5 hover:border-primary/50 transition-all">
-                    <h3 class="text-white font-bold text-sm mb-1.5">Permission Overreach</h3>
-                    <p class="text-gray-500 text-xs">Automatically flags apps requesting dangerous and unusual permissions like SMS or camera access.</p>
-                </div>
-                <div class="bg-surface border border-gray-800 rounded-2xl p-5 hover:border-primary/50 transition-all">
-                    <h3 class="text-white font-bold text-sm mb-1.5">Fake Review Spikes</h3>
-                    <p class="text-gray-500 text-xs">Identifies unnatural surges in 5-star reviews generated by automated bots and malicious actors.</p>
-                </div>
-                <div class="bg-surface border border-gray-800 rounded-2xl p-5 hover:border-primary/50 transition-all">
-                    <h3 class="text-white font-bold text-sm mb-1.5">Developer History</h3>
-                    <p class="text-gray-500 text-xs">Cross-references publisher profiles against a database of known banned and scam accounts.</p>
+                <div class="w-px h-10 bg-gray-800"></div>
+                <div>
+                    <div class="text-3xl font-black text-white">24<span class="text-primary">/7</span></div>
+                    <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Scanning</div>
                 </div>
             </div>
         </div>
 
-        <!-- 4. ABOUT US SECTION -->
-        <div class="px-6 lg:px-12 py-8 border-t border-gray-800/60 relative" id="about-section">
-            <div class="flex flex-col xl:flex-row gap-8 relative z-10 w-full">
-                <div class="xl:w-1/2 space-y-4">
-                    <h2 class="text-2xl sm:text-3xl font-black text-white">PROTECTING THE DIGITAL ECOSYSTEM</h2>
-                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">FraudShield AI helps bridge the gap between cybersecurity and everyday mobile users through real-time review sentiment analysis.</p>
+        <!-- Right Side: The Team & Tech Stack -->
+        <div class="xl:w-1/2 w-full">
+            <h3 class="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center">
+                <span class="w-8 h-px bg-primary mr-4"></span>
+                The Core Team
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+
+                <!-- Team Member 1: Atul Dubey (Project Leader) -->
+                <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Atul&backgroundColor=09090b" alt="Atul Dubey" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-white font-bold text-xs truncate">Atul Dubey</h4>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Project Leader</p>
                 </div>
-                <div class="xl:w-1/2 w-full">
-                    <h3 class="text-base font-bold text-white mb-4 uppercase tracking-wider">The Core Team</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div class="bg-surface border border-gray-800 rounded-xl p-3 text-center"><h4 class="text-white font-bold text-xs">Atul Dubey</h4><p class="text-[9px] text-gray-500 uppercase mt-0.5">Project Leader</p></div>
-                        <div class="bg-surface border border-gray-800 rounded-xl p-3 text-center"><h4 class="text-white font-bold text-xs">Shreeya Dubey</h4><p class="text-[9px] text-gray-500 uppercase mt-0.5">Software Eng.</p></div>
-                        <div class="bg-surface border border-gray-800 rounded-xl p-3 text-center"><h4 class="text-white font-bold text-xs">Ayush Prajapati</h4><p class="text-[9px] text-gray-500 uppercase mt-0.5">Software Eng.</p></div>
+
+                <!-- Team Member 2: Shreeya Dubey -->
+                <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shreeya&backgroundColor=09090b" alt="Shreeya Dubey" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-white font-bold text-xs truncate">Shreeya Dubey</h4>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Software Eng.</p>
+                </div>
+
+                <!-- Team Member 3: Ayush Prajapati -->
+                <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ayush&backgroundColor=09090b" alt="Ayush Prajapati" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-white font-bold text-xs truncate">Ayush Prajapati</h4>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Software Eng.</p>
+                </div>
+
+            </div>
+
+            <!-- Mini Tech Stack Badges -->
+            <div class="mt-8 pt-6 border-t border-gray-800/50">
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-3">Powered By Technology</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">Python</span>
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">Tailwind CSS</span>
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">MySQL Workbench</span>
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">NLP Models</span>
+                    <span class="px-3 py-1 bg-[#121214] border border-gray-700 rounded-md text-[10px] text-gray-300 font-mono hover:border-primary transition-colors cursor-default">JavaScript ES6</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PART 2: Core Principles / Values -->
+    <div class="mt-20 relative z-10 w-full">
+        <h3 class="text-lg font-bold text-white mb-8 uppercase tracking-wider flex items-center justify-center text-center">
+            <span class="w-12 h-px bg-gray-700 mr-4"></span>
+            Our Core Principles
+            <span class="w-12 h-px bg-gray-700 ml-4"></span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Principle 1 -->
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 text-center hover:bg-gray-800/30 transition-colors">
+                <div class="w-10 h-10 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h4 class="text-white font-bold text-sm mb-2">100% Privacy First</h4>
+                <p class="text-gray-500 text-[11px] leading-relaxed">We never store your personal data. Our scans are completely anonymous and your search history remains strictly confidential.</p>
+            </div>
+
+            <!-- Principle 2 -->
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 text-center hover:bg-gray-800/30 transition-colors">
+                <div class="w-10 h-10 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h4 class="text-white font-bold text-sm mb-2">Real-Time AI Processing</h4>
+                <p class="text-gray-500 text-[11px] leading-relaxed">Our custom NLP (Natural Language Processing) models analyze thousands of reviews in milliseconds to deliver instant verdicts.</p>
+            </div>
+
+            <!-- Principle 3 -->
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 text-center hover:bg-gray-800/30 transition-colors">
+                <div class="w-10 h-10 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                </div>
+                <h4 class="text-white font-bold text-sm mb-2">Community Driven</h4>
+                <p class="text-gray-500 text-[11px] leading-relaxed">Built by students, for the internet. Our machine learning models get smarter every day by learning from community feedback.</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- ============================================== -->
+<!-- 5. HOW IT WORKS SECTION -->
+<!-- ============================================== -->
+<div class="px-6 lg:px-12 py-16 border-t border-gray-800/60 relative" id="how-it-works">
+
+    <!-- Section Header -->
+    <div class="mb-14 flex flex-col items-center justify-center text-center relative z-10">
+        <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-4">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span class="text-xs font-bold text-primary tracking-widest uppercase">The Process</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
+            4 Simple Steps to <span class="text-primary">Total Security</span>
+        </h2>
+        <p class="text-gray-400 text-xs sm:text-sm mt-4 max-w-xl leading-relaxed">
+            See exactly how our backend architecture processes raw application data to deliver a final safety verdict in seconds.
+        </p>
+    </div>
+
+    <!-- Steps Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+
+        <!-- Connecting Line (Visible only on large screens) -->
+        <div class="hidden lg:block absolute top-1/2 left-0 w-full h-px bg-gray-800 -z-10 -translate-y-6"></div>
+
+        <!-- Step 1 -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-8 relative overflow-hidden hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] group">
+            <div class="absolute -right-4 -bottom-8 text-8xl font-black text-gray-800/40 group-hover:text-primary/10 transition-colors select-none">01</div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all relative z-10">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide relative z-10">Input App Details</h3>
+            <p class="text-gray-500 text-xs leading-relaxed relative z-10">Enter the app name or paste the Play Store URL directly into our live scanner dashboard.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-8 relative overflow-hidden hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] group mt-0 lg:mt-8">
+            <div class="absolute -right-4 -bottom-8 text-8xl font-black text-gray-800/40 group-hover:text-primary/10 transition-colors select-none">02</div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all relative z-10">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide relative z-10">Data Extraction</h3>
+            <p class="text-gray-500 text-xs leading-relaxed relative z-10">Our backend instantly scrapes thousands of user reviews, permission requests, and developer history.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-8 relative overflow-hidden hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] group">
+            <div class="absolute -right-4 -bottom-8 text-8xl font-black text-gray-800/40 group-hover:text-primary/10 transition-colors select-none">03</div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all relative z-10">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide relative z-10">NLP Analysis</h3>
+            <p class="text-gray-500 text-xs leading-relaxed relative z-10">Machine learning models process the text, filtering out bot-generated 5-star reviews and flagging hidden complaints.</p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="bg-surface border border-gray-800 rounded-2xl p-8 relative overflow-hidden hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.3)] group mt-0 lg:mt-8">
+            <div class="absolute -right-4 -bottom-8 text-8xl font-black text-gray-800/40 group-hover:text-primary/10 transition-colors select-none">04</div>
+            <div class="w-12 h-12 rounded-xl bg-background border border-gray-700 flex items-center justify-center mb-6 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all relative z-10">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <h3 class="text-white font-bold text-base mb-2 tracking-wide relative z-10">Final Verdict</h3>
+            <p class="text-gray-500 text-xs leading-relaxed relative z-10">Receive a comprehensive security score and a clear Safe or Fraud verdict directly on your dashboard.</p>
+        </div>
+
+    </div>
+</div>
+<!-- ============================================== -->
+<!-- 6. CONTACT US SECTION -->
+<!-- ============================================== -->
+<div class="px-6 lg:px-12 py-16 border-t border-gray-800/60 relative" id="contact">
+
+    <!-- Background Glow -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]"></div>
+    </div>
+
+    <!-- Section Header -->
+    <div class="mb-14 flex flex-col items-center justify-center text-center relative z-10">
+        <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-4">
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            <span class="text-xs font-bold text-primary tracking-widest uppercase">Get in Touch</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
+            Have Questions? <span class="text-primary">Contact Us</span>
+        </h2>
+        <p class="text-gray-400 text-xs sm:text-sm mt-4 max-w-xl leading-relaxed">
+            Report a highly suspicious app manually, request API access, or just say hello. Our team is always ready to help.
+        </p>
+    </div>
+
+    <!-- Contact Content Wrapper -->
+    <div class="flex flex-col lg:flex-row gap-12 relative z-10 w-full max-w-6xl mx-auto">
+        <!-- Right Side: Contact Form -->
+        <div class="lg:w-7/12">
+            <form id="contactForm" class="bg-surface border border-gray-800 rounded-3xl p-6 sm:p-8 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+                    <!-- Name Input -->
+                    <div>
+                        <label for="contact-name" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
+                                                <input type="text" id="contact-name" required placeholder="John Doe" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
+                    </div>
+
+                    <!-- Email Input -->
+                    <div>
+                        <label for="contact-email" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
+                        <input type="email" id="contact-email" required placeholder="you@example.com" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
+                    </div>
+                </div>
+
+                <!-- Subject Input -->
+                <div class="mb-6">
+                    <label for="contact-subject" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Subject</label>
+                    <input type="text" id="contact-subject" required placeholder="How can we help you?" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
+                </div>
+
+                <!-- Message Textarea -->
+                <div class="mb-6">
+                    <label for="contact-message" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Message</label>
+                    <textarea id="contact-message" rows="5" required placeholder="Write your message here..." class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors resize-none"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-4 rounded-xl transition-all duration-300 flex justify-center items-center space-x-2 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(0,255,102,0.15)] hover:shadow-[0_0_30px_rgba(0,255,102,0.3)]">
+
+                    <span>SEND MESSAGE</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </form>
+        </div>
+        <!-- Left Side: Contact Info -->
+        <div class="lg:w-5/12 space-y-8">
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 sm:p-8 hover:bg-gray-800/30 transition-colors">
+                <h3 class="text-xl font-bold text-white mb-6">Contact Information</h3>
+
+                <div class="space-y-6">
+                    <!-- Email -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Email Us</p>
+                            <a href="mailto:fraudshield2026@gmail.com" class="text-white text-sm font-medium hover:text-primary transition-colors">support@fraudshield.ai</a>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Location</p>
+                            <p class="text-white text-sm font-medium">Mumbai, Maharashtra, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="mt-10 pt-8 border-t border-gray-800/60">
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">Follow Our Journey</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-[#121214] border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-primary transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"></path></svg>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TERMS OF SERVICE -->
-        <section id="terms" class="py-8 bg-background border-t border-gray-800 px-6 lg:px-12">
-            <div class="max-w-5xl mx-auto">
-                <h2 class="text-xl font-bold text-white mb-2">Terms of Service</h2>
-                <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">By accessing FraudShield AI, you agree to use our platform lawfully and securely for threat detection purposes.</p>
-            </div>
-        </section>
 
-        <!-- CTA BANNER -->
-        <div class="px-6 lg:px-12 py-6">
-            <div class="bg-surface border border-gray-800 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between">
-                <div class="mb-4 md:mb-0 text-center md:text-left">
-                    <h2 class="text-xl sm:text-2xl font-black text-white mb-1">Scan your first app in seconds</h2>
-                    <p class="text-gray-400 text-xs">Free till 3 scans. No credit card required.</p>
-                </div>
-                <a href="login.html" class="bg-primary hover:bg-primary-dark text-black px-6 py-3 rounded-full font-bold text-xs uppercase tracking-widest">Get Started Free</a>
+
+    </div>
+</div>
+
+<!-- ============================================== -->
+<!-- TERMS OF SERVICE SECTION -->
+<!-- ============================================== -->
+<section id="terms" class="py-20 bg-background relative z-10 border-t border-gray-800">
+    <div class="max-w-5xl mx-auto px-6">
+
+        <!-- Section Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center px-4 py-1.5 mb-4 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold tracking-wide uppercase">
+                Legal
             </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Terms of Service</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">Please read these terms carefully before using FraudShield AI's platform and services.</p>
         </div>
 
-        <!-- Chatbot component -->
-        <fraud-shield-ai></fraud-shield-ai>
+        <!-- Terms Grid/List -->
+        <div class="space-y-6">
 
-        <!-- Footer -->
-        <footer class="px-6 lg:px-12 py-8 border-t border-gray-800/60 bg-[#09090b] text-center md:text-left">
-            <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase">COPYRIGHT &copy; FRAUDSHIELD 2026</div>
+            <!-- Term 1 -->
+            <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
+                <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                    <span class="text-gray-600 mr-3 text-lg">01.</span> Acceptance of Terms
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    By accessing and using FraudShield AI, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this service.
+                </p>
+            </div>
+
+            <!-- Term 2 -->
+            <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
+                <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                    <span class="text-gray-600 mr-3 text-lg">02.</span> User Accounts & Authentication
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    To use certain features, you must register using your email or OAuth providers (Google, GitHub). You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.
+                </p>
+            </div>
+
+            <!-- Term 3 -->
+            <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
+                <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                    <span class="text-gray-600 mr-3 text-lg">03.</span> Service Usage & Restrictions
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    FraudShield AI is designed to assist in detecting fraudulent activities. You agree to use the service only for lawful purposes. You may not reverse engineer the AI models, attempt unauthorized database access, or use the platform for malicious activities.
+                </p>
+            </div>
+
+            <!-- Term 4 -->
+            <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
+                <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
+                    <span class="text-gray-600 mr-3 text-lg">04.</span> Data Privacy & Security
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    We respect your privacy. Any data you submit for fraud analysis is processed securely. We do not sell your personal data or authentication details to third parties. Our AI models analyze patterns without exposing raw sensitive data.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Watch Demo Video Modal Popup -->
+<div id="demoModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-surface border border-surfaceBorder rounded-3xl max-w-4xl w-full p-6 relative shadow-2xl space-y-4">
+        <div class="flex justify-between items-center border-b border-surfaceBorder pb-4">
+            <h3 class="text-white font-bold text-base">FraudShield AI - Live Platform Demo</h3>
+            <button onclick="closeDemoModal()" class="text-gray-400 hover:text-white font-bold text-lg bg-surfaceBorder/50 w-8 h-8 rounded-xl flex items-center justify-center transition-all cursor-pointer">&times;</button>
+        </div>
+        <div class="aspect-video w-full rounded-2xl overflow-hidden bg-background border border-surfaceBorder">
+            <video id="demoVideoElement" controls class="w-full h-full object-cover">
+                <source src="../videos/demo-preview.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+</div>
+        <!-- ============================================== -->
+<!-- CALL TO ACTION (CTA) BANNER SECTION -->
+<!-- ============================================== -->
+<div class="px-6 lg:px-12 py-10">
+    <div class="bg-surface border border-gray-800 rounded-3xl p-6 sm:p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:border-gray-700 transition-colors">
+
+        <!-- Subtle Green Glow Background Effect -->
+        <div class="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none"></div>
+
+        <!-- Left Text Content -->
+        <div class="mb-8 md:mb-0 relative z-10 text-center md:text-left">
+            <p class="text-primary text-[11px] font-bold tracking-[0.2em] mb-3 uppercase">
+                Ready?
+            </p>
+            <h2 class="text-2xl sm:text-3xl md:text-[2.5rem] leading-none font-black text-white mb-4 tracking-tight uppercase">
+                Scan your first app in seconds
+            </h2>
+            <p class="text-gray-400 text-xs sm:text-sm tracking-wide">
+                Free till 3 scans. No credit card. Real reviews. Real AI. Real protection.
+            </p>
+        </div>
+
+        <!-- Right Button -->
+        <div class="relative z-10 shrink-0">
+            <a href="login.html" class="inline-flex items-center space-x-2 bg-primary hover:bg-primary-dark text-black px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(0,255,102,0.25)] hover:shadow-[0_0_30px_rgba(0,255,102,0.4)] transform hover:-translate-y-1">
+                <span>Get Started Free</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>
+
+    </div>
+</div>
+<fraud-shield-ai></fraud-shield-ai>
+
+
+        <!-- Footer Section -->
+        <footer class="px-6 lg:px-12 py-16 mt-8 border-t border-gray-800/60 bg-[#09090b] shrink-0">
+            <!-- Top Section: Logo/Desc & Links Grid -->
+            <div class="flex flex-col lg:flex-row justify-between gap-12 lg:gap-8 mb-16">
+
+                <!-- Left: Branding & Description -->
+                <div class="lg:w-1/3">
+                    <!-- Logo -->
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/30">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        </div>
+                        <h2 class="text-white font-bold text-xl tracking-wide">FraudShield</h2>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+                        Protect your devices with smart AI analysis. Detect fraudulent apps, analyze user sentiment, and stay safe online from start to finish.
+                    </p>
+                </div>
+
+                <!-- Right: Links Columns -->
+                <div class="lg:w-2/3 grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <!-- Column 1 -->
+                    <div>
+                        <h4 class="text-white font-medium mb-6 tracking-wide">Product</h4>
+                        <ul class="space-y-4">
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Analyze App</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Pricing</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Integrations</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">API Access</a></li>
+                        </ul>
+                    </div>
+                    <!-- Column 2 -->
+                    <div>
+                        <h4 class="text-white font-medium mb-6 tracking-wide">Solutions</h4>
+                        <ul class="space-y-4">
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Enterprise</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Developers</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Security Teams</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Operations</a></li>
+                        </ul>
+                    </div>
+                    <!-- Column 3 -->
+                    <div>
+                        <h4 class="text-white font-medium mb-6 tracking-wide">Resources</h4>
+                        <ul class="space-y-4">
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Docs</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Tutorials</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Case Studies</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Blog</a></li>
+                        </ul>
+                    </div>
+                    <!-- Column 4 -->
+                    <div>
+                        <h4 class="text-white font-medium mb-6 tracking-wide">Company</h4>
+                        <ul class="space-y-4">
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">About Us</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Careers</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Terms of Service</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Section: Copyright, Credits, & Socials -->
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800/60 gap-4 text-center md:text-left">
+
+                <!-- Copyright -->
+                <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase">
+                    COPYRIGHT &copy; FRAUDSHIELD 2026
+                </div>
+
+                <!-- Credits -->
+                <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase leading-relaxed">
+                    DESIGNED AND BUILT BY <br>
+                    THE AWESOME PEOPLE OF FRAUDSHIELD <span class="text-primary text-xs">💚</span>
+                </div>
+
+                <!-- Social Icons -->
+                <div class="flex items-center space-x-6 text-gray-500">
+                    <!-- LinkedIn -->
+                    <a href="#" class="hover:text-primary transition-colors" aria-label="LinkedIn">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                    <!-- X (Twitter) -->
+                    <a href="#" class="hover:text-primary transition-colors" aria-label="X">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"></path></svg>
+                    </a>
+                    <!-- YouTube -->
+                    <a href="#" class="hover:text-primary transition-colors" aria-label="YouTube">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                    </a>
+                    <!-- Instagram -->
+                    <a href="#" class="hover:text-primary transition-colors" aria-label="Instagram">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                </div>
+            </div>
         </footer>
 
     </main>
@@ -406,50 +1035,92 @@
         try {
             const response = await fetch(`/api/dashboard-stats`);
             const data = await response.json();
+
             if (data.success) {
+                // 1. Update Live Counters
                 document.getElementById('stat-apps').innerText = data.totalScanned || 0;
                 document.getElementById('stat-fraud').innerText = data.totalFraud || 0;
                 document.getElementById('stat-safe').innerText = data.totalSafe || 0;
                 document.getElementById('stat-users').innerText = data.totalUsers || 0;
 
+                // 2. Update Trending / Top Analyzed Apps Container
                 const container = document.getElementById('recent-apps-container');
                 if (container && data.recentApps && data.recentApps.length > 0) {
-                    container.innerHTML = '';
+                    container.innerHTML = ''; // Dummy placeholders hata diye
+
                     data.recentApps.forEach(app => {
                         const statusStr = (app.status || 'Low Risk').toLowerCase();
+
                         let statusColor, statusBorder, statusLetter;
+
+                        // 🟢 YAHAN L, M, aur H KA LOGIC AUR COLORS SET KIYE HAIN
                         if (statusStr.includes('high') || statusStr.includes('fraud')) {
-                            statusLetter = 'H'; statusColor = 'text-[#ff4444]'; statusBorder = 'border-[#ff4444]/40';
+                            statusLetter = 'H'; // High Risk
+                            statusColor = 'text-[#ff4444]'; // Red
+                            statusBorder = 'border-[#ff4444]/40 shadow-[0_0_10px_rgba(255,68,68,0.15)]';
                         } else if (statusStr.includes('medium')) {
-                            statusLetter = 'M'; statusColor = 'text-amber-400'; statusBorder = 'border-amber-400/40';
+                            statusLetter = 'M'; // Medium Risk
+                            statusColor = 'text-amber-400'; // Yellow/Amber
+                            statusBorder = 'border-amber-400/40 shadow-[0_0_10px_rgba(251,191,36,0.15)]';
                         } else {
-                            statusLetter = 'L'; statusColor = 'text-primary'; statusBorder = 'border-primary/40';
+                            statusLetter = 'L'; // Low Risk
+                            statusColor = 'text-primary'; // Green
+                            statusBorder = 'border-primary/40 shadow-[0_0_10px_rgba(0,255,102,0.1)]';
                         }
+
+                        // Asli Icon aur Naam
+                        const iconUrl = app.app_icon || 'https://cdn-icons-png.flaticon.com/512/888/888839.png';
+                        const appName = app.app_name || 'Unknown App';
+                        const scanCount = app.scan_count || 1;
+
                         const cardHTML = `
-                            <div class="bg-surface border border-gray-800 rounded-xl p-3.5 flex items-center justify-between">
+                            <div class="bg-surface border border-gray-800 rounded-xl p-3.5 flex items-center justify-between hover:border-gray-700 hover:bg-gray-800/30 transition-all cursor-pointer">
                                 <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1.5"><img src="${app.app_icon || ''}" class="w-full h-full object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/888/888839.png'"></div>
-                                    <div><h3 class="text-white font-bold text-xs truncate max-w-[120px]">${app.app_name || 'Unknown'}</h3><p class="text-gray-500 text-[10px]">Scanned ${app.scan_count || 1} times</p></div>
+                                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shrink-0 overflow-hidden shadow-inner p-1.5">
+                                        <img src="${iconUrl}" alt="${appName}" class="w-full h-full object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/888/888839.png'">
+                                    </div>
+                                    <div>
+                                        <h3 class="text-white font-bold text-xs tracking-wide truncate max-w-[120px]">${appName}</h3>
+                                        <p class="text-gray-500 text-[10px] mt-0.5 tracking-wide truncate max-w-[120px]">Scanned ${scanCount} times</p>
+                                    </div>
                                 </div>
-                                <div class="w-6 h-6 rounded-full border ${statusBorder} flex items-center justify-center bg-background"><span class="text-[9px] font-bold ${statusColor}">${statusLetter}</span></div>
-                            </div>`;
+                                <div class="w-6 h-6 rounded-full border ${statusBorder} flex items-center justify-center bg-background shrink-0" title="Status: ${app.status}">
+                                    <span class="text-[9px] font-bold ${statusColor}">${statusLetter}</span>
+                                </div>
+                            </div>
+                        `;
                         container.insertAdjacentHTML('beforeend', cardHTML);
                     });
                 }
             }
-        } catch (error) { console.error(error); }
+        } catch (error) {
+            console.error("Failed to connect to backend API:", error);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         const menuBtn = document.getElementById('menu-btn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        const links = document.querySelectorAll('#sidebar nav a');
-        function toggle() { sidebar.classList.toggle('-translate-x-full'); overlay.classList.toggle('hidden'); }
-        if (menuBtn) menuBtn.addEventListener('click', toggle);
-        if (overlay) overlay.addEventListener('click', toggle);
-        links.forEach(l => l.addEventListener('click', () => { if (window.innerWidth < 1024) toggle(); }));
+        const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+        if (overlay) overlay.addEventListener('click', toggleMenu);
+
+        // Jaise hi koi bhi nav link click ho, mobile mein menu band ho jaye
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    toggleMenu();
+                }
+            });
+        });
     });
-    </script>
+</script>
 </body>
 </html>
