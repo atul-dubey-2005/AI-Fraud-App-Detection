@@ -27,7 +27,7 @@ class FraudShieldAiChatbot extends HTMLElement {
           font-family: 'Inter', sans-serif, system-ui;
         }
 
-        /* Logo Attention Animation (Halka sa pulse/bounce) */
+        /* Logo Attention Animation */
         @keyframes logoAttention {
           0%, 100% {
             transform: scale(1) translateY(0);
@@ -77,8 +77,7 @@ class FraudShieldAiChatbot extends HTMLElement {
           right: 70px;
           bottom: 5px;
           background: #121214;
-          border: 1px solid #00ff66/40;
-          border-color: rgba(0, 255, 102, 0.4);
+          border: 1px solid rgba(0, 255, 102, 0.4);
           color: #ffffff;
           padding: 10px 14px;
           border-radius: 12px;
@@ -299,11 +298,14 @@ class FraudShieldAiChatbot extends HTMLElement {
             <span>FraudShield AI 🛡️</span>
             <button class="close-tip" id="close-tip">&times;</button>
           </div>
-          <p style="color: #d1d5db; line-height: 1.3;">Hey! Click here to chat with me & protect your apps.</p>
+          <p style="color: #d1d5db; line-height: 1.3;">Hey! Click here to chat with me & analyse your apps.</p>
         </div>
 
         <button class="chat-toggle-btn" id="toggle-btn" title="AI Chat Assistant">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
         </button>
       </div>
 
@@ -341,9 +343,8 @@ class FraudShieldAiChatbot extends HTMLElement {
     const input = this.shadowRoot.getElementById('user-input');
     const sendBtn = this.shadowRoot.getElementById('send-btn');
 
-    // Toggle open/close chat box & hide tooltip on open
     toggleBtn.addEventListener('click', () => {
-      tooltip.classList.remove('show'); // Tooltip hide ho jayega jab user click karega
+      tooltip.classList.remove('show');
       chatContainer.classList.toggle('open');
       if (chatContainer.classList.contains('open')) {
         input.focus();
@@ -354,7 +355,6 @@ class FraudShieldAiChatbot extends HTMLElement {
       chatContainer.classList.remove('open');
     });
 
-    // Tooltip close button
     closeTipBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       tooltip.classList.remove('show');
@@ -390,7 +390,7 @@ class FraudShieldAiChatbot extends HTMLElement {
         this.appendMessage('Koyi response nahi mila.', 'bot-message');
       }
     } catch (error) {
-        this.appendMessage('Server se connect nahi ho paya.', 'bot-message');
+      this.appendMessage('Server se connect nahi ho paya.', 'bot-message');
     } finally {
       this.showTyping(false);
     }
