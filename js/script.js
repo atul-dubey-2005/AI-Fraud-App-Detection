@@ -15,6 +15,17 @@ if (menuBtn && mobileMenu) {
     });
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+});
 
 async function fetchLatestNews() {
     const newsContainer = document.getElementById('news-container');
