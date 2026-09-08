@@ -16,32 +16,103 @@ class FraudShieldAiChatbot extends HTMLElement {
           box-sizing: border-box;
           margin: 0;
           padding: 0;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-family: 'Inter', sans-serif, system-ui;
         }
 
-        .chat-container {
+        /* Floating Toggle Button */
+        .chat-toggle-btn {
           position: fixed;
           bottom: 20px;
           right: 20px;
+          width: 56px;
+          height: 56px;
+          background: #00ff66;
+          color: #050507;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 20px rgba(0, 255, 102, 0.4);
+          z-index: 9999;
+          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s;
+        }
+
+        .chat-toggle-btn:hover {
+          transform: scale(1.08);
+          background: #00cc52;
+        }
+
+        /* Chat Container with Smooth Pop-up Animation */
+        .chat-container {
+          position: fixed;
+          bottom: 90px;
+          right: 20px;
           width: 360px;
           max-width: 90vw;
-          height: 500px;
-          background: #ffffff;
-          border-radius: 12px;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+          height: 480px;
+          background: #0f0f13;
+          border: 1px solid #1c1c24;
+          border-radius: 16px;
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
           display: flex;
           flex-direction: column;
           overflow: hidden;
           z-index: 9999;
+          transform: scale(0);
+          opacity: 0;
+          transform-origin: bottom right;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+          pointer-events: none;
+        }
+
+        .chat-container.open {
+          transform: scale(1);
+          opacity: 1;
+          pointer-events: auto;
         }
 
         .chat-header {
-          background: #4f46e5;
+          background: #0f0f13;
+          border-bottom: 1px solid #1c1c24;
           color: #ffffff;
-          padding: 14px;
-          font-size: 1rem;
-          font-weight: 600;
-          text-align: center;
+          padding: 14px 16px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .header-title {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .chat-header .status-dot {
+          width: 8px;
+          height: 8px;
+          background-color: #00ff66;
+          border-radius: 50%;
+          box-shadow: 0 0 8px rgba(0, 255, 102, 0.6);
+        }
+
+        .close-btn {
+          background: transparent;
+          border: none;
+          color: #9ca3af;
+          cursor: pointer;
+          font-size: 1.2rem;
+          padding: 2px 6px;
+          border-radius: 6px;
+          transition: color 0.2s, background 0.2s;
+        }
+
+        .close-btn:hover {
+          color: #ffffff;
+          background: #1c1c24;
         }
 
         .chat-messages {
@@ -50,94 +121,138 @@ class FraudShieldAiChatbot extends HTMLElement {
           overflow-y: auto;
           display: flex;
           flex-direction: column;
-          gap: 10px;
-          background: #fafafa;
+          gap: 12px;
+          background: #050507;
         }
 
         .message {
-          max-width: 80%;
+          max-width: 85%;
           padding: 10px 14px;
-          border-radius: 16px;
-          font-size: 0.9rem;
+          border-radius: 12px;
+          font-size: 0.875rem;
           line-height: 1.4;
           word-wrap: break-word;
         }
 
         .user-message {
           align-self: flex-end;
-          background-color: #4f46e5;
-          color: #ffffff;
-          border-bottom-right-radius: 4px;
+          background-color: #00ff66;
+          color: #000000;
+          font-weight: 500;
+          border-bottom-right-radius: 2px;
         }
 
         .bot-message {
           align-self: flex-start;
-          background-color: #e5e7eb;
-          color: #1f2937;
-          border-bottom-left-radius: 4px;
+          background-color: #1c1c24;
+          color: #d1d5db;
+          border: 1px solid #272732;
+          border-bottom-left-radius: 2px;
         }
 
         .typing-indicator {
           align-self: flex-start;
           font-style: italic;
-          color: #6b7280;
-          font-size: 0.8rem;
+          color: #9ca3af;
+          font-size: 0.75rem;
           display: none;
+          padding: 6px 10px;
+          background: #1c1c24;
+          border-radius: 8px;
         }
 
         .chat-input-container {
           display: flex;
-          padding: 10px;
-          background: #ffffff;
-          border-top: 1px solid #e5e7eb;
+          padding: 12px;
+          background: #0f0f13;
+          border-top: 1px solid #1c1c24;
+          gap: 8px;
         }
 
         .chat-input {
           flex: 1;
-          border: 1px solid #d1d5db;
-          border-radius: 20px;
+          background: #050507;
+          border: 1px solid #1c1c24;
+          color: #ffffff;
+          border-radius: 10px;
           padding: 8px 14px;
           outline: none;
-          font-size: 0.9rem;
+          font-size: 0.875rem;
+          transition: border-color 0.2s;
         }
 
         .chat-input:focus {
-          border-color: #4f46e5;
+          border-color: #00ff66;
         }
 
         .send-btn {
-          background: #4f46e5;
-          color: white;
+          background: #00ff66;
+          color: #050507;
           border: none;
-          padding: 8px 14px;
-          margin-left: 8px;
-          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
           cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           font-weight: bold;
+          transition: background 0.2s;
+        }
+
+        .send-btn:hover {
+          background: #00cc52;
         }
       </style>
 
-      <div class="chat-container">
-        <!-- Header Name Updated -->
-        <div class="chat-header">FraudShieldAi Chatbot</div>
+      <!-- Floating Bubble Button -->
+      <button class="chat-toggle-btn" id="toggle-btn" title="AI Chat Assistant">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'"></path><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </button>
+
+      <!-- Chat Box Window -->
+      <div class="chat-container" id="chat-container">
+        <div class="chat-header">
+          <div class="header-title">
+            <div class="status-dot"></div>
+            FraudShield AI
+          </div>
+          <button class="close-btn" id="close-btn">&times;</button>
+        </div>
         
         <div class="chat-messages" id="chat-messages">
-          <!-- Welcome Message Updated -->
-          <div class="message bot-message">Hello! Main FraudShieldAi Assistant hoon. Main aapki kya madad kar sakta hoon?</div>
-          <div class="typing-indicator" id="typing-indicator">FraudShieldAi soch raha hai...</div>
+          <div class="message bot-message">Hello! Main FraudShield AI Assistant hoon. Aapki kya madad kar sakta hoon?</div>
+          <div class="typing-indicator" id="typing-indicator">FraudShield AI soch raha hai...</div>
         </div>
         
         <div class="chat-input-container">
-          <input type="text" id="user-input" class="chat-input" placeholder="Message likhein..." />
-          <button class="send-btn" id="send-btn">&#10148;</button>
+          <input type="text" id="user-input" class="chat-input" placeholder="Yahan message likhein..." />
+          <button class="send-btn" id="send-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
         </div>
       </div>
     `;
   }
 
   initEvents() {
+    const toggleBtn = this.shadowRoot.getElementById('toggle-btn');
+    const closeBtn = this.shadowRoot.getElementById('close-btn');
+    const chatContainer = this.shadowRoot.getElementById('chat-container');
     const input = this.shadowRoot.getElementById('user-input');
     const sendBtn = this.shadowRoot.getElementById('send-btn');
+
+    // Toggle open/close
+    toggleBtn.addEventListener('click', () => {
+      chatContainer.classList.toggle('open');
+      if (chatContainer.classList.contains('open')) {
+        input.focus();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      chatContainer.classList.remove('open');
+    });
 
     sendBtn.addEventListener('click', () => this.sendMessage());
     input.addEventListener('keypress', (e) => {
@@ -156,7 +271,7 @@ class FraudShieldAiChatbot extends HTMLElement {
     this.showTyping(true);
 
     try {
-      const response = await fetch('api/chat', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: messageText }),
@@ -195,5 +310,4 @@ class FraudShieldAiChatbot extends HTMLElement {
   }
 }
 
-// Custom Tag Defined with Updated Name
 customElements.define('fraud-shield-ai', FraudShieldAiChatbot);
