@@ -58,15 +58,50 @@
         </button>
     </div>
 
-    <!-- Mobile Dropdown Menu -->
-    <div id="mobile-menu" class="hidden fixed inset-x-0 top-[65px] z-40 bg-surface border-b border-surfaceBorder p-4 space-y-2 lg:hidden shadow-xl">
-        <a href="dashboard.html" class="block px-4 py-2.5 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm">Overview</a>
-        <a href="analyze.html" class="block px-4 py-2.5 rounded-xl text-gray-400 hover:text-white font-medium text-sm">Analyze App</a>
-        <a href="reports.html" class="block px-4 py-2.5 rounded-xl text-gray-400 hover:text-white font-medium text-sm">Reports</a>
-        <a href="history.html" class="block px-4 py-2.5 rounded-xl text-gray-400 hover:text-white font-medium text-sm">History Logs</a>
-        <a href="profile.html" class="block px-4 py-2.5 rounded-xl text-gray-400 hover:text-white font-medium text-sm">Profile Settings</a>
-        <button onclick="handleLogout()" class="w-full text-left px-4 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 font-medium text-sm">Logout</button>
+    <!-- Mobile Slide-over / Dropdown Menu -->
+<div id="mobile-menu" class="hidden fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-surfaceBorder p-6 flex flex-col justify-between shadow-2xl lg:hidden transition-transform transform">
+    <div class="space-y-6">
+        <!-- Close / Header row inside mobile menu -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30">
+                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <span class="text-white font-bold text-sm">FraudShield AI</span>
+            </div>
+            <!-- Close Button -->
+            <button id="close-menu-btn" class="text-gray-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="space-y-2 mobile-nav-links">
+            <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm">Overview</a>
+            <a href="analyze.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Analyze App</a>
+            <a href="reports.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Reports</a>
+            <a href="history.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">History Logs</a>
+            <a href="profile.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Profile Settings</a>
+        </nav>
     </div>
+
+    <!-- Bottom Profile/Logout Section -->
+    <div class="p-4 bg-surfaceBorder/40 border border-surfaceBorder rounded-2xl flex items-center justify-between">
+        <div class="flex items-center space-x-3 overflow-hidden">
+            <div class="w-9 h-9 rounded-xl bg-primary/20 text-primary font-bold flex items-center justify-center shrink-0 border border-primary/35">U</div>
+            <div class="overflow-hidden">
+                <h4 class="text-xs font-bold text-white truncate">Atul Dubey</h4>
+                <p class="text-[10px] text-gray-500 uppercase font-mono">Standard Node</p>
+            </div>
+        </div>
+        <button onclick="handleLogout()" class="text-gray-400 hover:text-red-400 transition-colors p-1.5" title="Logout">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        </button>
+    </div>
+</div>
+
+<!-- Backdrop Overlay for Mobile Menu -->
+<div id="menu-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden"></div>
 
 
     <!-- Sidebar Navigation -->
@@ -504,6 +539,32 @@ if (menuBtn && mobileMenu) {
         mobileMenu.classList.toggle('hidden');
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = document.getElementById('menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const navLinks = document.querySelectorAll('.mobile-nav-links a');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+            menuOverlay.classList.toggle('hidden');
+        }
+
+        if (menuBtn) menuBtn.addEventListener('click', toggleMobileMenu);
+        if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMobileMenu);
+        if (menuOverlay) menuOverlay.addEventListener('click', toggleMobileMenu);
+
+        // Jaise hi user koi option select karega, menu apne aap band ho jayega
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+    });
     </script>
 </body>
 </html>
