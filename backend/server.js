@@ -84,11 +84,12 @@ app.post('/api/chat', async (req, res) => {
         }
 
         res.json({ success: true, reply });
-    }C (error) {
+    } catch (error) { // <--- Yahan 'C' ki jagah 'catch' hona chahiye
         console.error("Chat API Error:", error);
         res.status(500).json({ success: false, reply: "Server error processing your request." });
     }
 });
+
 
 // --- Mailjet HTTP API Setup ---
 async function sendEmailViaMailjet(toEmail, subject, htmlContent) {
