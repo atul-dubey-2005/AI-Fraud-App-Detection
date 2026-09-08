@@ -36,9 +36,26 @@
     </script>
 </head>
 <body class="bg-background text-gray-300 h-screen flex overflow-hidden selection:bg-primary selection:text-black">
+    <!-- Mobile Header Bar -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-gray-800 flex justify-between items-center p-4 lg:hidden">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary shrink-0">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <span class="text-white font-bold text-base">FraudShield</span>
+        </div>
+        <button id="menu-btn" class="text-gray-400 hover:text-white focus:outline-none p-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Overlay Background -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
+
 
     <!-- Sidebar -->
-    <aside class="w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background">
+   <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+
         <div>
             <!-- Logo -->
             <div class="p-6 flex items-center space-x-3">
@@ -137,7 +154,8 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto flex flex-col">
+    <main class="flex-1 overflow-y-auto flex flex-col pt-16 lg:pt-0">
+
         <!-- Header -->
 <header class="flex justify-end items-center p-6 space-x-4 shrink-0">
     <!-- Signup Button (ID removed) -->
@@ -1080,6 +1098,30 @@
             console.error("Failed to connect to backend API:", error);
         }
     }
+
+document.addEventListener('DOMContentLoaded', () => {
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+        if (overlay) overlay.addEventListener('click', toggleMenu);
+
+        // Jaise hi koi bhi nav link click ho, mobile mein menu band ho jaye
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    toggleMenu();
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>
