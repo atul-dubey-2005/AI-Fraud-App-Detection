@@ -78,7 +78,7 @@ function renderNews() {
     if (!newsContainer) return; 
 
     newsContainer.innerHTML = ''; 
-    
+
     const limit = isExpanded ? expandedCount : collapsedCount;
     const articlesToShow = allFetchedArticles.slice(0, limit);
 
@@ -90,14 +90,14 @@ function renderNews() {
         const formattedDate = `${day} ${month} ${year}`;
 
         const newsHTML = `
-            <a href="${article.link}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-5 border-b border-gray-800 hover:bg-gray-800/30 transition block">
-                <div class="flex items-center space-x-6 overflow-hidden">
-                    <span class="px-3 py-1 border border-primary/50 text-primary text-xs font-mono rounded bg-primary/5 whitespace-nowrap">${formattedDate}</span>
-                    <p class="text-sm font-medium text-gray-200 truncate pr-4">${article.title}</p>
+            <a href="${article.link}" target="_blank" rel="noopener noreferrer" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 md:p-5 border-b border-gray-800 hover:bg-gray-800/30 transition block gap-3 sm:gap-4">
+                <div class="flex items-start sm:items-center space-x-4 overflow-hidden">
+                    <span class="px-3 py-1 border border-primary/50 text-primary text-xs font-mono rounded bg-primary/5 whitespace-nowrap shrink-0 mt-0.5 sm:mt-0">${formattedDate}</span>
+                    <p class="text-sm font-medium text-gray-200 leading-snug break-words pr-2">${article.title}</p>
                 </div>
-                <div class="flex items-center space-x-4 text-gray-500 shrink-0">
-                    <span class="text-xs hidden sm:block font-semibold">${article.sourceName}</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <div class="flex items-center justify-between sm:justify-end space-x-4 text-gray-500 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-800/60">
+                    <span class="text-xs font-semibold">${article.sourceName}</span>
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </div>
             </a>
         `;
@@ -114,6 +114,7 @@ function renderNews() {
         }
     }
 }
+
 
 // ==========================================
 // 2. PAGE LOAD EVENTS (News, Login, Register)
