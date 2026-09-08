@@ -42,6 +42,32 @@
 </head>
 <body class="bg-background text-gray-300 min-h-screen flex selection:bg-primary selection:text-black">
 
+    <!-- Mobile Header Bar (Sirf mobile/tablet par dikhega) -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-surfaceBorder lg:hidden flex justify-between items-center p-4">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/30">
+                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <span class="text-white font-bold text-sm">FraudShield AI</span>
+        </div>
+        <button id="menu-btn" class="text-gray-400 hover:text-white focus:outline-none p-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-x-0 top-[65px] z-40 bg-surface border-b border-surfaceBorder p-4 space-y-2 lg:hidden shadow-xl">
+        <a href="dashboard.html" class="block px-4 py-2.5 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm">Overview</a>
+        <a href="analyze.html" class="block px-4 py-2.5 rounded-xl text-gray-400 hover:text-white font-medium text-sm">Analyze App</a>
+        <a href="reports.html" class="block px-4 py-2.5 rounded-xl text-gray-400 hover:text-white font-medium text-sm">Reports</a>
+        <a href="history.html" class="block px-4 py-2.5 rounded-xl text-gray-400 hover:text-white font-medium text-sm">History Logs</a>
+        <a href="profile.html" class="block px-4 py-2.5 rounded-xl text-gray-400 hover:text-white font-medium text-sm">Profile Settings</a>
+        <button onclick="handleLogout()" class="w-full text-left px-4 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 font-medium text-sm">Logout</button>
+    </div>
+
+
     <!-- Sidebar Navigation -->
     <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
         <div class="space-y-8">
