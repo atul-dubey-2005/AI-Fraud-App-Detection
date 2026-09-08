@@ -1,6 +1,5 @@
 require('dotenv').config({ path: '../.env' });
 const express = require('express');
-const nodemailer = require('nodemailer');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
 const path = require('path');
@@ -50,7 +49,6 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-//Database connection test
 // Test Connection on startup
 async function testConnection() {
     try {
@@ -65,24 +63,49 @@ testConnection();
 
 module.exports = pool;
     
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,           // 465 ki jagah 587 use karein
-    secure: false,       // Port 587 ke liye isko 'false' rakhna zaroori hai
-    requireTLS: true,    // TLS enable karein
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-    },
-    tls: {
-        rejectUnauthorized: false
-    },
-    family: 4,
-    connectionTimeout: 10000,
-    socketTimeout: 10000
-});
+// --- Mailjet HTTP API Setup ---
+async function sendEmailViaMailjet(toEmail, subject, htmlContent) {
+    const apiKey = process.env.MAILJET_API_KEY; 
+    const secretKey = process.env.MAILJET_SECRET_KEY;
+    
+    // API keys ko Base64 mein convert karna (Mailjet ka rule)
+    const authHeader = 'Basic ' + Buffer.from(apiKey + ':' + secretKey).toString('base64');
 
+    const payload = {
+        Messages: [{
+            From: { 
+                Email: "fraudshield2026@gmail.com", // Aapka verified email
+                Name: "FraudShield AI" 
+            },
+            To: [{ Email: toEmail }],
+            Subject: subject,
+            HTMLPart: htmlContent
+        }]
+    };
 
+    try {
+        const response = await fetch('https://api.mailjet.com/v3.1/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authHeader
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Mailjet API Error:", errorData);
+            return false;
+        }
+        
+        console.log(`✅ Email successfully sent to [${toEmail}] via Mailjet!`);
+        return true;
+    } catch (error) {
+        console.error("⚠️ Email sending failed:", error.message);
+        return false;
+    }
+}
 
 // ==========================================
 // PASSPORT: USER SERIALIZATION
@@ -102,8 +125,8 @@ passport.deserializeUser(async (email, done) => {
 // ==========================================
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
-clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-callbackURL: process.env.GOOGLE_CALLBACK_URL
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         const email = profile.emails[0].value;
@@ -197,7 +220,8 @@ app.post('/api/register', async (req, res) => {
                     </div>
                 `
             };
-            await transporter.sendMail(mailOptions);
+            // 🆕 Mailjet API use kar raha hai
+            await sendEmailViaMailjet(mailOptions.to, mailOptions.subject, mailOptions.html);
         } catch (emailError) {
             console.error('⚠️ Email sending failed:', emailError.message);
         }
@@ -282,7 +306,8 @@ app.post('/api/forgot-password', async (req, res) => {
                     </div>
                 `
             };
-            await transporter.sendMail(mailOptions);
+            // 🆕 Mailjet API use kar raha hai
+            await sendEmailViaMailjet(mailOptions.to, mailOptions.subject, mailOptions.html);
         } catch (emailError) {
             console.error('⚠️ Email sending failed:', emailError.message);
         }
@@ -333,13 +358,15 @@ app.post('/api/contact', async (req, res) => {
             `
         };
 
-        await transporter.sendMail(mailOptions);
+        // 🆕 Mailjet API use kar raha hai
+        await sendEmailViaMailjet(mailOptions.to, mailOptions.subject, mailOptions.html);
         res.status(200).json({ success: true, message: 'Message sent successfully!' });
     } catch (error) {
         console.error('Contact Email Error:', error);
         res.status(500).json({ success: false, message: 'Failed to send message. Server error.' });
     }
 });
+
 app.get('/api/live-stats', async (req, res) => {
     try {
         const [totalScansRows] = await pool.query('SELECT COUNT(*) as total FROM scan_history');
@@ -348,6 +375,7 @@ app.get('/api/live-stats', async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
+
 // --- Admin API ---
 app.get('/api/admin/users', async (req, res) => {
     try {
@@ -377,7 +405,6 @@ app.get('/auth/google/callback',
     }
 );
 
-// 👇 BAS YEH EK LINE ADD KARNI HAI 👇
 app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 app.get('/auth/github/callback', 
@@ -386,7 +413,6 @@ app.get('/auth/github/callback',
         res.redirect(`/dashboard.html?oauth=true&name=${encodeURIComponent(req.user.full_name)}&role=${req.user.role}&email=${encodeURIComponent(req.user.email)}`); 
     }
 );
-
 
 // --- Profile: Change Password API ---
 app.post('/api/change-password', async (req, res) => {
@@ -436,7 +462,8 @@ app.post('/api/send-update-otp', async (req, res) => {
                 </div>
             `
         };
-        await transporter.sendMail(mailOptions);
+        // 🆕 Mailjet API use kar raha hai
+        await sendEmailViaMailjet(mailOptions.to, mailOptions.subject, mailOptions.html);
         res.status(200).json({ success: true, message: 'OTP sent to email!' });
     } catch (error) {
         console.error('Send OTP Error:', error);
