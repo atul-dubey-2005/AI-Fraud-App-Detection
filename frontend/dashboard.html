@@ -77,31 +77,29 @@
 
         <!-- Navigation Links -->
         <nav class="space-y-2 mobile-nav-links">
-            <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm">Overview</a>
-            <a href="analyze.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Analyze App</a>
-            <a href="reports.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Reports</a>
-            <a href="history.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">History Logs</a>
-            <a href="profile.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Profile Settings</a>
+            <a href="dashboard.html" class="block px-4 py-3 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm">Overview</a>
+            <a href="analyze.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Analyze App</a>
+            <a href="reports.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Reports</a>
+            <a href="history.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">History Logs</a>
+            <a href="profile.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Profile Settings</a>
         </nav>
     </div>
 
-    <!-- Bottom Profile/Logout Section -->
-    <div class="p-4 bg-surfaceBorder/40 border border-surfaceBorder rounded-2xl flex items-center justify-between">
-        <div class="flex items-center space-x-3 overflow-hidden">
-            <div class="w-9 h-9 rounded-xl bg-primary/20 text-primary font-bold flex items-center justify-center shrink-0 border border-primary/35">U</div>
-            <div class="overflow-hidden">
-                <h4 class="text-xs font-bold text-white truncate">Atul Dubey</h4>
-                <p class="text-[10px] text-gray-500 uppercase font-mono">Standard Node</p>
-            </div>
+    <!-- Bottom Profile & Clean Logout Button Section -->
+    <div class="p-4 bg-surfaceBorder/40 border border-surfaceBorder rounded-2xl space-y-3">
+        <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400 font-medium">Logged in as</span>
+            <span class="text-xs font-bold text-white truncate max-w-[120px]" id="mobile-user-name">Loading...</span>
         </div>
-        <button onclick="handleLogout()" class="text-gray-400 hover:text-red-400 transition-colors p-1.5" title="Logout">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        <button onclick="handleLogout()" class="w-full py-2 px-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 font-medium text-xs transition-colors flex items-center justify-center space-x-2">
+            <span>Logout</span>
         </button>
     </div>
 </div>
 
 <!-- Backdrop Overlay for Mobile Menu -->
 <div id="menu-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden"></div>
+
 
 
     <!-- Sidebar Navigation -->
@@ -541,30 +539,43 @@ if (menuBtn && mobileMenu) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-        const menuBtn = document.getElementById('menu-btn');
-        const closeMenuBtn = document.getElementById('close-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuOverlay = document.getElementById('menu-overlay');
-        const navLinks = document.querySelectorAll('.mobile-nav-links a');
+    const menuBtn = document.getElementById('menu-btn');
+    const closeMenuBtn = document.getElementById('close-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.querySelectorAll('.mobile-nav-links a');
 
-        function toggleMobileMenu() {
-            mobileMenu.classList.toggle('hidden');
-            menuOverlay.classList.toggle('hidden');
+    function toggleMobileMenu() {
+        mobileMenu.classList.toggle('hidden');
+    }
+
+    if (menuBtn) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
+    }
+
+    if (closeMenuBtn) {
+        closeMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
+
+    // Screen mein kahin bhi bahar click karne par menu band ho jaye
+    document.addEventListener('click', (e) => {
+        if (mobileMenu && !mobileMenu.contains(e.target) && menuBtn && !menuBtn.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
         }
+    });
 
-        if (menuBtn) menuBtn.addEventListener('click', toggleMobileMenu);
-        if (closeMenuBtn) closeMenuBtn.addEventListener('click', toggleMobileMenu);
-        if (menuOverlay) menuOverlay.addEventListener('click', toggleMobileMenu);
-
-        // Jaise hi user koi option select karega, menu apne aap band ho jayega
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth < 1024) {
-                    toggleMobileMenu();
-                }
-            });
+    // Jaise hi user koi option select karega, menu apne aap band ho jayega
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth < 1024) {
+                mobileMenu.classList.add('hidden');
+            }
         });
     });
+});
+
     </script>
 </body>
 </html>
