@@ -11,7 +11,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FraudShield</title>
-    
+
     <!-- Link to external CSS file -->
     <link rel="stylesheet" href="style.css">
 
@@ -35,7 +35,7 @@
         }
     </script>
 </head>
-<body class="bg-background text-gray-300 h-screen flex overflow-hidden selection:bg-primary selection:text-black">
+<body class="bg-background text-gray-300 min-h-screen flex overflow-x-hidden selection:bg-primary selection:text-black">
     <!-- Mobile Header Bar -->
     <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-gray-800 flex justify-between items-center p-4 lg:hidden">
         <div class="flex items-center space-x-3">
@@ -54,7 +54,7 @@
 
 
     <!-- Sidebar -->
-   <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+   <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out h-screen">
 
         <div>
             <!-- Logo -->
@@ -70,14 +70,14 @@
 
             <!-- Navigation -->
             <nav class="px-3 space-y-1.5">
-                
+
                <a href="index.html" class="nav-item flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer" data-target="dashboard.html">
     <div class="flex items-center space-x-3">
         <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
         <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">Home</span>
     </div>
 </a>
-                
+
                 <!-- Analyze App -->
                 <a href="analyze.html" id="analyze-link" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
                     <div class="flex items-center space-x-3">
@@ -87,7 +87,7 @@
                     <!-- Lock Icon -->
                     <svg id="lock-icon" class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </a>
-                
+
                 <!-- Reports Link Fix -->
 <a href="login.html" class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
     <div class="flex items-center space-x-3">
@@ -105,27 +105,27 @@
     </div>
     <svg class="w-4 h-4 shrink-0 text-gray-500 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
 </a>
-                
+
                 <div class="h-3"></div> <!-- Spacer -->
-                
+
                 <!-- How to Detect -->
                 <a href="#how-to-detect" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
                     <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     <span class="font-medium text-sm truncate group-hover:translate-x-1 transition-transform duration-300">How to Detect</span>
                 </a>
-                
+
                 <!-- About -->
                 <a href="#about-section" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
                     <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">About</span>
                 </a>
-                
+
                 <!-- How It Works -->
                 <a href="#how-it-works" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
                     <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     <span class="font-medium text-sm group-hover:translate-x-1 transition-transform duration-300">How It Works</span>
                 </a>
-                
+
                 <!-- Contact -->
                 <a href="#contact" class="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40 transition-all duration-300 group cursor-pointer">
                     <svg class="w-5 h-5 shrink-0 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -154,7 +154,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto flex flex-col pt-16 lg:pt-0">
+    <main class="flex-1 overflow-y-auto flex flex-col pt-16 lg:pt-0 lg:ml-56">
 
         <!-- Header -->
 <header class="flex justify-end items-center p-6 space-x-4 shrink-0">
@@ -163,7 +163,7 @@
         <span>SIGNUP</span>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
     </a>
-    
+
     <!-- Login Button (ID removed) -->
     <a href="login.html" class="px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-sm font-bold tracking-wide">
         <span>LOGIN</span>
@@ -180,7 +180,7 @@
                     FRAUDULENT APPS <br>
                     USING <span class="text-primary drop-shadow-[0_0_15px_rgba(0,255,102,0.4)]"> <br> SENTIMENTAL <br> ANALYSIS</span>
                 </h1>
-                
+
                 <p class="text-gray-400 text-lg max-w-xl leading-relaxed">
                     Smart AI analysis of user reviews to identify suspicious patterns, fraudulent behavior and protect you from harmful applications.
                 </p>
@@ -203,7 +203,7 @@
     <span>WATCH DEMO</span>
     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
 </a>
-    
+
     <!-- Free Trial Link -->
     <a href="register.html" class="px-6 py-3 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center space-x-3 text-sm font-semibold tracking-wider transition-colors cursor-pointer">
         <span>FREE TRIAL(Signup)</span>
@@ -229,10 +229,10 @@
 
                 <!-- Phone Container -->
                 <div class="phone-container relative w-48 h-[350px] border-[3px] border-gray-800 rounded-[2rem] bg-[#09090b]/80 backdrop-blur-sm shadow-[0_0_50px_rgba(0,255,102,0.1)] overflow-hidden flex flex-col items-center justify-center">
-                    
+
                     <!-- Top Notch -->
                     <div class="absolute top-0 w-24 h-5 bg-gray-800 rounded-b-xl"></div>
-                    
+
                     <!-- Scanner Line Animation -->
                     <div class="scanner-line"></div>
 
@@ -244,7 +244,7 @@
     <svg class="w-12 h-12 text-primary relative z-10" viewBox="0 0 32 32">
         <rect width="32" height="32" rx="8" fill="#09090b" stroke="#00ff66" stroke-width="2"></rect>
         <path d="M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z" fill="rgba(0,255,102,0.15)" stroke="#00ff66" stroke-width="1.5"></path>
-        <text x="16" y="17.5" font-family="sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">FS</text>
+                <text x="16" y="17.5" font-family="sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">FS</text>
     </svg>
 </div>
 
@@ -258,7 +258,7 @@
 <!-- 1. STATS DASHBOARD SECTION -->
 <!-- ============================================== -->
 <div class="px-12 mb-10 mt-6 border-t border-gray-800/60">
-    
+
     <!-- NEW: DATA HEADING SECTION -->
     <div class="mb-6 mt-10 flex items-center justify-between ">
         <div class="flex items-center space-x-2.5">
@@ -279,7 +279,7 @@
 
     <!-- 4 Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        
+
         <!-- Card 1: Apps Scanned -->
         <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-28 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
             <div class="flex justify-between items-start">
@@ -334,7 +334,7 @@
 <!-- 2. TRENDING SECTION -->
 <!-- ============================================== -->
 <div class="px-12 pt-10 pb-10 ">
-    
+
     <div class="mb-6 flex items-center justify-between">
         <div class="flex items-center space-x-2.5">
             <!-- Trending Icon Box -->
@@ -351,7 +351,7 @@
 
     <!-- JS will inject real-time cards into this container -->
     <div id="recent-apps-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        
+
         <!-- Placeholder 1: Google Wallet -->
         <div class="bg-surface border border-gray-800 rounded-xl p-3.5 flex items-center justify-between hover:border-gray-700 hover:bg-gray-800/30 transition-all cursor-pointer">
             <div class="flex items-center space-x-3">
@@ -436,7 +436,7 @@
 <!-- 3. HOW TO DETECT / FEATURES SECTION -->
 <!-- ============================================== -->
 <div class="px-12 py-16 border-t border-gray-800/60" id="how-to-detect">
-    
+
     <!-- Section Header -->
     <div class="mb-12 flex flex-col items-center justify-center text-center">
         <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 mb-5 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
@@ -448,7 +448,7 @@
 
     <!-- Features Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        
+
         <!-- Card 1: Sentiment Analysis -->
         <div class="bg-surface border border-gray-800 rounded-2xl p-6 hover:border-primary/50 hover:bg-gray-800/30 transition-all duration-300 transform hover:-translate-y-1.5 relative overflow-hidden group shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
             <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none group-hover:bg-primary/10 transition-colors"></div>
@@ -496,7 +496,7 @@
 <!-- 4. ABOUT US SECTION (EXPANDED & PREMIUM) -->
 <!-- ============================================== -->
 <div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="about-section">
-    
+
     <!-- Background Glow -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"></div>
@@ -504,18 +504,18 @@
 
     <!-- PART 1: Mission & Team Wrapper -->
     <div class="flex flex-col xl:flex-row gap-12 relative z-10 w-full">
-        
+
         <!-- Left Side: Story & Mission -->
         <div class="xl:w-1/2 space-y-6">
             <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-2">
                 <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span class="text-xs font-bold text-primary tracking-widest uppercase">Our Mission</span>
             </div>
-            
+
             <h2 class="text-4xl lg:text-5xl font-black text-white tracking-wide leading-tight">
                 PROTECTING THE <br> DIGITAL <span class="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-300">ECOSYSTEM</span>
             </h2>
-            
+
             <p class="text-gray-400 text-sm leading-relaxed max-w-lg">
                 FraudShield AI was born out of a critical need to secure the digital landscape. With millions of applications available, users are increasingly vulnerable to malicious software masquerading as legitimate utilities. 
             </p>
@@ -542,9 +542,9 @@
                 <span class="w-8 h-px bg-primary mr-4"></span>
                 The Core Team
             </h3>
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-                
+
                 <!-- Team Member 1: Atul Dubey (Project Leader) -->
                 <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
                     <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
@@ -595,9 +595,9 @@
             Our Core Principles
             <span class="w-12 h-px bg-gray-700 ml-4"></span>
         </h3>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
             <!-- Principle 1 -->
             <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 text-center hover:bg-gray-800/30 transition-colors">
                 <div class="w-10 h-10 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
@@ -633,7 +633,7 @@
 <!-- 5. HOW IT WORKS SECTION -->
 <!-- ============================================== -->
 <div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="how-it-works">
-    
+
     <!-- Section Header -->
     <div class="mb-14 flex flex-col items-center justify-center text-center relative z-10">
         <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-4">
@@ -650,7 +650,7 @@
 
     <!-- Steps Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
-        
+
         <!-- Connecting Line (Visible only on large screens) -->
         <div class="hidden lg:block absolute top-1/2 left-0 w-full h-px bg-gray-800 -z-10 -translate-y-6"></div>
 
@@ -700,7 +700,7 @@
 <!-- 6. CONTACT US SECTION -->
 <!-- ============================================== -->
 <div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="contact">
-    
+
     <!-- Background Glow -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         <div class="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px]"></div>
@@ -727,13 +727,13 @@
             <form id="contactForm" class="bg-surface border border-gray-800 rounded-3xl p-8 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    
+
                     <!-- Name Input -->
                     <div>
                         <label for="contact-name" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
-                        <input type="text" id="contact-name" required placeholder="John Doe" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
+                                                <input type="text" id="contact-name" required placeholder="John Doe" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors">
                     </div>
-                    
+
                     <!-- Email Input -->
                     <div>
                         <label for="contact-email" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
@@ -765,7 +765,7 @@
         <div class="lg:w-5/12 space-y-8">
             <div class="bg-surface/50 border border-gray-800 rounded-2xl p-8 hover:bg-gray-800/30 transition-colors">
                 <h3 class="text-xl font-bold text-white mb-6">Contact Information</h3>
-                
+
                 <div class="space-y-6">
                     <!-- Email -->
                     <div class="flex items-start space-x-4">
@@ -808,8 +808,8 @@
             </div>
         </div>
 
-        
-        
+
+
     </div>
 </div>
 
@@ -818,7 +818,7 @@
 <!-- ============================================== -->
 <section id="terms" class="py-20 bg-background relative z-10 border-t border-gray-800">
     <div class="max-w-5xl mx-auto px-6">
-        
+
         <!-- Section Header -->
         <div class="text-center mb-12">
             <div class="inline-flex items-center justify-center px-4 py-1.5 mb-4 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold tracking-wide uppercase">
@@ -830,7 +830,7 @@
 
         <!-- Terms Grid/List -->
         <div class="space-y-6">
-            
+
             <!-- Term 1 -->
             <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
                 <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
@@ -840,7 +840,7 @@
                     By accessing and using FraudShield AI, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by these terms, please do not use this service.
                 </p>
             </div>
-            
+
             <!-- Term 2 -->
             <div class="bg-surface border border-gray-800 rounded-2xl p-6 md:p-8 hover:border-primary/30 transition-colors duration-300">
                 <h3 class="text-xl font-semibold text-primary mb-3 flex items-center">
@@ -895,7 +895,7 @@
 <!-- ============================================== -->
 <div class="px-12 py-10">
     <div class="bg-surface border border-gray-800 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:border-gray-700 transition-colors">
-        
+
         <!-- Subtle Green Glow Background Effect -->
         <div class="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none"></div>
 
@@ -919,7 +919,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </a>
         </div>
-        
+
     </div>
 </div>
 <fraud-shield-ai></fraud-shield-ai>
@@ -929,7 +929,7 @@
         <footer class="px-12 py-16 mt-8 border-t border-gray-800/60 bg-[#09090b] shrink-0">
             <!-- Top Section: Logo/Desc & Links Grid -->
             <div class="flex flex-col lg:flex-row justify-between gap-12 lg:gap-8 mb-16">
-                
+
                 <!-- Left: Branding & Description -->
                 <div class="lg:w-1/3">
                     <!-- Logo -->
@@ -991,7 +991,7 @@
 
             <!-- Bottom Section: Copyright, Credits, & Socials -->
             <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800/60">
-                
+
                 <!-- Copyright -->
                 <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-6 md:mb-0">
                     COPYRIGHT &copy; FRAUDSHIELD 2026
@@ -1051,7 +1051,7 @@
 
                     data.recentApps.forEach(app => {
                         const statusStr = (app.status || 'Low Risk').toLowerCase();
-                        
+
                         let statusColor, statusBorder, statusLetter;
 
                         // 🟢 YAHAN L, M, aur H KA LOGIC AUR COLORS SET KIYE HAIN
@@ -1099,7 +1099,7 @@
         }
     }
 
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const menuBtn = document.getElementById('menu-btn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
