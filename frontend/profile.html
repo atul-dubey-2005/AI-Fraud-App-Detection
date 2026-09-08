@@ -30,10 +30,26 @@
     </script>
     <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
 </head>
-<body class="bg-background text-gray-300 min-h-screen flex selection:bg-primary selection:text-black">
+<body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-primary selection:text-black overflow-x-hidden">
 
-    <!-- Sidebar Navigation (Consistent across all pages) -->
-    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
+    <!-- Mobile Header Bar -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-surfaceBorder flex justify-between items-center p-4 lg:hidden">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary shrink-0">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+            <span class="text-white font-bold text-base">FraudShield</span>
+        </div>
+        <button id="menu-btn" class="text-gray-400 hover:text-white focus:outline-none p-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Overlay Background -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
+
+    <!-- Sidebar Navigation (Responsive Drawer for Mobile & Fixed for PC) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-surfaceBorder flex flex-col justify-between p-6 transform -translate-x-full lg:translate-x-0 lg:static lg:h-screen transition-transform duration-300 ease-in-out">
         <div class="space-y-8">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
@@ -74,30 +90,30 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-grow flex flex-col min-w-0">
-        
+    <div class="flex-grow flex flex-col min-w-0 pt-16 lg:pt-0">
+
         <!-- Header -->
-        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-40">
+        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-6 lg:px-8 flex items-center justify-between sticky top-16 lg:top-0 z-40">
             <div>
                 <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Account Control</span>
-                <h1 class="text-lg font-bold text-white tracking-tight">User Profile Settings</h1>
+                <h1 class="text-base lg:text-lg font-bold text-white tracking-tight">User Profile Settings</h1>
             </div>
         </header>
 
         <!-- Main Workspace -->
-        <main class="p-8 space-y-8 flex-grow max-w-5xl mx-auto w-full">
-            
+        <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow max-w-5xl mx-auto w-full">
+
             <!-- Profile Overview Card -->
-            <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl flex items-center space-x-6 relative overflow-hidden shadow-2xl">
+            <div class="p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl flex flex-col sm:flex-row items-center sm:space-x-6 space-y-4 sm:space-y-0 relative overflow-hidden shadow-2xl text-center sm:text-left">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-                
-                <div class="w-24 h-24 rounded-2xl bg-primary/20 text-primary font-bold text-4xl flex items-center justify-center border-2 border-primary/30 shadow-[0_0_20px_rgba(0,255,102,0.15)]" id="profile-avatar">
+
+                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-primary/20 text-primary font-bold text-3xl sm:text-4xl flex items-center justify-center border-2 border-primary/30 shadow-[0_0_20px_rgba(0,255,102,0.15)] shrink-0" id="profile-avatar">
                     U
                 </div>
-                
+
                 <div class="relative z-10">
-                    <h2 id="profile-name" class="text-3xl font-extrabold text-white">Loading...</h2>
-                    <div class="flex items-center space-x-3 mt-2">
+                    <h2 id="profile-name" class="text-2xl sm:text-3xl font-extrabold text-white break-words">Loading...</h2>
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-2">
                         <span class="px-3 py-1 bg-surfaceBorder border border-gray-700 rounded-lg text-xs font-mono text-gray-400 uppercase tracking-widest">Role: <span id="profile-role" class="text-white">User</span></span>
                         <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-xs font-mono text-emerald-400 uppercase tracking-widest flex items-center space-x-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -108,17 +124,17 @@
             </div>
 
             <!-- Settings Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+
                 <!-- Account Details Update with OTP Flow -->
-                <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
+                <div class="p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
                     <div>
-                        <h3 class="text-white font-bold text-lg mb-6 flex items-center space-x-2">
-                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <h3 class="text-white font-bold text-base lg:text-lg mb-6 flex items-center space-x-2">
+                            <svg class="w-5 h-5 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             <span>Account Details</span>
                         </h3>
                         <form id="updateProfileForm" class="space-y-4">
-                            
+
                             <!-- Step 1: Request OTP -->
                             <div id="profile-step-1" class="space-y-4">
                                 <div>
@@ -153,10 +169,10 @@
                 </div>
 
                 <!-- Security & Password -->
-                <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
+                <div class="p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
                     <div>
-                        <h3 class="text-white font-bold text-lg mb-6 flex items-center space-x-2">
-                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        <h3 class="text-white font-bold text-base lg:text-lg mb-6 flex items-center space-x-2">
+                            <svg class="w-5 h-5 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                             <span>Security</span>
                         </h3>
                         <p class="text-sm text-gray-400 mb-6 leading-relaxed">Update your password to keep your FraudShield AI account secure.</p>
@@ -182,6 +198,30 @@
     </div>
 
     <script>
+        // Mobile Sidebar Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+
+            if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        toggleMenu();
+                    }
+                });
+            });
+        });
+
         // Load User Details
         const userName = localStorage.getItem('userName') || 'FraudShield User';
         const userRole = localStorage.getItem('userRole') || 'user';
@@ -246,11 +286,11 @@
                 const data = await response.json();
                 if (response.ok) {
                     alert('Profile name updated successfully!');
-                    
+
                     localStorage.setItem('userName', newName);
                     document.getElementById('profile-name').innerText = newName;
                     document.getElementById('profile-avatar').innerText = newName.charAt(0).toUpperCase();
-                    
+
                     document.getElementById('update-otp').value = '';
                     document.getElementById('update-email').value = '';
                     profileStep2.classList.add('hidden');
