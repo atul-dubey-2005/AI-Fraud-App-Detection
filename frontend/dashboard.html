@@ -330,6 +330,9 @@
     <script>
         const name = localStorage.getItem('userName') || 'User';
         const userEmail = localStorage.getItem('userEmail') || '';
+const mobileUserName = document.getElementById('mobile-user-name');
+if (mobileUserName) mobileUserName.innerText = name;
+
         document.getElementById('welcome-msg').innerText = `Welcome back, ${name}!`;
         document.getElementById('sidebar-name').innerText = name;
         document.getElementById('sidebar-avatar').innerText = name.charAt(0).toUpperCase();
