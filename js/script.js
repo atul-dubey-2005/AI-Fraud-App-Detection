@@ -6,6 +6,16 @@ let isExpanded = false;
 const collapsedCount = 5; 
 const expandedCount = 12; 
 
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+
+if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+}
+
+
 async function fetchLatestNews() {
     const newsContainer = document.getElementById('news-container');
     
