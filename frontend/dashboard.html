@@ -170,7 +170,8 @@
             </div>
         </header>
 
-        <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow">
+                <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow">
+
 
             <!-- Welcome Banner -->
             <div class="p-6 lg:p-8 bg-gradient-to-r from-surface to-surfaceBorder/40 border border-surfaceBorder rounded-3xl relative overflow-hidden flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 shadow-xl">
@@ -333,7 +334,7 @@
 const mobileUserName = document.getElementById('mobile-user-name');
 if (mobileUserName) mobileUserName.innerText = name;
 
-        document.getElementById('welcome-msg').innerText = `Welcome back, ${name}!`;
+        document.getElementById('welcome-msg').innerHTML = `Welcome back!,<br><span class="text-white">${name}!</span>`;
         document.getElementById('sidebar-name').innerText = name;
         document.getElementById('sidebar-avatar').innerText = name.charAt(0).toUpperCase();
 
