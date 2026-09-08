@@ -35,7 +35,7 @@
         }
     </script>
 </head>
-<body class="bg-background text-gray-300 min-h-screen flex overflow-x-hidden selection:bg-primary selection:text-black">
+<body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row overflow-x-hidden selection:bg-primary selection:text-black">
     <!-- Mobile Header Bar -->
     <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-gray-800 flex justify-between items-center p-4 lg:hidden">
         <div class="flex items-center space-x-3">
@@ -154,58 +154,58 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto flex flex-col pt-16 lg:pt-0 lg:ml-56">
+    <main class="flex-1 overflow-y-auto flex flex-col pt-16 lg:pt-0 lg:ml-56 w-full">
 
         <!-- Header -->
-<header class="flex justify-end items-center p-6 space-x-4 shrink-0">
+<header class="flex justify-end items-center p-4 lg:p-6 space-x-3 lg:space-x-4 shrink-0">
     <!-- Signup Button (ID removed) -->
-    <a href="register.html" class="px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-sm font-bold tracking-wide">
+    <a href="register.html" class="px-4 lg:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-xs lg:text-sm font-bold tracking-wide">
         <span>SIGNUP</span>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
     </a>
 
     <!-- Login Button (ID removed) -->
-    <a href="login.html" class="px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-sm font-bold tracking-wide">
+    <a href="login.html" class="px-4 lg:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-black transition-all duration-300 flex items-center space-x-2 text-xs lg:text-sm font-bold tracking-wide">
         <span>LOGIN</span>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
     </a>
 </header>
 
         <!-- Hero Section -->
-        <div class="px-12 pb-8 pt-2 flex flex-col lg:flex-row items-center justify-between min-h-[657px] -mt-4">
+        <div class="px-6 lg:px-12 pb-8 pt-2 flex flex-col lg:flex-row items-center justify-between min-h-[657px] -mt-4">
             <!-- Text Content -->
-            <div class="lg:w-1/2 space-y-6">
-                <h1 class="text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
-                    DETECTING <br>
-                    FRAUDULENT APPS <br>
-                    USING <span class="text-primary drop-shadow-[0_0_15px_rgba(0,255,102,0.4)]"> <br> SENTIMENTAL <br> ANALYSIS</span>
+            <div class="lg:w-1/2 space-y-6 text-center lg:text-left">
+                <h1 class="text-3xl sm:text-4xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                    DETECTING <br class="hidden sm:inline">
+                    FRAUDULENT APPS <br class="hidden sm:inline">
+                    USING <span class="text-primary drop-shadow-[0_0_15px_rgba(0,255,102,0.4)]">SENTIMENTAL <br class="hidden sm:inline"> ANALYSIS</span>
                 </h1>
 
-                <p class="text-gray-400 text-lg max-w-xl leading-relaxed">
+                <p class="text-gray-400 text-sm sm:text-base lg:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
                     Smart AI analysis of user reviews to identify suspicious patterns, fraudulent behavior and protect you from harmful applications.
                 </p>
 
                 <!-- Search Bar -->
-                <div class="relative max-w-xl mt-8">
+                <div class="relative max-w-xl mt-8 mx-auto lg:mx-0">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input type="text" placeholder="Search any mobile application to analyze..." class="w-full bg-surface border border-gray-800 rounded-full py-4 pl-12 pr-40 text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors">
-                    <a href="login.html" class="absolute inset-y-1.5 right-1.5 bg-primary hover:bg-primary-dark text-black font-bold px-6 rounded-full flex items-center justify-center space-x-2 transition-colors cursor-pointer">
-    <span>ANALYZE APP</span>
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-</a>
+                    <input type="text" placeholder="Search any mobile application..." class="w-full bg-surface border border-gray-800 rounded-full py-4 pl-12 pr-32 sm:pr-40 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 transition-colors">
+                    <a href="login.html" class="absolute inset-y-1.5 right-1.5 bg-primary hover:bg-primary-dark text-black font-bold px-4 sm:px-6 rounded-full flex items-center justify-center space-x-1 sm:space-x-2 transition-colors cursor-pointer text-xs sm:text-sm">
+                        <span>ANALYZE</span>
+                        <svg class="w-4 h-4 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
                 </div>
 
-                <div class="pt-4 flex flex-wrap gap-4">
+                <div class="pt-4 flex flex-wrap justify-center lg:justify-start gap-4">
     <!-- Watch Demo Link -->
-<a href="javascript:void(0)" onclick="openDemoModal()" id="watchDemoBtn" class="px-6 py-3 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center space-x-3 text-sm font-semibold tracking-wider transition-colors cursor-pointer">
+<a href="javascript:void(0)" onclick="openDemoModal()" id="watchDemoBtn" class="px-5 lg:px-6 py-3 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center space-x-3 text-xs lg:text-sm font-semibold tracking-wider transition-colors cursor-pointer">
     <span>WATCH DEMO</span>
     <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
 </a>
 
     <!-- Free Trial Link -->
-    <a href="register.html" class="px-6 py-3 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center space-x-3 text-sm font-semibold tracking-wider transition-colors cursor-pointer">
+    <a href="register.html" class="px-5 lg:px-6 py-3 rounded-full border border-gray-600 hover:border-gray-400 text-white flex items-center space-x-3 text-xs lg:text-sm font-semibold tracking-wider transition-colors cursor-pointer">
         <span>FREE TRIAL(Signup)</span>
         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
     </a>
@@ -220,11 +220,11 @@
                 <div class="radar-ring ring-3"></div>
 
                 <!-- Floating Labels -->
-                <div class="absolute top-10 left-16 text-[10px] text-gray-400 tracking-[0.3em]">SCANNING...</div>
-                <div class="absolute top-15 right-16 text-[10px] text-gray-400 tracking-[0.3em]">REVIEWING...</div>
-                <div class="absolute bottom-4 left-16 text-[10px] text-gray-400 tracking-[0.3em]">ANALYZING...</div>
-                <div class="absolute bottom-10 right-16 text-[10px] text-gray-400 tracking-[0.3em]">GENERATING...</div>
-                <div class="absolute top-1/2 left-4 text-[10px] text-gray-500 font-mono">01:0011</div>
+                <div class="absolute top-10 left-6 sm:left-16 text-[10px] text-gray-400 tracking-[0.3em]">SCANNING...</div>
+                <div class="absolute top-15 right-6 sm:right-16 text-[10px] text-gray-400 tracking-[0.3em]">REVIEWING...</div>
+                <div class="absolute bottom-4 left-6 sm:left-16 text-[10px] text-gray-400 tracking-[0.3em]">ANALYZING...</div>
+                <div class="absolute bottom-10 right-6 sm:right-16 text-[10px] text-gray-400 tracking-[0.3em]">GENERATING...</div>
+                <div class="absolute top-1/2 left-2 sm:left-4 text-[10px] text-gray-500 font-mono">01:0011</div>
                 <div class="absolute bottom-1/2 -right-2 text-[10px] text-gray-500 font-mono">0:101011</div>
 
                 <!-- Phone Container -->
@@ -257,7 +257,7 @@
 <!-- ============================================== -->
 <!-- 1. STATS DASHBOARD SECTION -->
 <!-- ============================================== -->
-<div class="px-12 mb-10 mt-6 border-t border-gray-800/60">
+<div class="px-6 lg:px-12 mb-10 mt-6 border-t border-gray-800/60">
 
     <!-- NEW: DATA HEADING SECTION -->
     <div class="mb-6 mt-10 flex items-center justify-between ">
@@ -268,17 +268,16 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
                 </svg>
             </div>
-            <h2 class="text-lg font-bold tracking-wide flex items-center space-x-1.5">
+            <h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
     <span class="text-primary tracking-wider">LIVE</span> 
     <span class="text-gray-500">:</span> 
     <span class="text-white">DATA OVERVIEW</span>
 </h2>
         </div>
-        <!-- (Optional) Agar right side mein koi link chahiye ho jaise "All Stats", toh yahan add kar sakte hain -->
     </div>
 
     <!-- 4 Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
         <!-- Card 1: Apps Scanned -->
         <div class="bg-surface border border-gray-800 rounded-xl p-4 relative flex flex-col justify-between h-28 hover:border-gray-700 transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
@@ -333,7 +332,7 @@
 <!-- ============================================== -->
 <!-- 2. TRENDING SECTION -->
 <!-- ============================================== -->
-<div class="px-12 pt-10 pb-10 ">
+<div class="px-6 lg:px-12 pt-10 pb-10 ">
 
     <div class="mb-6 flex items-center justify-between">
         <div class="flex items-center space-x-2.5">
@@ -341,7 +340,7 @@
             <div class="w-8 h-8 rounded-lg bg-background border border-gray-800 flex items-center justify-center">
                 <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
             </div>
-            <h2 class="text-lg font-bold tracking-wide flex items-center space-x-1.5">
+            <h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
     <span class="text-primary tracking-wider">TRENDING</span> 
     <span class="text-gray-500">:</span> 
     <span class="text-white">Most Scanned Apps</span>
@@ -406,13 +405,13 @@
 <!-- ============================================== -->
 <!-- News & Updates Section -->
 <!-- ============================================== -->
-        <div class="px-12 py-10 ">
-            <div class="flex items-center justify-between mb-8">
+        <div class="px-6 lg:px-12 py-10 ">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-lg border border-gray-800 bg-surface flex items-center justify-center text-primary">
+                    <div class="w-10 h-10 rounded-lg border border-gray-800 bg-surface flex items-center justify-center text-primary shrink-0">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
                     </div>
-<h2 class="text-lg font-bold tracking-wide flex items-center space-x-1.5">
+<h2 class="text-base sm:text-lg font-bold tracking-wide flex items-center space-x-1.5">
             <span class="text-primary tracking-wider">NOTICE</span> 
             <span class="text-gray-500">:</span> 
             <span class="text-white">Latest Fraud & Cybersecurity News</span>
@@ -435,15 +434,15 @@
         <!-- ============================================== -->
 <!-- 3. HOW TO DETECT / FEATURES SECTION -->
 <!-- ============================================== -->
-<div class="px-12 py-16 border-t border-gray-800/60" id="how-to-detect">
+<div class="px-6 lg:px-12 py-16 border-t border-gray-800/60" id="how-to-detect">
 
     <!-- Section Header -->
     <div class="mb-12 flex flex-col items-center justify-center text-center">
         <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 mb-5 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
             <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
         </div>
-        <h2 class="text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">How <span class="text-primary">FraudShield</span> Detects Danger</h2>
-        <p class="text-gray-400 text-sm mt-4 max-w-xl leading-relaxed">Our multi-layered AI engine looks beyond the surface to identify malicious patterns before you click download.</p>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">How <span class="text-primary">FraudShield</span> Detects Danger</h2>
+        <p class="text-gray-400 text-xs sm:text-sm mt-4 max-w-xl leading-relaxed">Our multi-layered AI engine looks beyond the surface to identify malicious patterns before you click download.</p>
     </div>
 
     <!-- Features Grid -->
@@ -495,7 +494,7 @@
 <!-- ============================================== -->
 <!-- 4. ABOUT US SECTION (EXPANDED & PREMIUM) -->
 <!-- ============================================== -->
-<div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="about-section">
+<div class="px-6 lg:px-12 py-16 border-t border-gray-800/60 relative" id="about-section">
 
     <!-- Background Glow -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
@@ -512,7 +511,7 @@
                 <span class="text-xs font-bold text-primary tracking-widest uppercase">Our Mission</span>
             </div>
 
-            <h2 class="text-4xl lg:text-5xl font-black text-white tracking-wide leading-tight">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-wide leading-tight">
                 PROTECTING THE <br> DIGITAL <span class="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-300">ECOSYSTEM</span>
             </h2>
 
@@ -548,7 +547,7 @@
                 <!-- Team Member 1: Atul Dubey (Project Leader) -->
                 <div class="bg-surface border border-gray-800 rounded-xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
                     <div class="w-12 h-12 mx-auto rounded-full bg-gray-800 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shreeya&backgroundColor=09090b" alt="Shreeya Dubey" class="w-full h-full object-cover">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Atul&backgroundColor=09090b" alt="Atul Dubey" class="w-full h-full object-cover">
                     </div>
                     <h4 class="text-white font-bold text-xs truncate">Atul Dubey</h4>
                     <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Project Leader</p>
@@ -632,7 +631,7 @@
 <!-- ============================================== -->
 <!-- 5. HOW IT WORKS SECTION -->
 <!-- ============================================== -->
-<div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="how-it-works">
+<div class="px-6 lg:px-12 py-16 border-t border-gray-800/60 relative" id="how-it-works">
 
     <!-- Section Header -->
     <div class="mb-14 flex flex-col items-center justify-center text-center relative z-10">
@@ -640,10 +639,10 @@
             <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             <span class="text-xs font-bold text-primary tracking-widest uppercase">The Process</span>
         </div>
-        <h2 class="text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
             4 Simple Steps to <span class="text-primary">Total Security</span>
         </h2>
-        <p class="text-gray-400 text-sm mt-4 max-w-xl leading-relaxed">
+        <p class="text-gray-400 text-xs sm:text-sm mt-4 max-w-xl leading-relaxed">
             See exactly how our backend architecture processes raw application data to deliver a final safety verdict in seconds.
         </p>
     </div>
@@ -699,7 +698,7 @@
 <!-- ============================================== -->
 <!-- 6. CONTACT US SECTION -->
 <!-- ============================================== -->
-<div class="px-8 md:px-12 py-16 border-t border-gray-800/60 relative" id="contact">
+<div class="px-6 lg:px-12 py-16 border-t border-gray-800/60 relative" id="contact">
 
     <!-- Background Glow -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
@@ -712,10 +711,10 @@
             <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
             <span class="text-xs font-bold text-primary tracking-widest uppercase">Get in Touch</span>
         </div>
-        <h2 class="text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
             Have Questions? <span class="text-primary">Contact Us</span>
         </h2>
-        <p class="text-gray-400 text-sm mt-4 max-w-xl leading-relaxed">
+        <p class="text-gray-400 text-xs sm:text-sm mt-4 max-w-xl leading-relaxed">
             Report a highly suspicious app manually, request API access, or just say hello. Our team is always ready to help.
         </p>
     </div>
@@ -724,7 +723,7 @@
     <div class="flex flex-col lg:flex-row gap-12 relative z-10 w-full max-w-6xl mx-auto">
         <!-- Right Side: Contact Form -->
         <div class="lg:w-7/12">
-            <form id="contactForm" class="bg-surface border border-gray-800 rounded-3xl p-8 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
+            <form id="contactForm" class="bg-surface border border-gray-800 rounded-3xl p-6 sm:p-8 shadow-[0_4px_30px_rgba(0,0,0,0.3)]">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
@@ -763,7 +762,7 @@
         </div>
         <!-- Left Side: Contact Info -->
         <div class="lg:w-5/12 space-y-8">
-            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-8 hover:bg-gray-800/30 transition-colors">
+            <div class="bg-surface/50 border border-gray-800 rounded-2xl p-6 sm:p-8 hover:bg-gray-800/30 transition-colors">
                 <h3 class="text-xl font-bold text-white mb-6">Contact Information</h3>
 
                 <div class="space-y-6">
@@ -893,8 +892,8 @@
         <!-- ============================================== -->
 <!-- CALL TO ACTION (CTA) BANNER SECTION -->
 <!-- ============================================== -->
-<div class="px-12 py-10">
-    <div class="bg-surface border border-gray-800 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:border-gray-700 transition-colors">
+<div class="px-6 lg:px-12 py-10">
+    <div class="bg-surface border border-gray-800 rounded-3xl p-6 sm:p-8 md:p-12 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:border-gray-700 transition-colors">
 
         <!-- Subtle Green Glow Background Effect -->
         <div class="absolute -top-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none"></div>
@@ -904,17 +903,17 @@
             <p class="text-primary text-[11px] font-bold tracking-[0.2em] mb-3 uppercase">
                 Ready?
             </p>
-            <h2 class="text-3xl md:text-[2.5rem] leading-none font-black text-white mb-4 tracking-tight uppercase">
+            <h2 class="text-2xl sm:text-3xl md:text-[2.5rem] leading-none font-black text-white mb-4 tracking-tight uppercase">
                 Scan your first app in seconds
             </h2>
-            <p class="text-gray-400 text-sm tracking-wide">
+            <p class="text-gray-400 text-xs sm:text-sm tracking-wide">
                 Free till 3 scans. No credit card. Real reviews. Real AI. Real protection.
             </p>
         </div>
 
         <!-- Right Button -->
         <div class="relative z-10 shrink-0">
-            <a href="login.html" class="inline-flex items-center space-x-2 bg-primary hover:bg-primary-dark text-black px-8 py-4 rounded-full font-bold text-sm uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(0,255,102,0.25)] hover:shadow-[0_0_30px_rgba(0,255,102,0.4)] transform hover:-translate-y-1">
+            <a href="login.html" class="inline-flex items-center space-x-2 bg-primary hover:bg-primary-dark text-black px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(0,255,102,0.25)] hover:shadow-[0_0_30px_rgba(0,255,102,0.4)] transform hover:-translate-y-1">
                 <span>Get Started Free</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </a>
@@ -926,7 +925,7 @@
 
 
         <!-- Footer Section -->
-        <footer class="px-12 py-16 mt-8 border-t border-gray-800/60 bg-[#09090b] shrink-0">
+        <footer class="px-6 lg:px-12 py-16 mt-8 border-t border-gray-800/60 bg-[#09090b] shrink-0">
             <!-- Top Section: Logo/Desc & Links Grid -->
             <div class="flex flex-col lg:flex-row justify-between gap-12 lg:gap-8 mb-16">
 
@@ -990,15 +989,15 @@
             </div>
 
             <!-- Bottom Section: Copyright, Credits, & Socials -->
-            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800/60">
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800/60 gap-4 text-center md:text-left">
 
                 <!-- Copyright -->
-                <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-6 md:mb-0">
+                <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase">
                     COPYRIGHT &copy; FRAUDSHIELD 2026
                 </div>
 
                 <!-- Credits -->
-                <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase mb-6 md:mb-0 text-center leading-relaxed">
+                <div class="text-[10px] text-gray-500 font-mono tracking-widest uppercase leading-relaxed">
                     DESIGNED AND BUILT BY <br>
                     THE AWESOME PEOPLE OF FRAUDSHIELD <span class="text-primary text-xs">💚</span>
                 </div>
