@@ -62,7 +62,34 @@ async function testConnection() {
 testConnection();
 
 module.exports = pool;
-    
+
+    // Chat API Route for FraudShield AI Assistant
+app.post('/api/chat', async (req, res) => {
+    try {
+        const { message } = req.body;
+        
+        if (!message) {
+            return res.status(400).json({ success: false, reply: "Message is required." });
+        }
+
+        let reply = "Main FraudShield AI Assistant hoon. Aapki kya madad kar sakta hoon?";
+        
+        const lowerMsg = message.toLowerCase();
+        if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+            reply = "Hello! Main FraudShield AI Assistant hoon. Aap kisi bhi app ko analyze karne ke liye 'Analyze App' section me ja sakte hain.";
+        } else if (lowerMsg.includes('fraud') || lowerMsg.includes('safe') || lowerMsg.includes('check')) {
+            reply = "Aap 'Analyze App' par jaakar kisi bhi application ka URL ya file daal sakte hain, hamara AI system uska fraud risk check kar dega.";
+        } else if (lowerMsg.includes('dashboard') || lowerMsg.includes('stats')) {
+            reply = "Aapka dashboard total scanned apps, detected fraud, aur system status ka live data dikhata hai.";
+        }
+
+        res.json({ success: true, reply });
+    }C (error) {
+        console.error("Chat API Error:", error);
+        res.status(500).json({ success: false, reply: "Server error processing your request." });
+    }
+});
+
 // --- Mailjet HTTP API Setup ---
 async function sendEmailViaMailjet(toEmail, subject, htmlContent) {
     const apiKey = process.env.MAILJET_API_KEY; 
