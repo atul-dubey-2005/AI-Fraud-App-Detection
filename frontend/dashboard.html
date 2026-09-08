@@ -40,18 +40,17 @@
     </script>
     <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
 </head>
-<body class="bg-background text-gray-300 min-h-screen flex selection:bg-primary selection:text-black pt-20 lg:pt-0">
+<body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-primary selection:text-black">
 
-
-    <!-- Mobile Header Bar (Sirf mobile/tablet par dikhega) -->
-    <div class="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-surfaceBorder lg:hidden flex justify-between items-center p-4">
+    <!-- Mobile Header Bar -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-surfaceBorder lg:hidden flex justify-between items-center px-4 h-16">
         <div class="flex items-center space-x-3">
             <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/30">
                 <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
             </div>
             <span class="text-white font-bold text-sm">FraudShield AI</span>
         </div>
-        <button id="menu-btn" class="text-gray-400 hover:text-white focus:outline-none p-1">
+        <button id="menu-btn" class="text-gray-400 hover:text-white focus:outline-none p-2 rounded-lg bg-surfaceBorder/50">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
@@ -59,51 +58,42 @@
     </div>
 
     <!-- Mobile Slide-over / Dropdown Menu -->
-<div id="mobile-menu" class="hidden fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-surfaceBorder p-6 flex flex-col justify-between shadow-2xl lg:hidden transition-transform transform">
-    <div class="space-y-6">
-        <!-- Close / Header row inside mobile menu -->
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30">
-                    <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+    <div id="mobile-menu" class="hidden fixed inset-y-0 left-0 z-50 w-72 bg-surface border-r border-surfaceBorder p-6 flex flex-col justify-between shadow-2xl lg:hidden transition-transform transform">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30">
+                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <span class="text-white font-bold text-sm">FraudShield AI</span>
                 </div>
-                <span class="text-white font-bold text-sm">FraudShield AI</span>
+                <button id="close-menu-btn" class="text-gray-400 hover:text-white p-1">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
-            <!-- Close Button -->
-            <button id="close-menu-btn" class="text-gray-400 hover:text-white p-1">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+
+            <nav class="space-y-2 mobile-nav-links">
+                <a href="dashboard.html" class="block px-4 py-3 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm">Overview</a>
+                <a href="analyze.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Analyze App</a>
+                <a href="reports.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Reports</a>
+                <a href="history.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">History Logs</a>
+                <a href="profile.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Profile Settings</a>
+            </nav>
+        </div>
+
+        <div class="p-4 bg-surfaceBorder/40 border border-surfaceBorder rounded-2xl space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400 font-medium">Logged in as</span>
+                <span class="text-xs font-bold text-white truncate max-w-[120px]" id="mobile-user-name">Loading...</span>
+            </div>
+            <button onclick="handleLogout()" class="w-full py-2 px-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 font-medium text-xs transition-colors flex items-center justify-center space-x-2">
+                <span>Logout</span>
             </button>
         </div>
-
-        <!-- Navigation Links -->
-        <nav class="space-y-2 mobile-nav-links">
-            <a href="dashboard.html" class="block px-4 py-3 rounded-xl text-white bg-surfaceBorder/50 font-medium text-sm">Overview</a>
-            <a href="analyze.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Analyze App</a>
-            <a href="reports.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Reports</a>
-            <a href="history.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">History Logs</a>
-            <a href="profile.html" class="block px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-surfaceBorder/50 font-medium text-sm">Profile Settings</a>
-        </nav>
     </div>
 
-    <!-- Bottom Profile & Clean Logout Button Section -->
-    <div class="p-4 bg-surfaceBorder/40 border border-surfaceBorder rounded-2xl space-y-3">
-        <div class="flex items-center justify-between">
-            <span class="text-xs text-gray-400 font-medium">Logged in as</span>
-            <span class="text-xs font-bold text-white truncate max-w-[120px]" id="mobile-user-name">Loading...</span>
-        </div>
-        <button onclick="handleLogout()" class="w-full py-2 px-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 font-medium text-xs transition-colors flex items-center justify-center space-x-2">
-            <span>Logout</span>
-        </button>
-    </div>
-</div>
-
-<!-- Backdrop Overlay for Mobile Menu -->
-<div id="menu-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden"></div>
-
-
-
-    <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
+    <!-- Sidebar Navigation (Desktop) -->
+    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen shrink-0">
         <div class="space-y-8">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
@@ -157,15 +147,15 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-grow flex flex-col min-w-0">
-        
-        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex-grow flex flex-col min-w-0 pt-16 lg:pt-0">
+
+        <header class="h-16 lg:h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-4 lg:px-8 flex items-center justify-between sticky top-16 lg:top-0 z-40">
             <div>
-                <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Dashboard Matrix</span>
-                <h1 class="text-lg font-bold text-white tracking-tight">Security Command Center</h1>
+                <span class="text-[10px] lg:text-xs font-mono text-gray-500 uppercase tracking-widest">Dashboard Matrix</span>
+                <h1 class="text-base lg:text-lg font-bold text-white tracking-tight">Security Command Center</h1>
             </div>
-            
-            <div class="flex items-center space-x-4">
+
+            <div class="flex items-center space-x-3 lg:space-x-4">
                 <!-- Pro Plan Dynamic Status Widget -->
                 <div id="proStatusWidget"></div>
 
@@ -173,33 +163,33 @@
                     <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
                     <span>API Pipeline Online</span>
                 </div>
-                <a href="analyze.html" class="bg-primary hover:bg-primary-dark text-black font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-[0_0_20px_rgba(0,255,102,0.15)] flex items-center space-x-2">
+                <a href="analyze.html" class="bg-primary hover:bg-primary-dark text-black font-bold text-xs px-4 lg:px-5 py-2.5 rounded-xl transition-all shadow-[0_0_20px_rgba(0,255,102,0.15)] flex items-center space-x-2 whitespace-nowrap">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     <span>NEW SCAN</span>
                 </a>
             </div>
         </header>
 
-        <main class="p-8 space-y-8 flex-grow">
-            
+        <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow">
+
             <!-- Welcome Banner -->
-            <div class="p-8 bg-gradient-to-r from-surface to-surfaceBorder/40 border border-surfaceBorder rounded-3xl relative overflow-hidden flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 shadow-xl">
+            <div class="p-6 lg:p-8 bg-gradient-to-r from-surface to-surfaceBorder/40 border border-surfaceBorder rounded-3xl relative overflow-hidden flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 shadow-xl">
                 <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="space-y-2 relative z-10">
                     <span class="text-primary font-mono text-xs tracking-wider uppercase font-semibold">● Session Authenticated</span>
-                    <h2 id="welcome-msg" class="text-3xl font-extrabold text-white">Welcome back!</h2>
-                    <p class="text-gray-400 text-sm max-w-xl">Your system is fully synced with the AI threat database. Ready to process new security audits and deep anomaly scans.</p>
+                    <h2 id="welcome-msg" class="text-2xl lg:text-3xl font-extrabold text-white">Welcome back!</h2>
+                    <p class="text-gray-400 text-xs lg:text-sm max-w-xl">Your system is fully synced with the AI threat database. Ready to process new security audits and deep anomaly scans.</p>
                 </div>
-                
-                <div class="flex flex-wrap items-center gap-3 relative z-10">
-                    <div class="bg-surfaceBorder/60 border border-surfaceBorder px-4 py-3 rounded-2xl flex items-center space-x-3">
+
+                <div class="flex flex-wrap items-center gap-3 relative z-10 w-full lg:w-auto">
+                    <div class="bg-surfaceBorder/60 border border-surfaceBorder px-4 py-3 rounded-2xl flex items-center space-x-3 flex-1 lg:flex-initial">
                         <div class="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs">AI</div>
                         <div>
                             <p class="text-gray-500 text-[10px] uppercase font-mono tracking-wider">Engine Model</p>
                             <p class="text-white font-bold text-xs">Neural v4.2</p>
                         </div>
                     </div>
-                    <div class="bg-surfaceBorder/60 border border-surfaceBorder px-4 py-3 rounded-2xl flex items-center space-x-3">
+                    <div class="bg-surfaceBorder/60 border border-surfaceBorder px-4 py-3 rounded-2xl flex items-center space-x-3 flex-1 lg:flex-initial">
                         <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xs">API</div>
                         <div>
                             <p class="text-gray-500 text-[10px] uppercase font-mono tracking-wider">Latency</p>
@@ -210,9 +200,9 @@
             </div>
 
             <!-- Quick Inspector Widget -->
-            <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl relative">
+            <div class="p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl relative">
                 <h3 class="text-white font-bold text-base mb-2 flex items-center space-x-2">
-                    <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    <svg class="w-5 h-5 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                     <span>Instant App Inspector</span>
                 </h3>
                 <p class="text-gray-400 text-xs mb-6">Type any Play Store link or package name to immediately queue it into the app analyzer.</p>
@@ -226,9 +216,9 @@
 
             <!-- ANALYTICS WITH COMPARATIVE METRICS PANEL -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
+
                 <!-- Graph 1: Live Threat Velocity Trend with Comparative Stats -->
-                <div class="lg:col-span-2 p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
+                <div class="lg:col-span-2 p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
                     <div>
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                             <div>
@@ -236,15 +226,15 @@
                                 <p class="text-gray-500 text-xs font-mono">Real-time risk index vs previous scans & global baseline</p>
                             </div>
                             <!-- Live Comparative Badge -->
-                            <div id="trendBadge" class="px-3 py-1.5 bg-surfaceBorder border border-gray-700 text-gray-300 font-mono text-xs rounded-xl flex items-center space-x-2">
-                                <span class="w-2 h-2 rounded-full bg-gray-400" id="badgeIndicator"></span>
+                            <div id="trendBadge" class="px-3 py-1.5 bg-surfaceBorder border border-gray-700 text-gray-300 font-mono text-xs rounded-xl flex items-center space-x-2 self-start sm:self-auto">
+                                <span class="w-2 h-2 rounded-full bg-gray-400 shrink-0" id="badgeIndicator"></span>
                                 <span id="trendBadgeText">Analyzing history...</span>
                             </div>
                         </div>
-                        
+
                         <!-- SVG Line Graph -->
-                        <div class="h-44 w-full mt-2 relative flex items-end">
-                            <svg id="trendSvg" class="w-full h-full overflow-visible" viewBox="0 0 600 160" preserveAspectRatio="none">
+                        <div class="h-44 w-full mt-2 relative flex items-end overflow-x-auto">
+                            <svg id="trendSvg" class="w-full h-full overflow-visible min-w-[300px]" viewBox="0 0 600 160" preserveAspectRatio="none">
                                 <line x1="0" y1="0" x2="600" y2="0" stroke="#1c1c24" stroke-width="1" />
                                 <line x1="0" y1="40" x2="600" y2="40" stroke="#1c1c24" stroke-width="1" />
                                 <line x1="0" y1="80" x2="600" y2="80" stroke="#1c1c24" stroke-width="1" stroke-dasharray="4" />
@@ -256,7 +246,7 @@
                     </div>
 
                     <!-- Comparative Sub-Metrics Footer -->
-                    <div class="grid grid-cols-3 gap-4 pt-6 mt-6 border-t border-surfaceBorder font-mono text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 mt-6 border-t border-surfaceBorder font-mono text-xs">
                         <div class="bg-background/40 p-3 rounded-2xl border border-gray-800">
                             <p class="text-gray-500 text-[10px] uppercase">Latest Risk Score</p>
                             <p id="compLatest" class="text-white font-bold text-base mt-1">0 / 100</p>
@@ -273,11 +263,11 @@
                 </div>
 
                 <!-- Graph 2: Live Audit Distribution (Donut Meter) -->
-                <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
+                <div class="p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl flex flex-col justify-between">
                     <div>
                         <h3 class="text-white font-bold text-base mb-1">Audit Distribution</h3>
                         <p class="text-gray-500 text-xs font-mono mb-6">Live ratio from database records</p>
-                        
+
                         <div class="flex items-center justify-center my-4">
                             <div class="relative w-36 h-36 flex items-center justify-center">
                                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
@@ -294,11 +284,11 @@
 
                     <div class="space-y-2 pt-4 border-t border-surfaceBorder font-mono text-xs">
                         <div class="flex justify-between items-center text-gray-400">
-                            <span class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-primary"></span><span>Safe Scans</span></span>
+                            <span class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-primary shrink-0"></span><span>Safe Scans</span></span>
                             <span id="safeCountVal" class="text-white font-bold">0</span>
                         </div>
                         <div class="flex justify-between items-center text-gray-400">
-                            <span class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-red-400"></span><span>Threats Flagged</span></span>
+                            <span class="flex items-center space-x-2"><span class="w-2 h-2 rounded-full bg-red-400 shrink-0"></span><span>Threats Flagged</span></span>
                             <span id="threatCountVal" class="text-red-400 font-bold">0</span>
                         </div>
                     </div>
@@ -307,13 +297,13 @@
             </div>
 
             <!-- Recent Activity Mini-Feed -->
-            <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl">
+            <div class="p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl overflow-hidden">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-white font-bold text-base">Recent Scan Logs Preview</h3>
-                    <a href="history.html" class="text-xs font-bold text-primary hover:underline">View All Logs &rarr;</a>
+                    <a href="history.html" class="text-xs font-bold text-primary hover:underline whitespace-nowrap">View All Logs &rarr;</a>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-400">
+                <div class="overflow-x-auto -mx-6 lg:mx-0 px-6 lg:px-0">
+                    <table class="w-full text-left text-sm text-gray-400 min-w-[600px]">
                         <thead class="text-xs uppercase bg-surfaceBorder/40 text-gray-400 font-mono tracking-wider border-b border-surfaceBorder">
                             <tr>
                                 <th class="px-4 py-3">Timestamp</th>
@@ -330,8 +320,8 @@
             </div>
 
         </main>
-        
-        <footer class="border-t border-surfaceBorder py-6 px-8 text-center text-xs text-gray-600 font-mono">
+
+        <footer class="border-t border-surfaceBorder py-6 px-4 lg:px-8 text-center text-xs text-gray-600 font-mono">
             FraudShield AI Core v2.4 &bull; Secure Connection Established
         </footer>
     </div>
@@ -391,7 +381,7 @@
                     if (historyData.length > 0) {
                         const recentScans = [...historyData].reverse().slice(-6);
                         const stepX = 600 / Math.max(recentScans.length - 1, 1);
-                        
+
                         let pathD = "";
                         recentScans.forEach((scan, idx) => {
                             const x = idx * stepX;
@@ -412,19 +402,19 @@
                                 compDiff.innerText = `${diff} pts (Safer)`;
                                 compDiff.className = "font-bold text-base mt-1 text-primary";
                                 trendBadgeText.innerText = "Security Improved vs Last Scan";
-                                badgeIndicator.className = "w-2 h-2 rounded-full bg-primary animate-pulse";
-                                trendBadge.className = "px-3 py-1.5 bg-primary/10 border border-primary/30 text-primary font-mono text-xs rounded-xl flex items-center space-x-2";
+                                badgeIndicator.className = "w-2 h-2 rounded-full bg-primary animate-pulse shrink-0";
+                                trendBadge.className = "px-3 py-1.5 bg-primary/10 border border-primary/30 text-primary font-mono text-xs rounded-xl flex items-center space-x-2 self-start sm:self-auto";
                             } else if (diff > 0) {
                                 compDiff.innerText = `+${diff} pts (Riskier)`;
                                 compDiff.className = "font-bold text-base mt-1 text-red-400";
                                 trendBadgeText.innerText = "Warning: Risk Elevated vs Last Scan";
-                                badgeIndicator.className = "w-2 h-2 rounded-full bg-red-400 animate-pulse";
-                                trendBadge.className = "px-3 py-1.5 bg-red-500/10 border border-red-500/30 text-red-400 font-mono text-xs rounded-xl flex items-center space-x-2";
+                                badgeIndicator.className = "w-2 h-2 rounded-full bg-red-400 animate-pulse shrink-0";
+                                trendBadge.className = "px-3 py-1.5 bg-red-500/10 border border-red-500/30 text-red-400 font-mono text-xs rounded-xl flex items-center space-x-2 self-start sm:self-auto";
                             } else {
                                 compDiff.innerText = "0 pts (Stable)";
                                 compDiff.className = "font-bold text-base mt-1 text-gray-400";
                                 trendBadgeText.innerText = "Risk Index Stable";
-                                badgeIndicator.className = "w-2 h-2 rounded-full bg-gray-400";
+                                badgeIndicator.className = "w-2 h-2 rounded-full bg-gray-400 shrink-0";
                             }
                         } else {
                             compDiff.innerText = "Baseline Scan";
@@ -445,7 +435,7 @@
                         historyData.slice(0, 3).forEach(item => {
                             const tr = document.createElement('tr');
                             tr.className = "hover:bg-surfaceBorder/30 transition-colors";
-                            
+
                             const displayName = item.appName || item.target;
                             const packageIdSubtext = item.appName ? `<span class="text-[10px] font-mono text-gray-500 block truncate mt-0.5">${item.target}</span>` : '';
 
@@ -478,104 +468,91 @@
         }
 
         async function checkProStatusOnDashboard() {
-    const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('userName') + '@fraudshield.com';
-    const widget = document.getElementById('proStatusWidget');
-    if (!widget) return;
+            const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('userName') + '@fraudshield.com';
+            const widget = document.getElementById('proStatusWidget');
+            if (!widget) return;
 
-    try {
-        const response = await fetch('/api/user-status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: userEmail })
-        });
-        const data = await response.json();
+            try {
+                const response = await fetch('/api/user-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmail })
+                });
+                const data = await response.json();
 
-        if (data.success && data.isPro) {
-            localStorage.setItem('fs_pro_active', 'true');
-            
-            // Time remaining calculate karein
-            let timeRemainingText = "Active Plan";
-            if (data.expiryDate) {
-                const diffTime = new Date(data.expiryDate) - new Date();
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays > 0) {
-                    timeRemainingText = `Pro Active (${diffDays} days left)`;
+                if (data.success && data.isPro) {
+                    localStorage.setItem('fs_pro_active', 'true');
+
+                    let timeRemainingText = "Active Plan";
+                    if (data.expiryDate) {
+                        const diffTime = new Date(data.expiryDate) - new Date();
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if (diffDays > 0) {
+                            timeRemainingText = `Pro Active (${diffDays} days left)`;
+                        } else {
+                            timeRemainingText = `Expiring Soon`;
+                        }
+                    }
+
+                    widget.innerHTML = `
+                        <div class="hidden md:flex items-center space-x-2 bg-primary/10 border border-primary/30 px-3.5 py-2 rounded-xl text-xs text-primary font-mono shadow-[0_0_15px_rgba(0,255,102,0.1)]">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                            <span>${timeRemainingText}</span>
+                        </div>
+                    `;
                 } else {
-                    timeRemainingText = `Expiring Soon`;
+                    localStorage.removeItem('fs_pro_active');
+                    widget.innerHTML = `
+                        <a href="payment.html" class="hidden md:flex items-center space-x-2 bg-primary/15 hover:bg-primary/25 border border-primary/40 px-3.5 py-2 rounded-xl text-xs text-primary font-mono transition-all shadow-[0_0_15px_rgba(0,255,102,0.1)]">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                    `;
                 }
+            } catch (err) {
+                console.error("Failed to fetch user status:", err);
             }
-
-            widget.innerHTML = `
-                <div class="hidden md:flex items-center space-x-2 bg-primary/10 border border-primary/30 px-3.5 py-2 rounded-xl text-xs text-primary font-mono shadow-[0_0_15px_rgba(0,255,102,0.1)]">
-                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                    <span>${timeRemainingText}</span>
-                </div>
-            `;
-        } else {
-            // Agar time khatam ho gaya ya Free user hai toh LocalStorage flag clear karke Upgrade button dikhayein
-            localStorage.removeItem('fs_pro_active');
-            widget.innerHTML = `
-                <a href="payment.html" class="hidden md:flex items-center space-x-2 bg-primary/15 hover:bg-primary/25 border border-primary/40 px-3.5 py-2 rounded-xl text-xs text-primary font-mono transition-all shadow-[0_0_15px_rgba(0,255,102,0.1)]">
-                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                    <span>Upgrade to Pro</span>
-                </a>
-            `;
         }
-    } catch (err) {
-        console.error("Failed to fetch user status:", err);
-    }
-}
 
         window.addEventListener('DOMContentLoaded', () => {
             checkProStatusOnDashboard();
         });
-const menuBtn = document.getElementById('menu-btn');
-const mobileMenu = document.getElementById('mobile-menu');
 
-if (menuBtn && mobileMenu) {
-    menuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
-}
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('menu-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('.mobile-nav-links a');
 
-document.addEventListener('DOMContentLoaded', () => {
-    const menuBtn = document.getElementById('menu-btn');
-    const closeMenuBtn = document.getElementById('close-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navLinks = document.querySelectorAll('.mobile-nav-links a');
-
-    function toggleMobileMenu() {
-        mobileMenu.classList.toggle('hidden');
-    }
-
-    if (menuBtn) {
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMobileMenu();
-        });
-    }
-
-    if (closeMenuBtn) {
-        closeMenuBtn.addEventListener('click', toggleMobileMenu);
-    }
-
-    // Screen mein kahin bhi bahar click karne par menu band ho jaye
-    document.addEventListener('click', (e) => {
-        if (mobileMenu && !mobileMenu.contains(e.target) && menuBtn && !menuBtn.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
-            mobileMenu.classList.add('hidden');
-        }
-    });
-
-    // Jaise hi user koi option select karega, menu apne aap band ho jayega
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth < 1024) {
-                mobileMenu.classList.add('hidden');
+            function toggleMobileMenu() {
+                mobileMenu.classList.toggle('hidden');
             }
-        });
-    });
-});
 
+            if (menuBtn) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleMobileMenu();
+                });
+            }
+
+            if (closeMenuBtn) {
+                closeMenuBtn.addEventListener('click', toggleMobileMenu);
+            }
+
+            document.addEventListener('click', (e) => {
+                if (mobileMenu && !mobileMenu.contains(e.target) && menuBtn && !menuBtn.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
