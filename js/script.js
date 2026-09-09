@@ -70,6 +70,29 @@ async function fetchLatestNews() {
     }
 }
 
+async function verifyActiveSession() {
+    const userEmail = localStorage.getItem('email') || localStorage.getItem('userEmail');
+    if (!userEmail || window.location.pathname.includes('login.html')) return;
+
+    try {
+        const response = await fetch(`/api/check-user-status?email=${encodeURIComponent(userEmail)}`);
+        const data = await response.json();
+
+        if (data.banned) {
+            alert('Your account has been suspended/banned.');
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+    } catch (error) {
+        console.error('Session check failed:', error);
+    }
+}
+
+// Page load par aur har 15 seconds mein check karega
+window.addEventListener('DOMContentLoaded', verifyActiveSession);
+setInterval(verifyActiveSession, 15000);
+
+
 function renderNews() {
     const newsContainer = document.getElementById('news-container');
     const viewToggleText = document.getElementById('view-toggle-text');
