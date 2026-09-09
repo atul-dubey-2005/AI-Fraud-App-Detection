@@ -150,7 +150,16 @@
 
     <!-- SCRIPT -->
     <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+   window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error === 'Account_suspended') {
+        alert('Account suspended.');
+        // URL se error parameter hata dein taaki page refresh par baar-baar alert na aaye
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
+ document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault(); 
 
         const email = document.getElementById('email').value.trim();
