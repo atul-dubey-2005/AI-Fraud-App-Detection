@@ -77,20 +77,17 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        // Updated Gemini API endpoint using v1beta and gemini-1.5-flash
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // Switched back to stable 'v1' endpoint for gemini-1.5-flash compatibility
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-        const systemInstruction = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
+        const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
 
         const response = await fetch(geminiEndpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                system_instruction: {
-                    parts: [{ text: systemInstruction }]
-                },
                 contents: [
-                    { role: "user", parts: [{ text: message }] }
+                    { role: "user", parts: [{ text: systemPrompt + "\n\nUser Question: " + message }] }
                 ]
             })
         });
@@ -111,6 +108,7 @@ app.post('/api/chat', async (req, res) => {
         res.status(500).json({ success: false, reply: "Internal server error occurred while connecting to the AI assistant." });
     }
 });
+
 
 
 
