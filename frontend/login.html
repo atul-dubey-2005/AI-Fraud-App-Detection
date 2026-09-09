@@ -150,16 +150,17 @@
 
     <!-- SCRIPT -->
     <script>
-   window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const error = urlParams.get('error');
-    if (error === 'Account_suspended') {
-        alert('Account suspended.');
-        // URL se error parameter hata dein taaki page refresh par baar-baar alert na aaye
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-});
- document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    // Page load hote hi check karega agar OAuth se banned error aaya hai
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error === 'Account_suspended') {
+            alert('Account suspended.');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault(); 
 
         const email = document.getElementById('email').value.trim();
@@ -182,7 +183,7 @@
 
             const data = await response.json();
 
-            // 🛑 Banned Account Check (403 Forbidden) - Handle alert and button reset cleanly here
+            // 🛑 Banned Account Check (403 Forbidden)
             if (response.status === 403) {
                 alert(data.message || 'Account suspended.');
                 submitBtn.disabled = false;
@@ -253,7 +254,6 @@
 
             alert("Password reset OTP sent! Check your email.");
 
-            // Change View to Enter OTP and New Password
             document.getElementById('forgot-otp-view').innerHTML = `
                 <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 mb-4 shadow-[0_0_20px_rgba(0,255,102,0.1)]">
                     <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -272,11 +272,10 @@
                 </button>
             `;
 
-            // Handle Reset Password Submit
             document.getElementById('resetPasswordForm').addEventListener('submit', async function(resEvent) {
                 resEvent.preventDefault();
                 const otp = document.getElementById('reset-otp').value.trim();
-                const newPassword = document.getElementById('new-password'].value;
+                const newPassword = document.getElementById('new-password').value;
                 const resetBtn = document.getElementById('resetSubmitBtn');
 
                 resetBtn.disabled = true;
@@ -308,5 +307,6 @@
         }
     });
 </script>
+
 </body>
 </html>
