@@ -63,7 +63,6 @@ testConnection();
 
 module.exports = pool;
 
-// Chat API Route for FraudShield AI Assistant (Powered by Google Gemini)
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
@@ -77,7 +76,7 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        // Switched back to stable 'v1' endpoint for gemini-1.5-flash compatibility
+        // Correct v1 endpoint for gemini-1.5-flash
         const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
@@ -96,7 +95,7 @@ app.post('/api/chat', async (req, res) => {
 
         if (!response.ok) {
             console.error("Gemini API Error Response:", data);
-            return res.status(500).json({ success: false, reply: "AI processing service encountered an error. Please try again later." });
+            return res.status(500).json({ success: false, reply: data.error?.message || "AI service error. Please try again." });
         }
 
         const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I am unable to process your request at the moment.";
@@ -108,6 +107,7 @@ app.post('/api/chat', async (req, res) => {
         res.status(500).json({ success: false, reply: "Internal server error occurred while connecting to the AI assistant." });
     }
 });
+
 
 
 
