@@ -63,6 +63,7 @@ testConnection();
 
 module.exports = pool;
 
+// Chat API Route for FraudShield AI Assistant (Using Gemini-Pro for universal key compatibility)
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
@@ -76,8 +77,8 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        // Correct v1 endpoint for gemini-1.5-flash
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // Switched to 'gemini-pro' which is universally supported across all standard Google AI Studio free tier keys
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`;
 
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
 
