@@ -63,17 +63,17 @@ testConnection();
 
 module.exports = pool;
 
-    // Chat API Route for FraudShield AI Assistant
+// Chat API Route for FraudShield AI Assistant
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
-        
+
         if (!message) {
             return res.status(400).json({ success: false, reply: "Message is required." });
         }
 
         let reply = "Main FraudShield AI Assistant hoon. Aapki kya madad kar sakta hoon?";
-        
+
         const lowerMsg = message.toLowerCase();
         if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
             reply = "Hello! Main FraudShield AI Assistant hoon. Aap kisi bhi app ko analyze karne ke liye 'Analyze App' section me ja sakte hain.";
@@ -84,7 +84,7 @@ app.post('/api/chat', async (req, res) => {
         }
 
         res.json({ success: true, reply });
-    } catch (error) { // <--- Yahan 'C' ki jagah 'catch' hona chahiye
+    } catch (error) {
         console.error("Chat API Error:", error);
         res.status(500).json({ success: false, reply: "Server error processing your request." });
     }
@@ -95,14 +95,13 @@ app.post('/api/chat', async (req, res) => {
 async function sendEmailViaMailjet(toEmail, subject, htmlContent) {
     const apiKey = process.env.MAILJET_API_KEY; 
     const secretKey = process.env.MAILJET_SECRET_KEY;
-    
-    // API keys ko Base64 mein convert karna (Mailjet ka rule)
+
     const authHeader = 'Basic ' + Buffer.from(apiKey + ':' + secretKey).toString('base64');
 
     const payload = {
         Messages: [{
             From: { 
-                Email: "fraudshield2026@gmail.com", // Aapka verified email
+                Email: "fraudshield2026@gmail.com", 
                 Name: "FraudShield AI" 
             },
             To: [{ Email: toEmail }],
@@ -126,7 +125,7 @@ async function sendEmailViaMailjet(toEmail, subject, htmlContent) {
             console.error("Mailjet API Error:", errorData);
             return false;
         }
-        
+
         console.log(`✅ Email successfully sent to [${toEmail}] via Mailjet!`);
         return true;
     } catch (error) {
@@ -159,9 +158,13 @@ passport.use(new GoogleStrategy({
     try {
         const email = profile.emails[0].value;
         const fullName = profile.displayName;
-        
+
         const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
         if (rows.length > 0) {
+            // Check if user is banned during Google login
+            if (rows[0].account_status === 'Banned') {
+                return done(null, false, { message: 'Account suspended.' });
+            }
             return done(null, rows[0]);
         }
 
@@ -190,9 +193,13 @@ passport.use(new GitHubStrategy({
     try {
         const email = (profile.emails && profile.emails[0]) ? profile.emails[0].value : `${profile.username}@github.com`;
         const fullName = profile.displayName || profile.username;
-        
+
         const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
         if (rows.length > 0) {
+            // Check if user is banned during Github login
+            if (rows[0].account_status === 'Banned') {
+                return done(null, false, { message: 'Account suspended.' });
+            }
             return done(null, rows[0]);
         }
 
@@ -217,16 +224,25 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
 });
 
-// --- Register API ---
+// --- Register / Signup API (With Duplicate Email Check & Popup Message Support) ---
 app.post('/api/register', async (req, res) => {
     const { full_name, email, password } = req.body;
     try {
+        // Check if user already exists to throw a clean popup message
+        const [existingUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        if (existingUser.length > 0) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'User already exists with this email! Please log in.' 
+            });
+        }
+
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         const user_id = crypto.randomUUID();
 
         await pool.execute(
-            `INSERT INTO users (user_id, full_name, email, password, otp, is_verified) VALUES (?, ?, ?, ?, ?, ?)`,
-            [user_id, full_name, email, password, otp, false]
+            `INSERT INTO users (user_id, full_name, email, password, otp, is_verified, account_status) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [user_id, full_name, email, password, otp, false, 'Active']
         );
 
         console.log("-----------------------------------------");
@@ -248,7 +264,6 @@ app.post('/api/register', async (req, res) => {
                     </div>
                 `
             };
-            // 🆕 Mailjet API use kar raha hai
             await sendEmailViaMailjet(mailOptions.to, mailOptions.subject, mailOptions.html);
         } catch (emailError) {
             console.error('⚠️ Email sending failed:', emailError.message);
@@ -258,7 +273,7 @@ app.post('/api/register', async (req, res) => {
     } catch (error) {
         console.error("Database Error:", error);
         if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(400).json({ success: false, message: 'Email already registered!' });
+            return res.status(400).json({ success: false, message: 'User already exists with this email! Please log in.' });
         }
         res.status(500).json({ success: false, message: 'Server error' });
     }
@@ -269,7 +284,7 @@ app.post('/api/verify-otp', async (req, res) => {
     const { email, otp } = req.body;
     try {
         const [rows] = await pool.execute(`SELECT * FROM users WHERE email = ? AND otp = ?`, [email, otp]);
-        
+
         if (rows.length > 0) {
             await pool.execute(`UPDATE users SET is_verified = TRUE, otp = NULL WHERE email = ?`, [email]);
             res.status(200).json({ success: true, message: 'Account verified successfully!' });
@@ -282,7 +297,7 @@ app.post('/api/verify-otp', async (req, res) => {
     }
 });
 
-// --- Login API ---
+// --- Login API (With Banned Account Check) ---
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -291,7 +306,12 @@ app.post('/api/login', async (req, res) => {
 
         const user = rows[0];
         if (password !== user.password) return res.status(400).json({ message: 'Invalid password' });
-        if (user.account_status === 'Banned') return res.status(403).json({ message: 'Account suspended.' });
+        
+        // Strict Banned Account Check returning 403 Forbidden
+        if (user.account_status === 'Banned') {
+            return res.status(403).json({ message: 'Account suspended.' });
+        }
+
         if (!user.is_verified) return res.status(400).json({ message: 'Verify account first.' });
 
         res.status(200).json({
@@ -300,6 +320,23 @@ app.post('/api/login', async (req, res) => {
             email: user.email,
             role: user.role 
         });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// --- Check User Status API (For Active Session Force-Logout Polling) ---
+app.get('/api/check-user-status', async (req, res) => {
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ message: 'Email required' });
+
+    try {
+        const [rows] = await pool.query('SELECT account_status FROM users WHERE email = ?', [email]);
+        if (rows.length === 0 || rows[0].account_status === 'Banned') {
+            return res.status(200).json({ banned: true });
+        }
+
+        res.status(200).json({ banned: false });
     } catch (err) {
         res.status(500).json({ message: 'Server error' });
     }
@@ -334,7 +371,6 @@ app.post('/api/forgot-password', async (req, res) => {
                     </div>
                 `
             };
-            // 🆕 Mailjet API use kar raha hai
             await sendEmailViaMailjet(mailOptions.to, mailOptions.subject, mailOptions.html);
         } catch (emailError) {
             console.error('⚠️ Email sending failed:', emailError.message);
@@ -352,7 +388,7 @@ app.post('/api/reset-password', async (req, res) => {
     const { email, otp, newPassword } = req.body;
     try {
         const [rows] = await pool.execute('SELECT * FROM users WHERE email = ? AND otp = ?', [email, otp]);
-        
+
         if (rows.length === 0) {
             return res.status(400).json({ success: false, message: 'Invalid OTP or email!' });
         }
@@ -386,7 +422,6 @@ app.post('/api/contact', async (req, res) => {
             `
         };
 
-        // 🆕 Mailjet API use kar raha hai
         await sendEmailViaMailjet(mailOptions.to, mailOptions.subject, mailOptions.html);
         res.status(200).json({ success: true, message: 'Message sent successfully!' });
     } catch (error) {
@@ -407,7 +442,7 @@ app.get('/api/live-stats', async (req, res) => {
 // --- Admin API ---
 app.get('/api/admin/users', async (req, res) => {
     try {
-        const [users] = await pool.query('SELECT user_id, full_name, email, role, account_status,is_pro, created_at FROM users');
+        const [users] = await pool.query('SELECT user_id, full_name, email, role, account_status, is_pro, created_at FROM users');
         res.status(200).json({ success: true, users });
     } catch (err) {
         res.status(500).json({ message: 'Database error' });
@@ -474,8 +509,6 @@ app.post('/api/send-update-otp', async (req, res) => {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         await pool.execute('UPDATE users SET otp = ? WHERE email = ?', [otp, email]);
 
-        console.log(`🔑 PROFILE UPDATE OTP FOR [${email}]: ${otp}`);
-
         const mailOptions = {
             from: 'FraudShield AI <fraudshield2026@gmail.com>',
             to: email,
@@ -490,7 +523,6 @@ app.post('/api/send-update-otp', async (req, res) => {
                 </div>
             `
         };
-        // 🆕 Mailjet API use kar raha hai
         await sendEmailViaMailjet(mailOptions.to, mailOptions.subject, mailOptions.html);
         res.status(200).json({ success: true, message: 'OTP sent to email!' });
     } catch (error) {
@@ -515,7 +547,7 @@ app.post('/api/verify-update-otp', async (req, res) => {
 });
 
 // ==========================================
-// 1. ASLI AI APP ANALYSIS API (Updated with Logo)
+// 1. ASLI AI APP ANALYSIS API
 // ==========================================
 app.post('/api/analyze', async (req, res) => {
     const { targetUrl, email } = req.body;
@@ -523,15 +555,13 @@ app.post('/api/analyze', async (req, res) => {
 
     try {
         const userEmail = email || 'anonymous@fraudshield.com';
-        
-        // 1. Check if user is Pro
+
         const [userRows] = await pool.query('SELECT is_pro FROM users WHERE email = ?', [userEmail]);
         const isPro = userRows.length > 0 && userRows[0].is_pro === 1;
 
-        // 2. If not Pro, check trial limit
         if (!isPro) {
             const [scanRows] = await pool.query('SELECT COUNT(*) as scanCount FROM scan_history WHERE user_email = ?', [userEmail]);
-            
+
             if (scanRows[0].scanCount >= 3) {
                 return res.status(403).json({ 
                     success: false, 
@@ -584,7 +614,7 @@ app.post('/api/analyze', async (req, res) => {
 
             let status = riskScore >= 70 ? 'High Risk' : (riskScore >= 35 ? 'Medium Risk' : 'Low Risk');
             let color = riskScore >= 70 ? 'text-red-500' : (riskScore >= 35 ? 'text-amber-400' : 'text-primary');
-            
+
             let finalThreats = [
                 riskScore >= 70 ? `CRITICAL: ${Math.round(fraudRatio * 100)}% reviews are Fraudulent.` : 
                 (riskScore >= 35 ? `WARNING: ${Math.round(fraudRatio * 100)}% reviews show negative sentiment.` : "Majority sentiment is Safe."),
@@ -610,14 +640,12 @@ app.post('/api/analyze', async (req, res) => {
 });
 
 // ==========================================
-// 2. SAVE SCAN HISTORY API (Updated with Logo)
+// 2. SAVE SCAN HISTORY API
 // ==========================================
 app.post('/api/save-scan', async (req, res) => {
-    // 🆕 Frontend se icon receive kiya
     const { email, target, icon, riskScore, status, colorClass, threats } = req.body;
     try {
         await pool.execute(
-            // 🆕 Database mein app_icon add kar diya
             `INSERT INTO scan_history (user_email, target_url, app_icon, risk_score, status, color_class, threats) VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [email || 'anonymous@fraudshield.com', target, icon || '', riskScore, status, colorClass, JSON.stringify(threats)]
         );
@@ -633,7 +661,7 @@ app.get('/api/get-scans', async (req, res) => {
     try {
         let query = 'SELECT * FROM scan_history';
         let params = [];
-        
+
         if (email) {
             query += ' WHERE user_email = ? OR user_email = ?';
             params = [email, 'anonymous@fraudshield.com'];
@@ -641,7 +669,7 @@ app.get('/api/get-scans', async (req, res) => {
         query += ' ORDER BY scanned_at DESC';
 
         const [rows] = await pool.query(query, params);
-        
+
         const formattedScans = rows.map(row => ({
             target: row.target_url,
             riskScore: row.risk_score,
@@ -662,7 +690,7 @@ app.get('/api/get-scans', async (req, res) => {
 app.get('/api/admin/all-scans', async (req, res) => {
     try {
         const [scans] = await pool.query('SELECT * FROM scan_history ORDER BY scanned_at DESC');
-        
+
         const formattedScans = scans.map(row => ({
             id: row.id,
             userEmail: row.user_email,
@@ -699,8 +727,7 @@ app.post('/api/admin/train-model', upload.single('dataset'), async (req, res) =>
 
     const uploadedFilePath = req.file.path;
     const originalExt = path.extname(req.file.originalname).toLowerCase();
-    
-    // Check file extension (.json or .csv)
+
     const targetFileName = originalExt === '.csv' ? 'latest_uploaded.csv' : 'latest_uploaded.json';
     const targetPath = path.join(__dirname, 'uploads/', targetFileName);
 
@@ -775,21 +802,20 @@ app.get('/api/dashboard-stats', async (req, res) => {
         res.status(500).json({ success: false, message: "Server database error" });
     }
 });
+
 //--Payment Verification--
 app.post('/api/verify-payment', async (req, res) => {
-    const { email, plan } = req.body; // plan = 'monthly' ya 'yearly'
+    const { email, plan } = req.body; 
     if (!email) return res.status(400).json({ success: false, message: 'Email required' });
 
     try {
-        // Expiry calculation
         const now = new Date();
         if (plan === 'yearly') {
-            now.setFullYear(now.getFullYear() + 1); // 1 Year validity
+            now.setFullYear(now.getFullYear() + 1);
         } else {
-            now.setMonth(now.getMonth() + 1); // 1 Month validity
+            now.setMonth(now.getMonth() + 1);
         }
 
-        // Database mein is_pro = 1 aur expiry date update karein
         await pool.query(
             'UPDATE users SET is_pro = 1, pro_expiry_date = ? WHERE email = ?',
             [now, email]
@@ -814,7 +840,6 @@ app.post('/api/user-status', async (req, res) => {
         let isPro = user.is_pro === 1;
         let expiryDate = user.pro_expiry_date ? new Date(user.pro_expiry_date) : null;
 
-        // Agar time khatam ho gaya hai, toh automatic free tier par shift kar do
         if (isPro && expiryDate && new Date() > expiryDate) {
             await pool.query('UPDATE users SET is_pro = 0, pro_expiry_date = NULL WHERE email = ?', [email]);
             isPro = false;
