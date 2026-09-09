@@ -173,10 +173,14 @@
 
             const data = await response.json();
 
-            // 🛑 Banned Account Check (403 Forbidden)
+            // 🛑 Banned Account Check (403 Forbidden) - Handle alert and button reset cleanly here
             if (response.status === 403) {
                 alert(data.message || 'Account suspended.');
-                throw new Error(data.message || 'Account suspended.');
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+                btnText.textContent = 'LOG IN TO ACCOUNT';
+                spinner.classList.add('hidden');
+                return;
             }
 
             if (!response.ok) throw new Error(data.message || 'Login failed');
@@ -194,12 +198,7 @@
             }
 
         } catch (error) {
-            if (response && response.status !== 403) {
-                alert("Login Failed: " + error.message);
-            } else if (!response) {
-                alert("Login Failed: " + error.message);
-            }
-            
+            alert("Login Failed: " + error.message);
             submitBtn.disabled = false;
             submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
             btnText.textContent = 'LOG IN TO ACCOUNT';
@@ -268,7 +267,7 @@
             document.getElementById('resetPasswordForm').addEventListener('submit', async function(resEvent) {
                 resEvent.preventDefault();
                 const otp = document.getElementById('reset-otp').value.trim();
-                const newPassword = document.getElementById('new-password').value;
+                const newPassword = document.getElementById('new-password'].value;
                 const resetBtn = document.getElementById('resetSubmitBtn');
 
                 resetBtn.disabled = true;
