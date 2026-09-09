@@ -8,7 +8,7 @@ class FraudShieldAiChatbot extends HTMLElement {
     this.render();
     this.initEvents();
 
-    // Page load hone ke 1 second baad welcome tooltip/bubble ko animate karke dikhana
+    // Show the welcome tooltip/bubble with an animation 1 second after page load
     setTimeout(() => {
       const tooltip = this.shadowRoot.getElementById('welcome-tooltip');
       if (tooltip) {
@@ -319,12 +319,12 @@ class FraudShieldAiChatbot extends HTMLElement {
         </div>
         
         <div class="chat-messages" id="chat-messages">
-          <div class="message bot-message">Hey! Main FraudShield AI hoon. Aapki kya madad kar sakta hoon?</div>
-          <div class="typing-indicator" id="typing-indicator">FraudShield AI soch raha hai...</div>
+          <div class="message bot-message">Hello! I am FraudShield AI. How can I assist you today?</div>
+          <div class="typing-indicator" id="typing-indicator">FraudShield AI is thinking...</div>
         </div>
         
         <div class="chat-input-container">
-          <input type="text" id="user-input" class="chat-input" placeholder="Yahan message likhein..." />
+          <input type="text" id="user-input" class="chat-input" placeholder="Type your message here..." />
           <button class="send-btn" id="send-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
           </button>
@@ -386,10 +386,10 @@ class FraudShieldAiChatbot extends HTMLElement {
       if (data.reply) {
         this.appendMessage(data.reply, 'bot-message');
       } else {
-        this.appendMessage('Koyi response nahi mila.', 'bot-message');
+        this.appendMessage('No response received.', 'bot-message');
       }
     } catch (error) {
-      this.appendMessage('Server se connect nahi ho paya.', 'bot-message');
+      this.appendMessage('Failed to connect to the server.', 'bot-message');
     } finally {
       this.showTyping(false);
     }
