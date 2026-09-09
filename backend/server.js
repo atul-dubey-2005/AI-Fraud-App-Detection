@@ -63,7 +63,7 @@ testConnection();
 
 module.exports = pool;
 
-// Chat API Route for FraudShield AI Assistant
+// Chat API Route for FraudShield AI Assistant (Powered by Google Gemini)
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
@@ -72,23 +72,46 @@ app.post('/api/chat', async (req, res) => {
             return res.status(400).json({ success: false, reply: "Message is required." });
         }
 
-        let reply = "Main FraudShield AI Assistant hoon. Aapki kya madad kar sakta hoon?";
-
-        const lowerMsg = message.toLowerCase();
-        if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
-            reply = "Hello! Main FraudShield AI Assistant hoon. Aap kisi bhi app ko analyze karne ke liye 'Analyze App' section me ja sakte hain.";
-        } else if (lowerMsg.includes('fraud') || lowerMsg.includes('safe') || lowerMsg.includes('check')) {
-            reply = "Aap 'Analyze App' par jaakar kisi bhi application ka URL ya file daal sakte hain, hamara AI system uska fraud risk check kar dega.";
-        } else if (lowerMsg.includes('dashboard') || lowerMsg.includes('stats')) {
-            reply = "Aapka dashboard total scanned apps, detected fraud, aur system status ka live data dikhata hai.";
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        res.json({ success: true, reply });
+        // Updated Gemini API endpoint using v1beta and gemini-1.5-flash
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+        const systemInstruction = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
+
+        const response = await fetch(geminiEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                system_instruction: {
+                    parts: [{ text: systemInstruction }]
+                },
+                contents: [
+                    { role: "user", parts: [{ text: message }] }
+                ]
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Gemini API Error Response:", data);
+            return res.status(500).json({ success: false, reply: "AI processing service encountered an error. Please try again later." });
+        }
+
+        const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I am unable to process your request at the moment.";
+
+        res.json({ success: true, reply: aiReply });
+
     } catch (error) {
-        console.error("Chat API Error:", error);
-        res.status(500).json({ success: false, reply: "Server error processing your request." });
+        console.error("Chat API Critical Exception:", error);
+        res.status(500).json({ success: false, reply: "Internal server error occurred while connecting to the AI assistant." });
     }
 });
+
 
 
 // --- Mailjet HTTP API Setup ---
