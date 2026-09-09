@@ -64,7 +64,7 @@ testConnection();
 module.exports = pool;
 
 
-// Chat API Route for FraudShield AI Assistant (Using Gemini 2.0 Flash for 2026 API keys)
+// Chat API Route for FraudShield AI Assistant (Updated to gemini-3.6-flash)
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
@@ -78,8 +78,8 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        // Updated for 2026 Google AI Studio API standards using gemini-2.0-flash on v1beta
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        // Updated endpoint to use gemini-3.6-flash
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
 
@@ -109,6 +109,7 @@ app.post('/api/chat', async (req, res) => {
         res.status(500).json({ success: false, reply: "Internal server error occurred while connecting to the AI assistant." });
     }
 });
+
 
 
 
