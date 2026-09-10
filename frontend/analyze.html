@@ -140,12 +140,19 @@
             <!-- Results Section -->
             <div id="resultsState" class="hidden w-full max-w-2xl bg-surface border border-surfaceBorder rounded-3xl overflow-hidden shadow-2xl flex-col">
 
-                <div class="p-6 border-b border-surfaceBorder flex items-center justify-between bg-surfaceBorder/30">
-                    <div>
-                        <p class="text-gray-500 text-xs uppercase tracking-widest font-bold mb-1">App Vulnerability Report</p>
-                        <h3 id="resultTarget" class="text-white font-mono text-sm truncate max-w-[200px] sm:max-w-md">com.app.target</h3>
+                <div class="p-6 lg:p-8 border-b border-surfaceBorder flex items-center justify-between bg-surfaceBorder/30">
+                    <div class="flex items-center space-x-4 overflow-hidden">
+                        <!-- Larger App Logo Container -->
+                        <div id="resultIconContainer" class="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-surfaceBorder flex items-center justify-center overflow-hidden shrink-0 border border-surfaceBorder shadow-lg">
+                            <!-- Injected via JS -->
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="text-gray-500 text-xs uppercase tracking-widest font-bold mb-1">App Vulnerability Report</p>
+                            <!-- Prominent App Name Heading -->
+                            <h3 id="resultTarget" class="text-white font-bold text-base lg:text-xl truncate max-w-[220px] sm:max-w-md">com.app.target</h3>
+                        </div>
                     </div>
-                    <button onclick="resetScanner()" class="text-xs text-gray-400 hover:text-white transition-colors border border-surfaceBorder hover:border-gray-500 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl">New Audit</button>
+                    <button onclick="resetScanner()" class="text-xs text-gray-400 hover:text-white transition-colors border border-surfaceBorder hover:border-gray-500 px-3.5 py-2 rounded-xl shrink-0">New Audit</button>
                 </div>
 
                 <div class="p-6 lg:p-8 flex flex-col md:flex-row items-center md:items-start gap-8">
@@ -426,10 +433,17 @@ CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
                 console.error("Failed to sync scan history to database:", err);
             }
 
-            // 3. UI Update: Asli Logo aur Naam Dikhana
+            // 3. UI Update: Larger App Logo Container & Prominent App Name Heading
             const resultTargetEl = document.getElementById('resultTarget');
-            const iconHtml = data.icon ? `<img src="${data.icon}" class="w-6 h-6 rounded-md inline-block mr-2 align-middle bg-white/10 p-0.5">` : '';
-            resultTargetEl.innerHTML = `${iconHtml}<span class="align-middle">${data.appName || data.target}</span>`;
+            const resultIconContainer = document.getElementById('resultIconContainer');
+            
+            resultTargetEl.innerText = data.appName || data.target;
+
+            if (data.icon) {
+                resultIconContainer.innerHTML = `<img src="${data.icon}" class="w-full h-full object-cover" alt="App Logo">`;
+            } else {
+                resultIconContainer.innerHTML = `<svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>`;
+            }
 
             document.getElementById('riskScore').innerText = data.riskScore;
 
