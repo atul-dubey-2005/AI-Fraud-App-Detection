@@ -114,7 +114,10 @@
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                         </div>
-                        <input type="text" id="targetUrl" required placeholder="https://play.google.com/store/apps/details?id=pkg.name or com.package.name" class="w-full bg-background border border-gray-800 rounded-xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors">
+                        <input type="text" id="targetUrl" required autocomplete="off" placeholder="https://play.google.com/store/apps/details?id=pkg.name or com.package.name" class="w-full bg-background border border-gray-800 rounded-xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors">
+                        
+                        <!-- Play Store Live Recommendations Dropdown -->
+                        <div id="searchSuggestions" class="absolute left-0 right-0 mt-2 bg-surface border border-surfaceBorder rounded-2xl shadow-2xl z-50 hidden max-h-96 overflow-y-auto divide-y divide-surfaceBorder/60"></div>
                     </div>
 
                     <button type="submit" id="scanBtn" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2">
@@ -205,6 +208,67 @@
                     }
                 });
             });
+        });
+
+        // Google Play Store Live Autocomplete Search Handler
+        const targetUrlInput = document.getElementById('targetUrl');
+        const suggestionsBox = document.getElementById('searchSuggestions');
+        let debounceTimer;
+
+        targetUrlInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            clearTimeout(debounceTimer);
+
+            if (query.length === 0 || query.startsWith('http') || query.includes('.')) {
+                suggestionsBox.classList.add('hidden');
+                suggestionsBox.innerHTML = '';
+                return;
+            }
+
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/api/playstore/search?q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+
+                    if (data.success && data.apps.length > 0) {
+                        let html = '';
+                        data.apps.forEach(app => {
+                            const safeTitle = app.app_name.replace(/'/g, "\\'");
+                            const safeId = app.app_id;
+                            html += `
+                                <div class="p-3 hover:bg-surfaceBorder/50 cursor-pointer transition-colors flex items-center space-x-3" onclick="selectPlayStoreApp('${safeId}', '${safeTitle}')">
+                                    <div class="w-9 h-9 rounded-xl bg-surfaceBorder flex items-center justify-center overflow-hidden shrink-0 border border-surfaceBorder">
+                                        <img src="${app.icon_url}" class="w-full h-full object-cover" alt="icon">
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h4 class="text-white text-xs font-semibold truncate">${app.app_name}</h4>
+                                        <p class="text-[10px] text-gray-400 truncate">${app.developer_name} &bull; <span class="font-mono text-primary">${app.app_id}</span></p>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        suggestionsBox.innerHTML = html;
+                        suggestionsBox.classList.remove('hidden');
+                    } else {
+                        suggestionsBox.innerHTML = `<div class="p-4 text-gray-500 text-xs font-mono text-center">No apps found on Play Store</div>`;
+                        suggestionsBox.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error("Play Store search error:", error);
+                }
+            }, 300);
+        });
+
+        function selectPlayStoreApp(appId, appName) {
+            targetUrlInput.value = `https://play.google.com/store/apps/details?id=${appId}`;
+            suggestionsBox.classList.add('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!targetUrlInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                suggestionsBox.classList.add('hidden');
+            }
         });
 
         const analyzeForm = document.getElementById('analyzeForm');
