@@ -905,6 +905,38 @@ async function logAdminAction(adminEmail, actionType, description) {
     }
 }
 
+// Real-time Google Play Store Search Endpoint (Expanded Results)
+app.get('/api/playstore/search', async (req, res) => {
+    try {
+        const query = req.query.q || '';
+        if (!query.trim()) {
+            return res.json({ success: true, apps: [] });
+        }
+
+        // Fetch up to 20 matching apps from the Google Play Store to display all alike names
+        const results = await gplay.search({
+            term: query,
+            num: 20,
+            lang: 'en',
+            country: 'in'
+        });
+
+        // Map results to extract structured options for the dropdown
+        const apps = results.map(app => ({
+            app_name: app.title,
+            developer_name: app.developer,
+            icon_url: app.icon,
+            app_id: app.appId
+        }));
+
+        res.json({ success: true, apps });
+    } catch (error) {
+        console.error("Play Store Search Error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch from Play Store." });
+    }
+});
+
+
 
 
 // --- SERVER START ---
