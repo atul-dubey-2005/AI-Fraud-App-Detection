@@ -675,17 +675,19 @@ app.post('/api/analyze', async (req, res) => {
 // 2. SAVE SCAN HISTORY API
 // ==========================================
 app.post('/api/save-scan', async (req, res) => {
-    const { email, target, icon, riskScore, status, colorClass, threats } = req.body;
+    const { email, target, appName, icon, riskScore, status, colorClass, threats } = req.body;
     try {
         await pool.execute(
-            `INSERT INTO scan_history (user_email, target_url, app_icon, risk_score, status, color_class, threats) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [email || 'anonymous@fraudshield.com', target, icon || '', riskScore, status, colorClass, JSON.stringify(threats)]
+            `INSERT INTO scan_history (user_email, target_url, app_name, app_icon, risk_score, status, color_class, threats) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [email || 'anonymous@fraudshield.com', target, appName || target, icon || '', riskScore, status, colorClass, JSON.stringify(threats)]
         );
         res.status(200).json({ success: true });
     } catch (err) {
+        console.error("Save Scan Error:", err);
         res.status(500).json({ success: false });
     }
 });
+
 
 // --- Get Scan History API ---
 app.get('/api/get-scans', async (req, res) => {
