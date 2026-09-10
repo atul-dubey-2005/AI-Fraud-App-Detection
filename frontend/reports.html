@@ -210,7 +210,6 @@
             const grid = document.getElementById('reportsGrid');
             if (!grid) return;
 
-            // Update Top Metrics Separately for Low, Medium, High
             document.getElementById('totalReportsCount').innerText = reportsData.length;
 
             const safeCount = reportsData.filter(r => r.status.toLowerCase() === 'low risk' || r.status.toLowerCase() === 'safe').length;
@@ -384,7 +383,6 @@ CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
             }
         }
 
-        // Fetch MySQL reports on startup
         fetchReportsData();
     </script>
 </body>
