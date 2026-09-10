@@ -102,7 +102,7 @@
         <!-- Main Workspace -->
         <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow flex flex-col items-center justify-start mt-4 lg:mt-6">
 
-            <!-- Input Section (Removed overflow-hidden so suggestions can overflow safely) -->
+            <!-- Input Section -->
             <div class="w-full max-w-2xl p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl relative">
                 <div class="absolute -top-10 -right-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -116,7 +116,7 @@
                         </div>
                         <input type="text" id="targetUrl" required autocomplete="off" placeholder="https://play.google.com/store/apps/details?id=pkg.name or com.package.name" class="w-full bg-background border border-gray-800 rounded-xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors">
                         
-                        <!-- Long & Scrollable Play Store Suggestions Box (Extended height up to 60vh) -->
+                        <!-- Long & Scrollable Play Store Suggestions Box -->
                         <div id="searchSuggestions" class="absolute left-0 right-0 mt-2 bg-surface border border-surfaceBorder rounded-2xl shadow-2xl z-50 hidden max-h-[60vh] overflow-y-auto divide-y divide-surfaceBorder/60"></div>
                     </div>
 
@@ -405,7 +405,7 @@ CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
             history.unshift(currentScanData);
             localStorage.setItem('fs_history', JSON.stringify(history));
 
-            // 2. Sync to Database (MySQL)
+            // 2. Sync to Database (MySQL) with explicit appName mapping for Reports page compatibility
             const userEmail = getSafeUserEmail();
             try {
                 await fetch('/api/save-scan', { 
@@ -414,6 +414,7 @@ CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
                     body: JSON.stringify({ 
                         email: userEmail, 
                         target: currentScanData.target, 
+                        appName: currentScanData.appName || currentScanData.target,
                         icon: currentScanData.icon, 
                         riskScore: currentScanData.riskScore,
                         status: currentScanData.status,
@@ -428,7 +429,7 @@ CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
             // 3. UI Update: Asli Logo aur Naam Dikhana
             const resultTargetEl = document.getElementById('resultTarget');
             const iconHtml = data.icon ? `<img src="${data.icon}" class="w-6 h-6 rounded-md inline-block mr-2 align-middle bg-white/10 p-0.5">` : '';
-            resultTargetEl.innerHTML = `${iconHtml}<span class="align-middle">${data.target}</span>`;
+            resultTargetEl.innerHTML = `${iconHtml}<span class="align-middle">${data.appName || data.target}</span>`;
 
             document.getElementById('riskScore').innerText = data.riskScore;
 
