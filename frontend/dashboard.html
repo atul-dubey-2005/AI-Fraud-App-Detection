@@ -170,8 +170,7 @@
             </div>
         </header>
 
-                <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow">
-
+        <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow">
 
             <!-- Welcome Banner -->
             <div class="p-6 lg:p-8 bg-gradient-to-r from-surface to-surfaceBorder/40 border border-surfaceBorder rounded-3xl relative overflow-hidden flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 shadow-xl">
@@ -200,16 +199,23 @@
                 </div>
             </div>
 
-            <!-- Quick Inspector Widget -->
+            <!-- Quick Inspector Widget with Play Store Suggestions -->
             <div class="p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl relative">
                 <h3 class="text-white font-bold text-base mb-2 flex items-center space-x-2">
                     <svg class="w-5 h-5 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                     <span>Instant App Inspector</span>
                 </h3>
-                <p class="text-gray-400 text-xs mb-6">Type any Play Store link or package name to immediately queue it into the app analyzer.</p>
+                <p class="text-gray-400 text-xs mb-6">Type any Play Store link or search app name to immediately queue it into the app analyzer.</p>
+                
                 <form id="quickScanForm" class="flex flex-col sm:flex-row gap-3">
-                    <input type="text" id="quickUrl" required placeholder="https://play.google.com/store/apps/details?id=pkg.name or com.package.name" class="flex-grow bg-background border border-gray-800 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors">
-                    <button type="submit" class="bg-primary hover:bg-primary-dark text-black font-bold text-xs px-6 py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(0,255,102,0.15)] whitespace-nowrap">
+                    <div class="relative flex-grow">
+                        <input type="text" id="quickUrl" required autocomplete="off" placeholder="https://play.google.com/store/apps/details?id=pkg.name or search app name..." class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors">
+                        
+                        <!-- Real-time Play Store Recommendations Dropdown -->
+                        <div id="quickSearchSuggestions" class="absolute left-0 right-0 mt-2 bg-surface border border-surfaceBorder rounded-2xl shadow-2xl z-50 hidden max-h-[60vh] overflow-y-auto divide-y divide-surfaceBorder/60"></div>
+                    </div>
+
+                    <button type="submit" class="bg-primary hover:bg-primary-dark text-black font-bold text-xs px-6 py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(0,255,102,0.15)] whitespace-nowrap h-[46px]">
                         INSPECT APP NOW
                     </button>
                 </form>
@@ -327,16 +333,79 @@
         </footer>
     </div>
 
-    <!-- Live Database Integration Script -->
+    <!-- Live Database & Autocomplete Integration Script -->
     <script>
         const name = localStorage.getItem('userName') || 'User';
         const userEmail = localStorage.getItem('userEmail') || '';
-const mobileUserName = document.getElementById('mobile-user-name');
-if (mobileUserName) mobileUserName.innerText = name;
+        const mobileUserName = document.getElementById('mobile-user-name');
+        if (mobileUserName) mobileUserName.innerText = name;
 
         document.getElementById('welcome-msg').innerHTML = `Welcome back,<br><span class="text-white">${name}!</span>`;
         document.getElementById('sidebar-name').innerText = name;
         document.getElementById('sidebar-avatar').innerText = name.charAt(0).toUpperCase();
+
+        // Instant App Inspector Live Play Store Search Handler
+        const quickUrlInput = document.getElementById('quickUrl');
+        const quickSuggestionsBox = document.getElementById('quickSearchSuggestions');
+        let quickDebounceTimer;
+
+        if (quickUrlInput && quickSuggestionsBox) {
+            quickUrlInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                clearTimeout(quickDebounceTimer);
+
+                if (query.length === 0 || query.startsWith('http') || query.includes('.')) {
+                    quickSuggestionsBox.classList.add('hidden');
+                    quickSuggestionsBox.innerHTML = '';
+                    return;
+                }
+
+                quickDebounceTimer = setTimeout(async () => {
+                    try {
+                        const response = await fetch(`/api/playstore/search?q=${encodeURIComponent(query)}`);
+                        const data = await response.json();
+
+                        if (data.success && data.apps.length > 0) {
+                            let html = '';
+                            data.apps.forEach(app => {
+                                const safeTitle = app.app_name.replace(/'/g, "\\'");
+                                const safeId = app.app_id;
+                                html += `
+                                    <div class="p-3.5 hover:bg-surfaceBorder/50 cursor-pointer transition-colors flex items-center space-x-3" onclick="selectQuickPlayStoreApp('${safeId}')">
+                                        <div class="w-10 h-10 rounded-xl bg-surfaceBorder flex items-center justify-center overflow-hidden shrink-0 border border-surfaceBorder">
+                                            <img src="${app.icon_url}" class="w-full h-full object-cover" alt="icon">
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <h4 class="text-white text-xs font-semibold truncate">${app.app_name}</h4>
+                                            <p class="text-[10px] text-gray-400 truncate">${app.developer_name} &bull; <span class="font-mono text-primary">${app.app_id}</span></p>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            quickSuggestionsBox.innerHTML = html;
+                            quickSuggestionsBox.classList.remove('hidden');
+                        } else {
+                            quickSuggestionsBox.innerHTML = `<div class="p-4 text-gray-500 text-xs font-mono text-center">No apps found on Play Store</div>`;
+                            quickSuggestionsBox.classList.remove('hidden');
+                        }
+                    } catch (error) {
+                        console.error("Play Store search error:", error);
+                    }
+                }, 300);
+            });
+
+            function selectQuickPlayStoreApp(appId) {
+                quickUrlInput.value = `https://play.google.com/store/apps/details?id=${appId}`;
+                quickSuggestionsBox.classList.add('hidden');
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!quickUrlInput.contains(e.target) && !quickSuggestionsBox.contains(e.target)) {
+                    quickSuggestionsBox.classList.add('hidden');
+                }
+            });
+        }
 
         const quickScanForm = document.getElementById('quickScanForm');
         if (quickScanForm) {
