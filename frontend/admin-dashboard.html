@@ -25,11 +25,27 @@
     </script>
     <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
 </head>
-<body class="bg-background text-gray-300 min-h-screen flex selection:bg-red-500 selection:text-white">
+<body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-red-500 selection:text-white overflow-x-hidden">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
-        <div class="space-y-8">
+    <!-- Mobile Header Bar -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-surfaceBorder flex justify-between items-center p-4 lg:hidden">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center border border-red-500/30 shrink-0">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <span class="text-white font-bold text-base">FraudShield Admin</span>
+        </div>
+        <button id="menu-btn" class="text-gray-400 hover:text-white focus:outline-none p-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Overlay Background for Mobile Drawer -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
+
+    <!-- Sidebar Navigation (Responsive Drawer for Mobile & Fixed for PC) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-surfaceBorder flex flex-col justify-between p-6 transform -translate-x-full lg:translate-x-0 lg:static lg:h-screen transition-transform duration-300 ease-in-out">
+        <div class="space-y-8 flex-grow">
             <!-- Brand Logo -->
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)]">
@@ -43,7 +59,7 @@
 
             <!-- Navigation Links -->
             <nav class="space-y-2">
-                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
+                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-red-400 bg-red-500/10 font-semibold text-sm transition-all border border-red-500/20">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     <span>User Management</span>
                 </a>
@@ -71,35 +87,32 @@
                     <p class="text-[10px] text-red-400 uppercase font-mono">Level-4 Access</p>
                 </div>
             </div>
-            <button onclick="handleLogout()" class="text-gray-400 hover:text-red-400 transition-colors p-1.5" title="Terminate Session">
+            <button onclick="handleLogout()" class="text-gray-400 hover:text-red-400 transition-colors p-1.5 cursor-pointer" title="Terminate Session">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
             </button>
         </div>
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-grow flex flex-col min-w-0">
-        
+    <div class="flex-grow flex flex-col min-w-0 pt-16 lg:pt-0">
+
         <!-- Top Header Bar -->
-        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-40">
+        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-6 lg:px-8 flex items-center justify-between sticky top-16 lg:top-0 z-40">
             <div>
                 <span class="text-xs font-mono text-red-400 uppercase tracking-widest">Restricted Zone</span>
-                <h1 class="text-lg font-bold text-white tracking-tight">System Administration Matrix</h1>
+                <h1 class="text-base lg:text-lg font-bold text-white tracking-tight">System Administration Matrix</h1>
             </div>
             <div class="flex items-center space-x-4">
                 <div class="hidden md:flex items-center space-x-2 bg-surface border border-red-500/20 px-3.5 py-2 rounded-xl text-xs text-red-400 font-mono">
                     <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
                     <span>Admin Session Secure</span>
                 </div>
-                <button onclick="handleLogout()" class="lg:hidden bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold px-4 py-2 rounded-xl">
-                    Logout
-                </button>
             </div>
         </header>
 
         <!-- Main Body Content -->
-        <main class="p-8 space-y-8 flex-grow">
-            
+        <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow">
+
             <!-- Global Admin Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div class="p-6 bg-surface border border-surfaceBorder rounded-2xl relative overflow-hidden">
@@ -127,127 +140,134 @@
                 </div>
             </div>
 
-
             <!-- User Management Table Panel -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-surfaceBorder pb-6">
-    <div>
-        <h3 class="text-white font-bold text-lg">Registered User Accounts</h3>
-        <p class="text-xs text-gray-500 mt-0.5">Real-time control panel for database records and account permissions.</p>
-    </div>
-    <div class="flex items-center gap-3 w-full sm:w-auto">
-        <!-- Search Input Bar -->
-        <input type="text" id="userSearchInput" onkeyup="filterUserTable()" placeholder="Search users by name or email..." class="bg-background border border-surfaceBorder rounded-xl py-2 px-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 transition-all font-mono w-full sm:w-64">
-        
-        <button onclick="exportUsersToCSV()" class="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 text-xs font-semibold px-4 py-2.5 rounded-xl transition-all flex items-center space-x-2 shrink-0">
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-    <span>Export Excel/CSV</span>
-</button>
-        <button onclick="fetchAllUsers()" class="bg-surfaceBorder/60 hover:bg-surfaceBorder border border-surfaceBorder text-gray-300 text-xs font-semibold px-4 py-2.5 rounded-xl transition-all flex items-center space-x-2 shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            <span>Refresh</span>
-        </button>
-    </div>
-</div>
+            <div class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-surfaceBorder pb-6">
+                    <div>
+                        <h3 class="text-white font-bold text-lg">Registered User Accounts</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Real-time control panel for database records and account permissions.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                        <input type="text" id="userSearchInput" onkeyup="filterUserTable()" placeholder="Search users..." class="bg-background border border-surfaceBorder rounded-xl py-2 px-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-red-500/50 transition-all font-mono w-full sm:w-64">
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <button onclick="exportUsersToCSV()" class="flex-1 sm:flex-none bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 text-xs font-semibold px-4 py-2.5 rounded-xl transition-all flex items-center justify-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                <span>Export CSV</span>
+                            </button>
+                            <button onclick="fetchAllUsers()" class="flex-1 sm:flex-none bg-surfaceBorder/60 hover:bg-surfaceBorder border border-surfaceBorder text-gray-300 text-xs font-semibold px-4 py-2.5 rounded-xl transition-all flex items-center justify-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-<div class="overflow-x-auto">
-    <table class="w-full text-left text-sm text-gray-300">
-        <thead class="bg-background/80 text-xs uppercase text-gray-500 font-mono tracking-wider border-b border-surfaceBorder">
-            <tr>
-                <th class="py-3.5 px-4">Full Name</th>
-                <th class="py-3.5 px-4">Email Address</th>
-                <th class="py-3.5 px-4">Role</th>
-                <th class="py-3.5 px-4">Subscription</th>
-                <th class="py-3.5 px-4">Status</th>
-                <th class="py-3.5 px-4 text-right">Actions</th>
-            </tr>
-        </thead>
-        <tbody id="users-table-body" class="divide-y divide-surfaceBorder/60">
-            <tr>
-                <td colspan="6" class="py-8 text-center text-gray-500 font-mono text-xs">Fetching active user records from MySQL cluster...</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-background/80 text-xs uppercase text-gray-500 font-mono tracking-wider border-b border-surfaceBorder">
+                            <tr>
+                                <th class="py-3.5 px-4">Full Name</th>
+                                <th class="py-3.5 px-4">Email Address</th>
+                                <th class="py-3.5 px-4">Role</th>
+                                <th class="py-3.5 px-4">Subscription</th>
+                                <th class="py-3.5 px-4">Status</th>
+                                <th class="py-3.5 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="divide-y divide-surfaceBorder/60">
+                            <tr>
+                                <td colspan="6" class="py-8 text-center text-gray-500 font-mono text-xs">Fetching active user records from MySQL cluster...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <!-- Training card -->
-<div class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl space-y-6">
-    <div class="border-b border-surfaceBorder pb-6">
-        <h3 class="text-white font-bold text-lg">AI Model Cumulative Retraining Matrix</h3>
-        <p class="text-xs text-gray-500 mt-0.5">Upload a custom JSON or CSV dataset file to append new fraud signatures and make the FraudShield sentiment engine more powerful while retaining existing knowledge.</p>
-    </div>
+            <div class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl space-y-6">
+                <div class="border-b border-surfaceBorder pb-6">
+                    <h3 class="text-white font-bold text-lg">AI Model Cumulative Retraining Matrix</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Upload a custom JSON or CSV dataset file to append new fraud signatures and enhance the sentiment engine.</p>
+                </div>
 
-    <form id="trainingForm" class="space-y-4">
-        <div class="flex flex-col md:flex-row items-center gap-4">
-            <!-- File Input Button (Supports .json and .csv) -->
-            <div class="w-full flex-grow">
-                <label class="block text-xs font-mono text-gray-400 mb-2">SELECT DATASET (.JSON or .CSV FORMAT)</label>
-                <input type="file" id="datasetFile" accept=".json, .csv" required class="w-full bg-background border border-surfaceBorder rounded-xl py-3 px-4 text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-red-500/10 file:text-red-400 hover:file:bg-red-500/20 transition-all cursor-pointer">
+                <form id="trainingForm" class="space-y-4">
+                    <div class="flex flex-col md:flex-row items-center gap-4">
+                        <div class="w-full flex-grow">
+                            <label class="block text-xs font-mono text-gray-400 mb-2">SELECT DATASET (.JSON or .CSV FORMAT)</label>
+                            <input type="file" id="datasetFile" accept=".json, .csv" required class="w-full bg-background border border-surfaceBorder rounded-xl py-3 px-4 text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-red-500/10 file:text-red-400 hover:file:bg-red-500/20 transition-all cursor-pointer">
+                        </div>
+
+                        <div class="w-full md:w-auto self-end">
+                            <button type="submit" id="trainBtn" class="w-full md:w-auto bg-red-500 hover:bg-red-600 text-white font-bold text-xs px-6 py-3.5 rounded-xl transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] flex items-center justify-center space-x-2 whitespace-nowrap cursor-pointer">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                <span>RETRAIN & MERGE MODEL</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="trainingStatusContainer" class="hidden p-4 bg-background/60 border border-surfaceBorder rounded-2xl font-mono text-xs space-y-1">
+                        <p id="trainingStatusText" class="text-amber-400 flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                            <span id="statusMessage">Processing dataset upload and compiling neural weights...</span>
+                        </p>
+                    </div>
+                </form>
             </div>
 
-            <!-- Action Button -->
-            <div class="w-full md:w-auto self-end">
-                <button type="submit" id="trainBtn" class="w-full md:w-auto bg-red-500 hover:bg-red-600 text-white font-bold text-xs px-6 py-3.5 rounded-xl transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] flex items-center justify-center space-x-2 whitespace-nowrap">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    <span>RETRAIN & MERGE MODEL</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Live Status / Progress Feedback Box -->
-        <div id="trainingStatusContainer" class="hidden p-4 bg-background/60 border border-surfaceBorder rounded-2xl font-mono text-xs space-y-1">
-            <p id="trainingStatusText" class="text-amber-400 flex items-center space-x-2">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                <span id="statusMessage">Processing dataset upload and compiling neural weights...</span>
-            </p>
-        </div>
-    </form>
-</div>
-
-            <!-- New Section: System Security Audit Logs -->
+            <!-- Real System Security Audit Logs -->
             <div id="audit-logs" class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-surfaceBorder pb-6">
                     <div>
                         <h3 class="text-white font-bold text-lg">System Security Audit Logs</h3>
-                        <p class="text-xs text-gray-500 mt-0.5">Recent administrative checkpoints and security events monitored by FraudShield AI.</p>
+                        <p class="text-xs text-gray-500 mt-0.5">Real-time database audit trail of administrative activities and checkpoints.</p>
                     </div>
-                    <span class="px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-mono rounded-lg">Live Feed</span>
+                    <span class="px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-mono rounded-lg flex items-center space-x-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+                        <span>Live Database Feed</span>
+                    </span>
                 </div>
 
-                <div class="space-y-3 font-mono text-xs">
-                    <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                            <span class="text-gray-300">OAuth Security Handshake verified via Google Cluster</span>
-                        </div>
-                        <span class="text-gray-500">Just now</span>
-                    </div>
-                    <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <span class="w-2 h-2 rounded-full bg-primary"></span>
-                            <span class="text-gray-300">MySQL Database connection pool optimized (0 failed queries)</span>
-                        </div>
-                        <span class="text-gray-500">5 mins ago</span>
-                    </div>
-                    <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                            <span class="text-gray-300">Rate limiter checkpoint initialized for public API endpoints</span>
-                        </div>
-                        <span class="text-gray-500">12 mins ago</span>
+                <div id="audit-logs-container" class="space-y-3 font-mono text-xs">
+                    <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl text-center text-gray-500">
+                        Loading audit logs from database...
                     </div>
                 </div>
             </div>
 
         </main>
-        
+
         <!-- Footer -->
         <footer class="border-t border-surfaceBorder py-6 px-8 text-center text-xs text-gray-600 font-mono">
             FraudShield AI Admin Core v2.4 &bull; Level-4 Authorized Node
         </footer>
     </div>
 
-    <!-- Updated Admin Script Logic -->
+    <!-- Script Logic -->
     <script>
+        // Mobile Sidebar Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+
+            if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        toggleMenu();
+                    }
+                });
+            });
+        });
+
         if (localStorage.getItem('userLoggedIn') !== 'true' || localStorage.getItem('userRole') !== 'admin') {
             alert("Unauthorized Access! Admins only.");
             window.location.href = 'login.html';
@@ -255,14 +275,48 @@
 
         async function fetchAdminDashboardData() {
             await fetchAllUsers();
-            await fetchAllSystemScans();
+            await fetchAuditLogs();
+        }
+
+        async function fetchAuditLogs() {
+            try {
+                const response = await fetch('/api/admin/audit-logs');
+                const data = await response.json();
+                const container = document.getElementById('audit-logs-container');
+
+                if (data.success && data.logs.length > 0) {
+                    let html = '';
+                    data.logs.forEach(log => {
+                        const timeString = new Date(log.created_at).toLocaleString();
+                        html += `
+                            <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                                <div class="flex items-center space-x-3">
+                                    <span class="w-2 h-2 rounded-full bg-red-400 shrink-0"></span>
+                                    <div>
+                                        <span class="text-white font-semibold">[${log.action_type}]</span> 
+                                        <span class="text-gray-300">${log.description}</span>
+                                        <span class="block text-[10px] text-gray-500">Admin: ${log.admin_email}</span>
+                                    </div>
+                                </div>
+                                <span class="text-gray-500 shrink-0 text-[10px]">${timeString}</span>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `<div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl text-center text-gray-500">No audit log entries found.</div>`;
+                }
+            } catch (err) {
+                console.error("Error fetching audit logs:", err);
+                document.getElementById('audit-logs-container').innerHTML = `<div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl text-center text-red-400">Failed to load live audit logs.</div>`;
+            }
         }
 
         async function fetchAllUsers() {
             try {
                 const response = await fetch('/api/admin/users');
                 const data = await response.json();
-                
+
                 if (data.success) {
                     document.getElementById('stat-total-users').innerText = data.users.length;
                     let rows = '';
@@ -270,7 +324,7 @@
                         const roleBadge = u.role === 'admin' 
                             ? '<span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">Admin</span>' 
                             : '<span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-primary/10 text-primary border border-primary/20">User</span>';
-                        
+
                         const isProActive = u.is_pro === 1 || u.is_pro === true;
                         const proBadge = isProActive
                             ? '<span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-primary/20 text-primary border border-primary/40 shadow-[0_0_10px_rgba(0,255,102,0.1)]">PRO PLAN</span>'
@@ -293,7 +347,7 @@
                                 <td class="py-4 px-4">${proBadge}</td>
                                 <td class="py-4 px-4">${statusBadge}</td>
                                 <td class="py-4 px-4 text-right">
-                                    <button onclick="updateStatus('${u.user_id}', '${u.account_status === 'Banned' ? 'Active' : 'Banned'}')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all ${actionBtnClass}">
+                                    <button onclick="updateStatus('${u.user_id}', '${u.account_status === 'Banned' ? 'Active' : 'Banned'}')" class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all cursor-pointer ${actionBtnClass}">
                                         ${actionBtnText}
                                     </button>
                                 </td>
@@ -307,44 +361,6 @@
             }
         }
 
-        async function fetchAllSystemScans() {
-            try {
-                const response = await fetch('/api/admin/all-scans');
-                const data = await response.json();
-
-                if (data.success) {
-                    const scans = data.scans;
-                    const statTotalScans = document.getElementById('stat-total-scans');
-                    if(statTotalScans) statTotalScans.innerText = scans.length;
-                    
-                    const threatCount = scans.filter(s => s.status.toLowerCase() === 'high risk' || s.status.toLowerCase() === 'threat').length;
-                    const statTotalThreats = document.getElementById('stat-total-threats');
-                    if(statTotalThreats) statTotalThreats.innerText = threatCount;
-                    
-                    let scanRows = '';
-                    if (scans.length === 0) {
-                        scanRows = `<tr><td colspan="5" class="py-8 text-center text-gray-500 font-mono text-xs">No scan logs recorded in database.</td></tr>`;
-                    } else {
-                        scans.forEach(s => {
-                            scanRows += `
-                                <tr class="hover:bg-surfaceHover/50 transition-colors">
-                                    <td class="py-4 px-4 font-mono text-xs text-gray-400 whitespace-nowrap">${s.date}</td>
-                                    <td class="py-4 px-4 font-mono text-white text-xs">${s.userEmail}</td>
-                                    <td class="py-4 px-4 font-mono text-xs truncate max-w-[200px]" title="${s.target}">${s.target}</td>
-                                    <td class="py-4 px-4 font-mono font-bold text-xs ${s.colorClass}">${s.riskScore}/100</td>
-                                    <td class="py-4 px-4"><span class="px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase font-bold border ${s.colorClass.replace('text', 'border')}/40 ${s.colorClass} bg-background/50">${s.status}</span></td>
-                                </tr>
-                            `;
-                        });
-                    }
-                    const auditTableBody = document.getElementById('admin-audit-table-body');
-                    if(auditTableBody) auditTableBody.innerHTML = scanRows;
-                }
-            } catch (err) {
-                console.error("Failed to load global scan logs:", err);
-            }
-        }
-
         async function updateStatus(userId, newStatus) {
             try {
                 const res = await fetch('/api/admin/update-status', {
@@ -355,6 +371,7 @@
                 const result = await res.json();
                 if (result.success) {
                     fetchAllUsers();
+                    fetchAuditLogs(); // Refresh logs when an action occurs
                 } else {
                     alert('Failed to modify user status.');
                 }
@@ -370,129 +387,130 @@
         fetchAdminDashboardData();
 
         document.getElementById('trainingForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const fileInput = document.getElementById('datasetFile');
-        const trainBtn = document.getElementById('trainBtn');
-        const statusContainer = document.getElementById('trainingStatusContainer');
-        const statusMessage = document.getElementById('statusMessage');
+            e.preventDefault();
+            const fileInput = document.getElementById('datasetFile');
+            const trainBtn = document.getElementById('trainBtn');
+            const statusContainer = document.getElementById('trainingStatusContainer');
+            const statusMessage = document.getElementById('statusMessage');
 
-        if (fileInput.files.length === 0) {
-            alert('Please select a dataset file (.json or .csv) first.');
-            return;
-        }
+            if (fileInput.files.length === 0) {
+                alert('Please select a dataset file (.json or .csv) first.');
+                return;
+            }
 
-        const formData = new FormData();
-        formData.append('dataset', fileInput.files[0]);
+            const formData = new FormData();
+            formData.append('dataset', fileInput.files[0]);
 
-        trainBtn.disabled = true;
-        trainBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        trainBtn.innerText = 'TRAINING IN PROGRESS...';
-        
-        statusContainer.classList.remove('hidden');
-        statusMessage.className = "text-amber-400 flex items-center space-x-2";
-        statusMessage.innerText = "⚡ Uploading dataset to server and executing incremental training...";
+            trainBtn.disabled = true;
+            trainBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            trainBtn.innerText = 'TRAINING IN PROGRESS...';
 
-        try {
-            const response = await fetch('/api/admin/train-model', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
+            statusContainer.classList.remove('hidden');
+            statusMessage.className = "text-amber-400 flex items-center space-x-2";
+            statusMessage.innerText = "⚡ Uploading dataset to server and executing incremental training...";
 
-            if (result.success) {
-                statusMessage.className = "text-primary font-bold";
-                statusMessage.innerText = "✅ " + result.message;
-                fileInput.value = ''; 
-            } else {
+            try {
+                const response = await fetch('/api/admin/train-model', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    statusMessage.className = "text-primary font-bold";
+                    statusMessage.innerText = "✅ " + result.message;
+                    fileInput.value = ''; 
+                    fetchAuditLogs(); // Refresh audit logs to show training event
+                } else {
+                    statusMessage.className = "text-red-400 font-bold";
+                    statusMessage.innerText = "❌ Error: " + result.message;
+                }
+            } catch (err) {
+                console.error("Training error:", err);
                 statusMessage.className = "text-red-400 font-bold";
-                statusMessage.innerText = "❌ Error: " + result.message;
+                statusMessage.innerText = "❌ Failed to connect to backend server during training execution.";
+            } finally {
+                trainBtn.disabled = false;
+                trainBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                trainBtn.innerHTML = `
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <span>RETRAIN & MERGE MODEL</span>
+                `;
             }
-        } catch (err) {
-            console.error("Training error:", err);
-            statusMessage.className = "text-red-400 font-bold";
-            statusMessage.innerText = "❌ Failed to connect to backend server during training execution.";
-        } finally {
-            trainBtn.disabled = false;
-            trainBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            trainBtn.innerHTML = `
-                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                <span>RETRAIN & MERGE MODEL</span>
-            `;
-        }
-    });
+        });
 
-    function filterUserTable() {
-        const input = document.getElementById('userSearchInput');
-        const filter = input.value.toLowerCase();
-        const tableBody = document.getElementById('users-table-body');
-        
-        if (!tableBody) return;
-        
-        const rows = tableBody.getElementsByTagName('tr');
+        function filterUserTable() {
+            const input = document.getElementById('userSearchInput');
+            const filter = input.value.toLowerCase();
+            const tableBody = document.getElementById('users-table-body');
 
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            if (row.cells.length <= 1) continue;
+            if (!tableBody) return;
 
-            const nameText = row.cells[0].textContent || "";
-            const emailText = row.cells[1].textContent || "";
+            const rows = tableBody.getElementsByTagName('tr');
 
-            const combinedText = (nameText + " " + emailText).toLowerCase();
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                if (row.cells.length <= 1) continue;
 
-            if (combinedText.indexOf(filter) > -1) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
+                const nameText = row.cells[0].textContent || "";
+                const emailText = row.cells[1].textContent || "";
+
+                const combinedText = (nameText + " " + emailText).toLowerCase();
+
+                if (combinedText.indexOf(filter) > -1) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
             }
         }
-    }
 
-    function exportUsersToCSV() {
-        const tableBody = document.getElementById('users-table-body');
-        if (!tableBody) return;
+        function exportUsersToCSV() {
+            const tableBody = document.getElementById('users-table-body');
+            if (!tableBody) return;
 
-        const rows = tableBody.getElementsByTagName('tr');
-        let csvContent = [];
-        
-        csvContent.push(["Full Name", "Email Address", "Role", "Subscription", "Status"].join(","));
+            const rows = tableBody.getElementsByTagName('tr');
+            let csvContent = [];
 
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            if (row.cells.length <= 1) continue;
+            csvContent.push(["Full Name", "Email Address", "Role", "Subscription", "Status"].join(","));
 
-            const name = row.cells[0].textContent.trim().replace(/,/g, "");
-            const email = row.cells[1].textContent.trim().replace(/,/g, "");
-            const role = row.cells[2].textContent.trim().replace(/,/g, "");
-            const subscription = row.cells[3].textContent.trim().replace(/,/g, "");
-            const status = row.cells[4].textContent.trim().replace(/,/g, "");
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                if (row.cells.length <= 1) continue;
 
-            csvContent.push([`"${name}"`, `"${email}"`, `"${role}"`, `"${subscription}"`, `"${status}"`].join(","));
+                const name = row.cells[0].textContent.trim().replace(/,/g, "");
+                const email = row.cells[1].textContent.trim().replace(/,/g, "");
+                const role = row.cells[2].textContent.trim().replace(/,/g, "");
+                const subscription = row.cells[3].textContent.trim().replace(/,/g, "");
+                const status = row.cells[4].textContent.trim().replace(/,/g, "");
+
+                csvContent.push([`"${name}"`, `"${email}"`, `"${role}"`, `"${subscription}"`, `"${status}"`].join(","));
+            }
+
+            if (csvContent.length <= 1) {
+                alert("No user records available to export.");
+                return;
+            }
+
+            const csvString = csvContent.join("\n");
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `FraudShield_Users_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
-        if (csvContent.length <= 1) {
-            alert("No user records available to export.");
-            return;
+        function handleLogout() {
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            window.location.replace('index.html');
         }
-
-        const csvString = csvContent.join("\n");
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", `FraudShield_Users_${new Date().toISOString().slice(0,10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    function handleLogout() {
-        localStorage.removeItem('userLoggedIn');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('userEmail');
-        window.location.replace('index.html');
-    }
     </script>
 </body>
 </html>
