@@ -882,6 +882,30 @@ app.post('/api/user-status', async (req, res) => {
         res.status(500).json({ success: false, isPro: false });
     }
 });
+// Fetch latest audit logs
+app.get('/api/admin/audit-logs', async (req, res) => {
+    try {
+        const [logs] = await db.execute('SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 20');
+        res.json({ success: true, logs });
+    } catch (error) {
+        console.error("Fetch Audit Logs Error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch audit logs." });
+    }
+});
+
+// Helper function to record an audit log from anywhere in backend
+async function logAdminAction(adminEmail, actionType, description) {
+    try {
+        await db.execute(
+            'INSERT INTO audit_logs (admin_email, action_type, description) VALUES (?, ?, ?)',
+            [adminEmail, actionType, description]
+        );
+    } catch (error) {
+        console.error("Log Insertion Error:", error);
+    }
+}
+
+
 
 // --- SERVER START ---
 const PORT = process.env.PORT || 3000;
