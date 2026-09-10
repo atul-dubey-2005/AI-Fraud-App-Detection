@@ -102,8 +102,8 @@
         <!-- Main Workspace -->
         <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow flex flex-col items-center justify-start mt-4 lg:mt-6">
 
-            <!-- Input Section -->
-            <div class="w-full max-w-2xl p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl relative overflow-hidden">
+            <!-- Input Section (Removed overflow-hidden so suggestions can overflow safely) -->
+            <div class="w-full max-w-2xl p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl shadow-xl relative">
                 <div class="absolute -top-10 -right-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
 
                 <h2 class="text-xl lg:text-2xl font-bold text-white mb-2">Inspect Mobile Application</h2>
@@ -116,8 +116,8 @@
                         </div>
                         <input type="text" id="targetUrl" required autocomplete="off" placeholder="https://play.google.com/store/apps/details?id=pkg.name or com.package.name" class="w-full bg-background border border-gray-800 rounded-xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors">
                         
-                        <!-- Play Store Live Recommendations Dropdown -->
-                        <div id="searchSuggestions" class="absolute left-0 right-0 mt-2 bg-surface border border-surfaceBorder rounded-2xl shadow-2xl z-50 hidden max-h-96 overflow-y-auto divide-y divide-surfaceBorder/60"></div>
+                        <!-- Long & Scrollable Play Store Suggestions Box (Extended height up to 60vh) -->
+                        <div id="searchSuggestions" class="absolute left-0 right-0 mt-2 bg-surface border border-surfaceBorder rounded-2xl shadow-2xl z-50 hidden max-h-[60vh] overflow-y-auto divide-y divide-surfaceBorder/60"></div>
                     </div>
 
                     <button type="submit" id="scanBtn" class="w-full bg-primary hover:bg-primary-dark text-black font-bold py-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2">
@@ -236,8 +236,8 @@
                             const safeTitle = app.app_name.replace(/'/g, "\\'");
                             const safeId = app.app_id;
                             html += `
-                                <div class="p-3 hover:bg-surfaceBorder/50 cursor-pointer transition-colors flex items-center space-x-3" onclick="selectPlayStoreApp('${safeId}', '${safeTitle}')">
-                                    <div class="w-9 h-9 rounded-xl bg-surfaceBorder flex items-center justify-center overflow-hidden shrink-0 border border-surfaceBorder">
+                                <div class="p-3.5 hover:bg-surfaceBorder/50 cursor-pointer transition-colors flex items-center space-x-3" onclick="selectPlayStoreApp('${safeId}', '${safeTitle}')">
+                                    <div class="w-10 h-10 rounded-xl bg-surfaceBorder flex items-center justify-center overflow-hidden shrink-0 border border-surfaceBorder">
                                         <img src="${app.icon_url}" class="w-full h-full object-cover" alt="icon">
                                     </div>
                                     <div class="overflow-hidden">
