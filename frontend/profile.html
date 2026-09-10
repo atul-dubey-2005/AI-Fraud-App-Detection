@@ -180,11 +180,29 @@
                             <div>
                                 <input type="email" id="confirmEmail" required placeholder="Confirm your Email" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
                             </div>
-                            <div>
-                                <input type="password" id="currentPassword" required placeholder="Current Password" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                            <div class="relative">
+                                <input type="password" id="currentPassword" required placeholder="Current Password" class="w-full bg-background border border-gray-800 rounded-xl py-3 pl-4 pr-10 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                                <button type="button" id="toggleCurrentPasswordBtn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-white transition-colors focus:outline-none">
+                                    <svg id="currentEyeClosedIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                    </svg>
+                                    <svg id="currentEyeOpenIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </button>
                             </div>
-                            <div>
-                                <input type="password" id="newPassword" required minlength="6" placeholder="New Password" class="w-full bg-background border border-gray-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                            <div class="relative">
+                                <input type="password" id="newPassword" required minlength="6" placeholder="New Password" class="w-full bg-background border border-gray-800 rounded-xl py-3 pl-4 pr-10 text-white focus:outline-none focus:border-primary/50 transition-colors">
+                                <button type="button" id="toggleNewPasswordBtn" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-white transition-colors focus:outline-none">
+                                    <svg id="newEyeClosedIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                    </svg>
+                                    <svg id="newEyeOpenIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </button>
                             </div>
                             <button type="submit" id="updatePassBtn" class="w-full bg-red-500/10 border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white font-bold py-3 rounded-xl transition-all duration-300">
                                 UPDATE PASSWORD
@@ -198,6 +216,46 @@
     </div>
 
     <script>
+        // Toggle Password Visibility for Current Password
+        const toggleCurrentPasswordBtn = document.getElementById('toggleCurrentPasswordBtn');
+        const currentPasswordInput = document.getElementById('currentPassword');
+        const currentEyeClosedIcon = document.getElementById('currentEyeClosedIcon');
+        const currentEyeOpenIcon = document.getElementById('currentEyeOpenIcon');
+
+        if (toggleCurrentPasswordBtn && currentPasswordInput) {
+            toggleCurrentPasswordBtn.addEventListener('click', () => {
+                const isPassword = currentPasswordInput.type === 'password';
+                currentPasswordInput.type = isPassword ? 'text' : 'password';
+                if (isPassword) {
+                    currentEyeClosedIcon.classList.add('hidden');
+                    currentEyeOpenIcon.classList.remove('hidden');
+                } else {
+                    currentEyeOpenIcon.classList.add('hidden');
+                    currentEyeClosedIcon.classList.remove('hidden');
+                }
+            });
+        }
+
+        // Toggle Password Visibility for New Password
+        const toggleNewPasswordBtn = document.getElementById('toggleNewPasswordBtn');
+        const newPasswordInput = document.getElementById('newPassword');
+        const newEyeClosedIcon = document.getElementById('newEyeClosedIcon');
+        const newEyeOpenIcon = document.getElementById('newEyeOpenIcon');
+
+        if (toggleNewPasswordBtn && newPasswordInput) {
+            toggleNewPasswordBtn.addEventListener('click', () => {
+                const isPassword = newPasswordInput.type === 'password';
+                newPasswordInput.type = isPassword ? 'text' : 'password';
+                if (isPassword) {
+                    newEyeClosedIcon.classList.add('hidden');
+                    newEyeOpenIcon.classList.remove('hidden');
+                } else {
+                    newEyeOpenIcon.classList.add('hidden');
+                    newEyeClosedIcon.classList.remove('hidden');
+                }
+            });
+        }
+
         // Mobile Sidebar Toggle Logic
         document.addEventListener('DOMContentLoaded', () => {
             const menuBtn = document.getElementById('menu-btn');
