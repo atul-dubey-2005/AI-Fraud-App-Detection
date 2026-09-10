@@ -331,7 +331,7 @@ app.post('/api/login', async (req, res) => {
 
         const user = rows[0];
         if (password !== user.password) return res.status(400).json({ message: 'Invalid password' });
-        
+
         // Strict Banned Account Check returning 403 Forbidden
         if (user.account_status === 'Banned') {
             return res.status(403).json({ message: 'Account suspended.' });
@@ -882,10 +882,11 @@ app.post('/api/user-status', async (req, res) => {
         res.status(500).json({ success: false, isPro: false });
     }
 });
+
 // Fetch latest audit logs
 app.get('/api/admin/audit-logs', async (req, res) => {
     try {
-        const [logs] = await db.execute('SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 20');
+        const [logs] = await pool.execute('SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 20');
         res.json({ success: true, logs });
     } catch (error) {
         console.error("Fetch Audit Logs Error:", error);
@@ -896,7 +897,7 @@ app.get('/api/admin/audit-logs', async (req, res) => {
 // Helper function to record an audit log from anywhere in backend
 async function logAdminAction(adminEmail, actionType, description) {
     try {
-        await db.execute(
+        await pool.execute(
             'INSERT INTO audit_logs (admin_email, action_type, description) VALUES (?, ?, ?)',
             [adminEmail, actionType, description]
         );
@@ -935,9 +936,6 @@ app.get('/api/playstore/search', async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch from Play Store." });
     }
 });
-
-
-
 
 // --- SERVER START ---
 const PORT = process.env.PORT || 3000;
