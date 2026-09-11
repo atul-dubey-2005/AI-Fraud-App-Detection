@@ -1058,8 +1058,19 @@ app.use((req, res, next) => {
 });
 
 // Global 500 Error Handler Middleware
-app.use((err, req, res, next) => {
+app.use(async (err, req, res, next) => {
     console.error("Critical Server Exception (500):", err.stack);
+    try {
+        await pool.execute(
+            'INSERT INTO audit_logs (admin_email, action_type, description) VALUES (?, ?, ?)',
+            ['system@fraudshield.ai', '500_SERVER_ERROR', `Server Error on ${req.method} ${req.originalUrl}: ${err.message}`]
+        );
+    } catch (logErr) {
+        console.error("Failed to log 500 error to DB:", logErr);
+    }
+    res.status(500).json({ success: false, message: 'Internal Server Error (500)' });
+});
+
     logAdminAction('system@fraudshield.ai', '500_SERVER_ERROR', `Server Error on ${req.method} ${req.originalUrl}: ${err.message}`);
     res.status(500).json({ success: false, message: 'Internal Server Error (500)' });
 });
