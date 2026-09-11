@@ -286,7 +286,7 @@
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     const href = link.getAttribute('href');
-                    
+
                     // Handle smooth scrolling for anchor links & update active visual state
                     if (href && href.startsWith('#')) {
                         e.preventDefault();
@@ -366,17 +366,33 @@
                     let html = '';
                     data.logs.forEach(log => {
                         const timeString = log.created_at;
+                        const isResolved = log.is_resolved === 1 || log.is_resolved === true;
+                        
+                        const statusBadge = isResolved 
+                            ? `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] rounded font-bold">RESOLVED</span>`
+                            : `<span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] rounded font-bold">PENDING</span>`;
+
+                        const toggleBtnText = isResolved ? 'Mark Pending' : 'Mark Resolved';
+                        const toggleBtnClass = isResolved 
+                            ? 'bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 border-gray-500/30' 
+                            : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+
                         html += `
                             <div class="p-3 bg-background/60 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                                 <div class="flex items-center space-x-3">
-                                    <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                                    <span class="w-2 h-2 rounded-full ${isResolved ? 'bg-emerald-400' : 'bg-amber-400'} shrink-0"></span>
                                     <div>
                                         <span class="text-amber-400 font-semibold">[${log.action_type}]</span> 
                                         <span class="text-gray-300">${log.description}</span>
-                                        <span class="block text-[10px] text-gray-500">Source: ${log.admin_email}</span>
+                                        <span class="block text-[10px] text-gray-500">Source: ${log.admin_email} | Time: ${timeString}</span>
                                     </div>
                                 </div>
-                                <span class="text-gray-500 shrink-0 text-[10px]">${timeString}</span>
+                                <div class="shrink-0 flex items-center gap-3">
+                                    ${statusBadge}
+                                    <button onclick="toggleErrorStatus(${log.id}, ${isResolved ? 0 : 1})" class="px-2.5 py-1 border text-[10px] rounded transition-all cursor-pointer ${toggleBtnClass}">
+                                        ${toggleBtnText}
+                                    </button>
+                                </div>
                             </div>
                         `;
                     });
@@ -387,6 +403,26 @@
             } catch (err) {
                 console.error("Error fetching error logs:", err);
                 document.getElementById('error-logs-container').innerHTML = `<div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl text-center text-red-400">Failed to load system error logs.</div>`;
+            }
+        }
+
+        async function toggleErrorStatus(logId, newStatus) {
+            const currentAdminEmail = localStorage.getItem('userEmail') || 'fraudshield2026@gmail.com';
+            try {
+                const res = await fetch('/api/admin/resolve-error', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ log_id: logId, is_resolved: newStatus, adminEmail: currentAdminEmail })
+                });
+                const result = await res.json();
+                if (result.success) {
+                    fetchErrorLogs(); 
+                    fetchAuditLogs();
+                } else {
+                    alert('Failed to update status.');
+                }
+            } catch (e) {
+                alert('Server communication error.');
             }
         }
 
