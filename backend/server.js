@@ -482,7 +482,7 @@ app.post('/api/admin/update-status', async (req, res) => {
     const { user_id, status, adminEmail } = req.body;
     try {
         await pool.query('UPDATE users SET account_status = ? WHERE user_id = ?', [status, user_id]);
-        
+
         await logAdminAction(adminEmail || 'fraudshield2026@gmail.com', 'STATUS_UPDATE', `Updated user ID ${user_id} status to ${status}`);
 
         res.status(200).json({ success: true, message: 'Status updated successfully' });
@@ -797,7 +797,7 @@ app.post('/api/admin/delete-scan', async (req, res) => {
     const { scan_id, adminEmail } = req.body;
     try {
         await pool.query('DELETE FROM scan_history WHERE id = ?', [scan_id]);
-        
+
         await logAdminAction(adminEmail || 'fraudshield2026@gmail.com', 'DELETE_SCAN', `Deleted scan log ID ${scan_id}`);
 
         res.status(200).json({ success: true, message: 'Scan log deleted successfully.' });
@@ -959,6 +959,24 @@ app.get('/api/admin/audit-logs', async (req, res) => {
     }
 });
 
+// Fetch Error Audit Logs specifically (404 / 500 errors)
+app.get('/api/admin/error-logs', async (req, res) => {
+    try {
+        const [logs] = await pool.execute(`
+            SELECT id, admin_email, action_type, description, 
+            DATE_FORMAT(CONVERT_TZ(created_at, '+00:00', '+05:30'), '%Y-%m-%d %H:%i:%s') as created_at 
+            FROM audit_logs 
+            WHERE action_type LIKE '%ERROR%' OR action_type LIKE '%404%' OR action_type LIKE '%500%'
+            ORDER BY created_at DESC 
+            LIMIT 20
+        `);
+        res.json({ success: true, logs });
+    } catch (error) {
+        console.error("Fetch Error Logs Exception:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch error logs." });
+    }
+});
+
 // Real-time Google Play Store Search Endpoint
 app.get('/api/playstore/search', async (req, res) => {
     try {
@@ -986,6 +1004,21 @@ app.get('/api/playstore/search', async (req, res) => {
         console.error("Play Store Search Error:", error);
         res.status(500).json({ success: false, message: "Failed to fetch from Play Store." });
     }
+});
+
+// --- ERROR HANDLING MIDDLEWARES (Place right before app.listen) ---
+
+// 404 Not Found Middleware
+app.use((req, res, next) => {
+    logAdminAction('system@fraudshield.ai', '404_ERROR', `Route not found: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({ success: false, message: 'Endpoint not found (404)' });
+});
+
+// Global 500 Error Handler Middleware
+app.use((err, req, res, next) => {
+    console.error("Critical Server Exception (500):", err.stack);
+    logAdminAction('system@fraudshield.ai', '500_SERVER_ERROR', `Server Error on ${req.method} ${req.originalUrl}: ${err.message}`);
+    res.status(500).json({ success: false, message: 'Internal Server Error (500)' });
 });
 
 // --- SERVER START ---
