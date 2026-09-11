@@ -37,6 +37,31 @@
 </head>
 <body class="bg-background text-white min-h-screen flex flex-col lg:flex-row overflow-x-hidden selection:bg-primary selection:text-black relative font-sans">
 
+    <!-- Splash Screen Overlay with Custom SVG Logo -->
+    <div id="splash-screen" class="fixed inset-0 bg-[#050507] z-50 flex flex-col items-center justify-center transition-opacity duration-700">
+        <div class="relative flex flex-col items-center space-y-6">
+            <!-- Animated Shield Logo -->
+            <div class="relative w-20 h-20 rounded-2xl bg-surface flex items-center justify-center border border-primary/40 shadow-[0_0_30px_rgba(0,255,102,0.2)] animate-pulse">
+                <svg class="w-12 h-12 animate-bounce" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="animation-duration: 2s;">
+                    <rect width='32' height='32' rx='8' fill='#09090b' stroke='#00ff66' stroke-width='2'/>
+                    <path d='M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z' fill='rgba(0,255,102,0.15)' stroke='#00ff66' stroke-width='1.5'/>
+                    <text x='16' y='17.5' font-family='sans-serif' font-weight='900' font-size='11' fill='#ffffff' text-anchor='middle'>FS</text>
+                </svg>
+            </div>
+
+            <!-- Brand Text -->
+            <div class="text-center space-y-1">
+                <h1 class="text-white font-extrabold text-xl tracking-wider">FRAUDSHIELD <span class="text-primary">AI</span></h1>
+                <p id="splash-status" class="text-xs font-mono text-gray-500 uppercase tracking-widest">Initializing Secure Cluster...</p>
+            </div>
+
+            <!-- Loading Progress Bar -->
+            <div class="w-48 h-1 bg-surfaceBorder rounded-full overflow-hidden">
+                <div id="splash-progress" class="w-0 h-full bg-primary transition-all duration-300 shadow-[0_0_10px_rgba(0,255,102,0.8)]"></div>
+            </div>
+        </div>
+    </div>
+
         <!-- Mobile Background Video (Crisp & Clear Content) -->
     <div class="fixed inset-0 z-0 overflow-hidden block lg:hidden pointer-events-none">
         <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-30">
@@ -54,7 +79,7 @@
     </div>
 
     <!-- Mobile Header Bar -->
-    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-gray-800 flex justify-between items-center p-4 lg:hidden">
+    <div class="fixed top-0 left-0 right-0 z-40 bg-[#0f0f13] border-b border-gray-800 flex justify-between items-center p-4 lg:hidden">
         <div class="flex items-center space-x-3">
             <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary shrink-0">
                 <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
@@ -67,11 +92,11 @@
     </div>
 
     <!-- Overlay Background -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden transition-opacity"></div>
 
 
     <!-- Sidebar -->
-   <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out h-screen">
+   <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-56 border-r border-gray-800 flex flex-col justify-between flex-shrink-0 bg-background transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out h-screen">
 
         <div>
             <!-- Logo -->
@@ -653,7 +678,7 @@
     <!-- Section Header -->
     <div class="mb-14 flex flex-col items-center justify-center text-center relative z-10">
         <div class="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 mb-4">
-            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             <span class="text-xs font-bold text-primary tracking-widest uppercase">The Process</span>
         </div>
         <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-wide uppercase">
@@ -1044,6 +1069,42 @@
     </main>
 
     <script>
+    // Splash Screen Loading Simulation & Fade Out
+    window.addEventListener('load', () => {
+        const splashScreen = document.getElementById('splash-screen');
+        const progressBar = document.getElementById('splash-progress');
+        const statusText = document.getElementById('splash-status');
+
+        let progress = 0;
+        const statuses = [
+            "Initializing Secure Cluster...",
+            "Loading Threat Intelligence Matrices...",
+            "Verifying Database Handshake...",
+            "Access Granted. Launching Terminal..."
+        ];
+
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 20) + 15;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                statusText.innerText = statuses[3];
+                
+                setTimeout(() => {
+                    splashScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        splashScreen.style.display = 'none';
+                    }, 700);
+                }, 400);
+            } else if (progress > 60) {
+                statusText.innerText = statuses[2];
+            } else if (progress > 30) {
+                statusText.innerText = statuses[1];
+            }
+            progressBar.style.width = progress + '%';
+        }, 150);
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
         fetchRealMySQLData();
     });
