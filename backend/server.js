@@ -970,7 +970,8 @@ app.get('/api/admin/error-logs', async (req, res) => {
             SELECT id, admin_email, action_type, description, 
             DATE_FORMAT(CONVERT_TZ(created_at, '+00:00', '+05:30'), '%Y-%m-%d %H:%i:%s') as created_at 
             FROM audit_logs 
-            WHERE action_type LIKE '%ERROR%' OR action_type LIKE '%404%' OR action_type LIKE '%500%'
+            WHERE (action_type LIKE '%ERROR%' OR action_type LIKE '%404%' OR action_type LIKE '%500%')
+              AND action_type NOT LIKE '%RESOLVED%'
             ORDER BY created_at DESC 
             LIMIT 20
         `);
@@ -980,6 +981,7 @@ app.get('/api/admin/error-logs', async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch error logs." });
     }
 });
+
 
 // Resolve & Delete Error Log from Database
 app.post('/api/admin/resolve-error', async (req, res) => {
