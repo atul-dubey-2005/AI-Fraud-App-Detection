@@ -37,18 +37,18 @@
 </head>
 <body class="bg-background text-white min-h-screen flex flex-col lg:flex-row overflow-x-hidden selection:bg-primary selection:text-black relative font-sans">
 
-    <!-- Mobile Background Video -->
+    <!-- Mobile Background Video (Extra Bright) -->
     <div class="fixed inset-0 z-0 overflow-hidden block lg:hidden pointer-events-none">
-        <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-55 brightness-110 scale-105">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-85 brightness-125 contrast-105 scale-105">
             <source src="/videos/bg_video.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <div class="absolute inset-0 bg-background/50"></div>
+        <div class="absolute inset-0 bg-background/20"></div>
     </div>
 
-    <!-- PC Background Video (Dimmed Video with Zero Text Blur) -->
+    <!-- PC Background Video (Dimmed Video with Crisp Original Text) -->
     <div class="fixed inset-0 z-0 overflow-hidden hidden lg:block pointer-events-none">
-        <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-25 brightness-95 scale-100">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-35 brightness-100 scale-100">
             <source src="/videos/pc_bg_video.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
