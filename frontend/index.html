@@ -37,13 +37,12 @@
 </head>
 <body class="bg-background text-white min-h-screen flex flex-col lg:flex-row overflow-x-hidden selection:bg-primary selection:text-black relative font-sans">
 
-    <!-- Mobile Background Video -->
+        <!-- Mobile Background Video (Crisp & Clear Content) -->
     <div class="fixed inset-0 z-0 overflow-hidden block lg:hidden pointer-events-none">
-        <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-40 brightness-95 scale-105">
+        <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-30">
             <source src="/videos/bg_video.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <div class="absolute inset-0 bg-background/80"></div>
     </div>
 
     <!-- PC Background Video (Dimmed Video with Zero Text Blur) -->
@@ -53,7 +52,6 @@
             Your browser does not support the video tag.
         </video>
     </div>
-
 
     <!-- Mobile Header Bar -->
     <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-gray-800 flex justify-between items-center p-4 lg:hidden">
