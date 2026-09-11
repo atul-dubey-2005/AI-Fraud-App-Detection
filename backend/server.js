@@ -54,7 +54,7 @@ async function testConnection() {
     try {
         const connection = await pool.getConnection();
         console.log('✅ Database connected successfully!');
-        
+
         // Auto-create audit_logs table with proper DEFAULT CURRENT_TIMESTAMP if missing
         await connection.query(`
             CREATE TABLE IF NOT EXISTS audit_logs (
@@ -62,11 +62,12 @@ async function testConnection() {
                 admin_email VARCHAR(255) NOT NULL,
                 action_type VARCHAR(100) NOT NULL,
                 description TEXT DEFAULT NULL,
+                is_resolved TINYINT(1) DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
         console.log('🛡️ audit_logs table verified/created successfully.');
-        
+
         connection.release();
     } catch (err) {
         console.error('❌ Database connection or initialization failed:', err.message);
@@ -963,7 +964,7 @@ app.get('/api/admin/audit-logs', async (req, res) => {
 app.get('/api/admin/error-logs', async (req, res) => {
     try {
         const [logs] = await pool.execute(`
-            SELECT id, admin_email, action_type, description, 
+            SELECT id, admin_email, action_type, description, is_resolved,
             DATE_FORMAT(CONVERT_TZ(created_at, '+00:00', '+05:30'), '%Y-%m-%d %H:%i:%s') as created_at 
             FROM audit_logs 
             WHERE action_type LIKE '%ERROR%' OR action_type LIKE '%404%' OR action_type LIKE '%500%'
@@ -974,6 +975,21 @@ app.get('/api/admin/error-logs', async (req, res) => {
     } catch (error) {
         console.error("Fetch Error Logs Exception:", error);
         res.status(500).json({ success: false, message: "Failed to fetch error logs." });
+    }
+});
+
+// Toggle Error Resolution Status API
+app.post('/api/admin/resolve-error', async (req, res) => {
+    const { log_id, is_resolved, adminEmail } = req.body;
+    try {
+        await pool.query('UPDATE audit_logs SET is_resolved = ? WHERE id = ?', [is_resolved, log_id]);
+        
+        await logAdminAction(adminEmail || 'fraudshield2026@gmail.com', 'ERROR_STATUS_UPDATE', `Marked system error log ID ${log_id} as ${is_resolved ? 'Resolved' : 'Pending'}`);
+
+        res.status(200).json({ success: true, message: 'Error status updated successfully.' });
+    } catch (err) {
+        console.error("Resolve Error Exception:", err);
+        res.status(500).json({ success: false, message: 'Failed to update error status.' });
     }
 });
 
