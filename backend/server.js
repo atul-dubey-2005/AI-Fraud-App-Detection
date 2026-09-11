@@ -953,6 +953,9 @@ app.get('/api/admin/audit-logs', async (req, res) => {
             SELECT id, admin_email, action_type, description, 
             DATE_FORMAT(CONVERT_TZ(created_at, '+00:00', '+05:30'), '%Y-%m-%d %H:%i:%s') as created_at 
             FROM audit_logs 
+            WHERE action_type NOT LIKE '%ERROR%' 
+              AND action_type NOT LIKE '%404%' 
+              AND action_type NOT LIKE '%500%'
             ORDER BY created_at DESC 
             LIMIT 20
         `);
@@ -962,6 +965,7 @@ app.get('/api/admin/audit-logs', async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch audit logs." });
     }
 });
+
 
 // Fetch Error Audit Logs specifically (404 / 500 errors)
 app.get('/api/admin/error-logs', async (req, res) => {
