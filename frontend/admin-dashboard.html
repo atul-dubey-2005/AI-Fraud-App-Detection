@@ -71,6 +71,10 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                     <span>Audit Logs</span>
                 </a>
+                <a href="#error-logs-section" onclick="scrollToSection('error-logs-section')" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <span>System Errors (404/500)</span>
+                </a>
                 <a href="admin-profile.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     <span>Profile Settings</span>
@@ -234,6 +238,26 @@
                 </div>
             </div>
 
+            <!-- System Error Logs Section (404 / 500) -->
+            <div id="error-logs-section" class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-surfaceBorder pb-6">
+                    <div>
+                        <h3 class="text-white font-bold text-lg">System Error Logs (404 / 500)</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Real-time tracker for missing routes and server-side exceptions.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-mono rounded-lg flex items-center space-x-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                        <span>Error Monitor Active</span>
+                    </span>
+                </div>
+
+                <div id="error-logs-container" class="space-y-3 font-mono text-xs">
+                    <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl text-center text-gray-500">
+                        Loading error logs from database...
+                    </div>
+                </div>
+            </div>
+
         </main>
 
         <!-- Footer -->
@@ -276,6 +300,7 @@
         async function fetchAdminDashboardData() {
             await fetchAllUsers();
             await fetchAuditLogs();
+            await fetchErrorLogs();
         }
 
         async function fetchAuditLogs() {
@@ -287,7 +312,7 @@
                 if (data.success && data.logs.length > 0) {
                     let html = '';
                     data.logs.forEach(log => {
-                        const timeString = new Date(log.created_at).toLocaleString();
+                        const timeString = log.created_at; // Already formatted as IST from backend
                         html += `
                             <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                                 <div class="flex items-center space-x-3">
@@ -309,6 +334,40 @@
             } catch (err) {
                 console.error("Error fetching audit logs:", err);
                 document.getElementById('audit-logs-container').innerHTML = `<div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl text-center text-red-400">Failed to load live audit logs.</div>`;
+            }
+        }
+
+        async function fetchErrorLogs() {
+            try {
+                const response = await fetch('/api/admin/error-logs');
+                const data = await response.json();
+                const container = document.getElementById('error-logs-container');
+
+                if (data.success && data.logs.length > 0) {
+                    let html = '';
+                    data.logs.forEach(log => {
+                        const timeString = log.created_at;
+                        html += `
+                            <div class="p-3 bg-background/60 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                                <div class="flex items-center space-x-3">
+                                    <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                                    <div>
+                                        <span class="text-amber-400 font-semibold">[${log.action_type}]</span> 
+                                        <span class="text-gray-300">${log.description}</span>
+                                        <span class="block text-[10px] text-gray-500">Source: ${log.admin_email}</span>
+                                    </div>
+                                </div>
+                                <span class="text-gray-500 shrink-0 text-[10px]">${timeString}</span>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `<div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl text-center text-gray-500">No system errors recorded.</div>`;
+                }
+            } catch (err) {
+                console.error("Error fetching error logs:", err);
+                document.getElementById('error-logs-container').innerHTML = `<div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl text-center text-red-400">Failed to load system error logs.</div>`;
             }
         }
 
@@ -371,7 +430,7 @@
                 const result = await res.json();
                 if (result.success) {
                     fetchAllUsers();
-                    fetchAuditLogs(); // Refresh logs when an action occurs
+                    fetchAuditLogs(); 
                 } else {
                     alert('Failed to modify user status.');
                 }
@@ -420,7 +479,7 @@
                     statusMessage.className = "text-primary font-bold";
                     statusMessage.innerText = "✅ " + result.message;
                     fileInput.value = ''; 
-                    fetchAuditLogs(); // Refresh audit logs to show training event
+                    fetchAuditLogs(); 
                 } else {
                     statusMessage.className = "text-red-400 font-bold";
                     statusMessage.innerText = "❌ Error: " + result.message;
