@@ -62,7 +62,6 @@ async function testConnection() {
                 admin_email VARCHAR(255) NOT NULL,
                 action_type VARCHAR(100) NOT NULL,
                 description TEXT DEFAULT NULL,
-                is_resolved TINYINT(1) DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
@@ -78,11 +77,15 @@ testConnection();
 module.exports = pool;
 
 // Helper function to record an audit log automatically
-async function logAdminAction(adminEmail, actionType, description) {
+async function logAdminAction(email, actionType, description) {
     try {
+        const [rows] = await pool.query('SELECT role FROM users WHERE email = ?', [email]);
+        const role = rows.length > 0 ? rows[0].role : 'user';
+        const identifier = (role === 'admin') ? `Admin: ${email}` : `User: ${email}`;
+
         await pool.execute(
             'INSERT INTO audit_logs (admin_email, action_type, description) VALUES (?, ?, ?)',
-            [adminEmail || 'system@fraudshield.ai', actionType, description]
+            [identifier || 'system@fraudshield.ai', actionType, description]
         );
     } catch (error) {
         console.error("Log Insertion Error:", error);
@@ -964,7 +967,7 @@ app.get('/api/admin/audit-logs', async (req, res) => {
 app.get('/api/admin/error-logs', async (req, res) => {
     try {
         const [logs] = await pool.execute(`
-            SELECT id, admin_email, action_type, description, is_resolved,
+            SELECT id, admin_email, action_type, description, 
             DATE_FORMAT(CONVERT_TZ(created_at, '+00:00', '+05:30'), '%Y-%m-%d %H:%i:%s') as created_at 
             FROM audit_logs 
             WHERE action_type LIKE '%ERROR%' OR action_type LIKE '%404%' OR action_type LIKE '%500%'
@@ -978,18 +981,18 @@ app.get('/api/admin/error-logs', async (req, res) => {
     }
 });
 
-// Toggle Error Resolution Status API
+// Resolve & Delete Error Log from Database
 app.post('/api/admin/resolve-error', async (req, res) => {
-    const { log_id, is_resolved, adminEmail } = req.body;
+    const { log_id, adminEmail } = req.body;
     try {
-        await pool.query('UPDATE audit_logs SET is_resolved = ? WHERE id = ?', [is_resolved, log_id]);
-        
-        await logAdminAction(adminEmail || 'fraudshield2026@gmail.com', 'ERROR_STATUS_UPDATE', `Marked system error log ID ${log_id} as ${is_resolved ? 'Resolved' : 'Pending'}`);
+        await pool.query('DELETE FROM audit_logs WHERE id = ?', [log_id]);
 
-        res.status(200).json({ success: true, message: 'Error status updated successfully.' });
+        await logAdminAction(adminEmail || 'fraudshield2026@gmail.com', 'ERROR_RESOLVED', `Resolved and deleted system error log ID ${log_id}.`);
+
+        res.status(200).json({ success: true, message: 'Error resolved and removed from database.' });
     } catch (err) {
         console.error("Resolve Error Exception:", err);
-        res.status(500).json({ success: false, message: 'Failed to update error status.' });
+        res.status(500).json({ success: false, message: 'Failed to resolve error.' });
     }
 });
 
