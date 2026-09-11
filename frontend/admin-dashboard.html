@@ -59,23 +59,23 @@
 
             <!-- Navigation Links -->
             <nav class="space-y-2">
-                <a href="admin-dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-red-400 bg-red-500/10 font-semibold text-sm transition-all border border-red-500/20">
+                <a href="#users-section" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-red-400 bg-red-500/10 font-semibold text-sm transition-all border border-red-500/20">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     <span>User Management</span>
                 </a>
-                <a href="#trainingForm" onclick="scrollToSection('trainingForm')" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
+                <a href="#trainingForm" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <span>Model Training</span>
                 </a>
-                <a href="#audit-logs" onclick="scrollToSection('audit-logs')" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
+                <a href="#audit-logs" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                     <span>Audit Logs</span>
                 </a>
-                <a href="#error-logs-section" onclick="scrollToSection('error-logs-section')" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
+                <a href="#error-logs-section" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     <span>System Errors (404/500)</span>
                 </a>
-                <a href="admin-profile.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
+                <a href="admin-profile.html" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium hover:font-semibold text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     <span>Profile Settings</span>
                 </a>
@@ -145,7 +145,7 @@
             </div>
 
             <!-- User Management Table Panel -->
-            <div class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl">
+            <div id="users-section" class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-surfaceBorder pb-6">
                     <div>
                         <h3 class="text-white font-bold text-lg">Registered User Accounts</h3>
@@ -188,13 +188,13 @@
             </div>
 
             <!-- Training card -->
-            <div class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl space-y-6">
+            <div id="trainingForm" class="bg-surface border border-surfaceBorder rounded-3xl p-6 shadow-xl space-y-6">
                 <div class="border-b border-surfaceBorder pb-6">
                     <h3 class="text-white font-bold text-lg">AI Model Cumulative Retraining Matrix</h3>
                     <p class="text-xs text-gray-500 mt-0.5">Upload a custom JSON or CSV dataset file to append new fraud signatures and enhance the sentiment engine.</p>
                 </div>
 
-                <form id="trainingForm" class="space-y-4">
+                <form id="trainingDatasetForm" class="space-y-4">
                     <div class="flex flex-col md:flex-row items-center gap-4">
                         <div class="w-full flex-grow">
                             <label class="block text-xs font-mono text-gray-400 mb-2">SELECT DATASET (.JSON or .CSV FORMAT)</label>
@@ -268,7 +268,7 @@
 
     <!-- Script Logic -->
     <script>
-        // Mobile Sidebar Toggle Logic
+        // Mobile Sidebar Toggle & Active State Scroll Logic
         document.addEventListener('DOMContentLoaded', () => {
             const menuBtn = document.getElementById('menu-btn');
             const sidebar = document.getElementById('sidebar');
@@ -284,7 +284,26 @@
             if (overlay) overlay.addEventListener('click', toggleMenu);
 
             sidebarLinks.forEach(link => {
-                link.addEventListener('click', () => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    
+                    // Handle smooth scrolling for anchor links & update active visual state
+                    if (href && href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                            // Update active styles across sidebar links
+                            sidebarLinks.forEach(l => {
+                                l.classList.remove('text-red-400', 'bg-red-500/10', 'font-semibold', 'border-red-500/20');
+                                l.classList.add('text-gray-400', 'border-transparent');
+                            });
+                            link.classList.remove('text-gray-400', 'border-transparent');
+                            link.classList.add('text-red-400', 'bg-red-500/10', 'font-semibold', 'border-red-500/20');
+                        }
+                    }
+
                     if (window.innerWidth < 1024) {
                         toggleMenu();
                     }
@@ -312,7 +331,7 @@
                 if (data.success && data.logs.length > 0) {
                     let html = '';
                     data.logs.forEach(log => {
-                        const timeString = log.created_at; // Already formatted as IST from backend
+                        const timeString = log.created_at; 
                         html += `
                             <div class="p-3 bg-background/60 border border-surfaceBorder rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                                 <div class="flex items-center space-x-3">
@@ -439,13 +458,9 @@
             }
         }
 
-        function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
-        }
-
         fetchAdminDashboardData();
 
-        document.getElementById('trainingForm').addEventListener('submit', async (e) => {
+        document.getElementById('trainingDatasetForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const fileInput = document.getElementById('datasetFile');
             const trainBtn = document.getElementById('trainBtn');
