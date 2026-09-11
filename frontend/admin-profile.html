@@ -30,11 +30,27 @@
     </script>
     <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
 </head>
-<body class="bg-background text-gray-300 min-h-screen flex selection:bg-red-500 selection:text-white">
+<body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-red-500 selection:text-white overflow-x-hidden">
 
-    <!-- Admin Sidebar Navigation -->
-    <aside class="w-64 bg-surface border-r border-surfaceBorder hidden lg:flex flex-col justify-between p-6 sticky top-0 h-screen">
-        <div class="space-y-8">
+    <!-- Mobile Header Bar -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-surfaceBorder flex justify-between items-center p-4 lg:hidden">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center border border-red-500/30 shrink-0">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+            <span class="text-white font-bold text-base">FraudShield Admin</span>
+        </div>
+        <button id="menu-btn" class="text-gray-400 hover:text-white focus:outline-none p-1 cursor-pointer">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <!-- Overlay Background for Mobile Drawer -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
+
+    <!-- Admin Sidebar Navigation (Responsive Drawer for Mobile & Fixed for PC) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-surfaceBorder flex flex-col justify-between p-6 transform -translate-x-full lg:translate-x-0 lg:static lg:h-screen transition-transform duration-300 ease-in-out">
+        <div class="space-y-8 flex-grow">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)]">
                     <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -56,36 +72,44 @@
                 </a>
             </nav>
         </div>
+
+        <!-- Logout button at bottom of sidebar -->
+        <div class="pt-4 border-t border-surfaceBorder">
+            <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 font-medium text-sm transition-all border border-transparent hover:border-red-500/20 cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <span>Terminate Session</span>
+            </button>
+        </div>
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-grow flex flex-col min-w-0">
-        
+    <div class="flex-grow flex flex-col min-w-0 pt-16 lg:pt-0">
+
         <!-- Header -->
-        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-40">
+        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-6 lg:px-8 flex items-center justify-between sticky top-16 lg:top-0 z-40">
             <div>
                 <span class="text-xs font-mono text-red-500 uppercase tracking-widest">Master Security Clearance</span>
-                <h1 class="text-lg font-bold text-white tracking-tight">Administrator Profile Credentials</h1>
+                <h1 class="text-base lg:text-lg font-bold text-white tracking-tight">Administrator Profile Credentials</h1>
             </div>
-            <a href="admin-dashboard.html" class="text-xs font-mono text-gray-400 hover:text-white bg-surfaceBorder/40 px-3.5 py-2 rounded-xl transition-all">
-                &larr; Back to Dashboard
+            <a href="admin-dashboard.html" class="text-xs font-mono text-gray-400 hover:text-white bg-surfaceBorder/40 px-3 py-2 rounded-xl transition-all">
+                &larr; Dashboard
             </a>
         </header>
 
         <!-- Main Workspace -->
-        <main class="p-8 space-y-8 flex-grow max-w-5xl mx-auto w-full">
-            
+        <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow max-w-5xl mx-auto w-full">
+
             <!-- Admin Profile Overview Card -->
-            <div class="p-8 bg-surface border border-surfaceBorder rounded-3xl flex items-center space-x-6 relative overflow-hidden shadow-2xl">
+            <div class="p-6 lg:p-8 bg-surface border border-surfaceBorder rounded-3xl flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 relative overflow-hidden shadow-2xl text-center sm:text-left">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                
-                <div class="w-24 h-24 rounded-2xl bg-red-500/20 text-red-400 font-bold text-4xl flex items-center justify-center border-2 border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)] font-mono" id="adminAvatarInitials">
+
+                <div class="w-24 h-24 rounded-2xl bg-red-500/20 text-red-400 font-bold text-4xl flex items-center justify-center border-2 border-red-500/30 shadow-[0_0_20px_rgba(239,68,68,0.15)] font-mono shrink-0" id="adminAvatarInitials">
                     AD
                 </div>
-                
+
                 <div class="relative z-10">
-                    <h2 class="text-3xl font-extrabold text-white" id="profileNameDisplay">Loading...</h2>
-                    <div class="flex items-center space-x-3 mt-2">
+                    <h2 class="text-2xl lg:text-3xl font-extrabold text-white" id="profileNameDisplay">Loading...</h2>
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-2">
                         <span class="px-3 py-1 bg-surfaceBorder border border-gray-700 rounded-lg text-xs font-mono text-gray-400 uppercase tracking-widest">Role: <span class="text-red-400">SUPER_ADMIN</span></span>
                         <span class="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-lg text-xs font-mono text-red-400 uppercase tracking-widest flex items-center space-x-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
@@ -96,13 +120,13 @@
             </div>
 
             <!-- Admin Master Details View -->
-            <div class="bg-surface border border-surfaceBorder rounded-3xl p-8 shadow-xl space-y-6">
+            <div class="bg-surface border border-surfaceBorder rounded-3xl p-6 lg:p-8 shadow-xl space-y-6">
                 <div class="border-b border-surfaceBorder pb-6 flex items-center justify-between">
                     <div>
                         <h3 class="text-white font-bold text-lg">Direct Master Credentials</h3>
                         <p class="text-xs text-gray-500 mt-0.5">Unrestricted visibility of root credentials and system keys from database.</p>
                     </div>
-                    <div class="w-10 h-10 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-bold text-sm font-mono">
+                    <div class="w-10 h-10 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-bold text-sm font-mono shrink-0">
                         ROOT
                     </div>
                 </div>
@@ -115,7 +139,7 @@
 
                     <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
                         <span class="text-gray-500 block uppercase">Master Email Access</span>
-                        <span class="text-white font-bold text-sm" id="adminEmailText">Loading...</span>
+                        <span class="text-white font-bold text-sm break-all" id="adminEmailText">Loading...</span>
                     </div>
 
                     <div class="bg-background/60 border border-surfaceBorder p-4 rounded-2xl space-y-1">
@@ -137,13 +161,36 @@
     </div>
 
     <script>
+        // Mobile Sidebar Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+
+            if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+            if (overlay) overlay.addEventListener('click', toggleMenu);
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        toggleMenu();
+                    }
+                });
+            });
+        });
+
         let fetchedPassword = "**************"; // Default masked password
         let isPasswordVisible = false;
 
         async function loadAdminProfileFromDB() {
             const currentEmail = localStorage.getItem('userEmail');
             if (!currentEmail) {
-                // Fallback to localStorage data if email is not available
                 const fallbackName = localStorage.getItem('userName') || 'System Root Administrator';
                 document.getElementById('profileNameDisplay').textContent = fallbackName;
                 document.getElementById('adminNameText').textContent = fallbackName;
@@ -153,7 +200,6 @@
             }
 
             try {
-                // Backend se profile data fetch karne ki request
                 const response = await fetch(`/api/admin/profile?email=${encodeURIComponent(currentEmail)}`);
                 const data = await response.json();
 
@@ -162,17 +208,14 @@
                     document.getElementById('profileNameDisplay').textContent = admin.full_name;
                     document.getElementById('adminNameText').textContent = admin.full_name;
                     document.getElementById('adminEmailText').textContent = admin.email;
-                    
-                    // Avatar initials set karein
+
                     const initials = admin.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
                     document.getElementById('adminAvatarInitials').textContent = initials;
 
-                    // Database se mila hua password store karein
                     if (admin.password) {
                         fetchedPassword = admin.password;
                     }
                 } else {
-                    // Fallback to localStorage values
                     const fallbackName = localStorage.getItem('userName') || 'System Root Administrator';
                     document.getElementById('profileNameDisplay').textContent = fallbackName;
                     document.getElementById('adminNameText').textContent = fallbackName;
@@ -192,7 +235,7 @@
         function toggleMasterPassword() {
             const passSpan = document.getElementById('adminDisplayPassword');
             const eyeBtn = document.getElementById('eyeBtn');
-            
+
             if (isPasswordVisible) {
                 passSpan.textContent = "****************";
                 eyeBtn.textContent = "Show";
@@ -202,6 +245,14 @@
                 eyeBtn.textContent = "Hide";
                 isPasswordVisible = true;
             }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            window.location.replace('index.html');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
