@@ -819,15 +819,32 @@ app.post('/api/admin/train-model', upload.single('dataset'), async (req, res) =>
     const originalExt = path.extname(req.file.originalname).toLowerCase();
 
     const targetFileName = originalExt === '.csv' ? 'latest_uploaded.csv' : 'latest_uploaded.json';
-    const targetPath = path.join(__dirname, 'uploads/', targetFileName);
+    
+    // Ensure uploads directory exists
+    const uploadsDir = path.join(__dirname, 'uploads/');
+    if (!fs.existsSync(uploadsDir)){
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
 
-    fs.rename(uploadedFilePath, targetPath, async (err) => {
-        if (err) {
+    const targetPath = path.join(uploadsDir, targetFileName);
+
+    // Use copyFile + unlink instead of rename to prevent EXDEV cross-device errors on cloud servers
+    fs.copyFile(uploadedFilePath, targetPath, async (copyErr) => {
+        if (copyErr) {
+            console.error("File Copy Error:", copyErr);
             return res.status(500).json({ success: false, message: 'Failed to process uploaded dataset file.' });
         }
 
-        exec('node trainModel.js', async (error, stdout, stderr) => {
+        // Delete original temp file
+        fs.unlink(uploadedFilePath, (unlinkErr) => {
+            if (unlinkErr) console.error("Temp file cleanup warning:", unlinkErr);
+        });
+
+        const trainingScript = path.join(__dirname, 'trainModel.js');
+        exec(`node "${trainingScript}"`, async (error, stdout, stderr) => {
             if (error) {
+                console.error("Model Training Execution Error:", error);
+                console.error("Stderr:", stderr);
                 return res.status(500).json({ success: false, message: 'Model training execution failed.' });
             }
 
@@ -841,6 +858,7 @@ app.post('/api/admin/train-model', upload.single('dataset'), async (req, res) =>
         });
     });
 });
+
 
 // --- Admin: Get Profile Credentials API ---
 app.get('/api/admin/profile', async (req, res) => {
