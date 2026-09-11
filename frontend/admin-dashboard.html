@@ -27,8 +27,33 @@
 </head>
 <body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-red-500 selection:text-white overflow-x-hidden">
 
+    <!-- Splash Screen Overlay with Custom SVG Logo -->
+    <div id="splash-screen" class="fixed inset-0 bg-[#050507] z-50 flex flex-col items-center justify-center transition-opacity duration-700">
+        <div class="relative flex flex-col items-center space-y-6">
+            <!-- Animated Shield Logo -->
+            <div class="relative w-20 h-20 rounded-2xl bg-surface flex items-center justify-center border border-primary/40 shadow-[0_0_30px_rgba(0,255,102,0.2)] animate-pulse">
+                <svg class="w-12 h-12 animate-bounce" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="animation-duration: 2s;">
+                    <rect width='32' height='32' rx='8' fill='#09090b' stroke='#00ff66' stroke-width='2'/>
+                    <path d='M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z' fill='rgba(0,255,102,0.15)' stroke='#00ff66' stroke-width='1.5'/>
+                    <text x='16' y='17.5' font-family='sans-serif' font-weight='900' font-size='11' fill='#ffffff' text-anchor='middle'>FS</text>
+                </svg>
+            </div>
+
+            <!-- Brand Text -->
+            <div class="text-center space-y-1">
+                <h1 class="text-white font-extrabold text-xl tracking-wider">FRAUDSHIELD <span class="text-primary">AI</span></h1>
+                <p id="splash-status" class="text-xs font-mono text-gray-500 uppercase tracking-widest">Initializing Secure Cluster...</p>
+            </div>
+
+            <!-- Loading Progress Bar -->
+            <div class="w-48 h-1 bg-surfaceBorder rounded-full overflow-hidden">
+                <div id="splash-progress" class="w-0 h-full bg-primary transition-all duration-300 shadow-[0_0_10px_rgba(0,255,102,0.8)]"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Mobile Header Bar -->
-    <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-surfaceBorder flex justify-between items-center p-4 lg:hidden">
+    <div class="fixed top-0 left-0 right-0 z-40 bg-[#0f0f13] border-b border-surfaceBorder flex justify-between items-center p-4 lg:hidden">
         <div class="flex items-center space-x-3">
             <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center border border-red-500/30 shrink-0">
                 <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
@@ -41,10 +66,10 @@
     </div>
 
     <!-- Overlay Background for Mobile Drawer -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden transition-opacity"></div>
 
     <!-- Sidebar Navigation (Responsive Drawer for Mobile & Fixed for PC) -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-surfaceBorder flex flex-col justify-between p-6 transform -translate-x-full lg:translate-x-0 lg:static lg:h-screen transition-transform duration-300 ease-in-out">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-surface border-r border-surfaceBorder flex flex-col justify-between p-6 transform -translate-x-full lg:translate-x-0 lg:static lg:h-screen transition-transform duration-300 ease-in-out">
         <div class="space-y-8 flex-grow">
             <!-- Brand Logo -->
             <div class="flex items-center space-x-3">
@@ -101,7 +126,7 @@
     <div class="flex-grow flex flex-col min-w-0 pt-16 lg:pt-0">
 
         <!-- Top Header Bar -->
-        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-6 lg:px-8 flex items-center justify-between sticky top-16 lg:top-0 z-40">
+        <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-6 lg:px-8 flex items-center justify-between sticky top-16 lg:top-0 z-30">
             <div>
                 <span class="text-xs font-mono text-red-400 uppercase tracking-widest">Restricted Zone</span>
                 <h1 class="text-base lg:text-lg font-bold text-white tracking-tight">System Administration Matrix</h1>
@@ -268,6 +293,42 @@
 
     <!-- Script Logic -->
     <script>
+        // Splash Screen Loading Simulation & Fade Out
+        window.addEventListener('load', () => {
+            const splashScreen = document.getElementById('splash-screen');
+            const progressBar = document.getElementById('splash-progress');
+            const statusText = document.getElementById('splash-status');
+
+            let progress = 0;
+            const statuses = [
+                "Initializing Admin Cluster...",
+                "Loading Security Clearance Matrices...",
+                "Verifying Root Database Handshake...",
+                "Access Granted. Launching Terminal..."
+            ];
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 20) + 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    statusText.innerText = statuses[3];
+                    
+                    setTimeout(() => {
+                        splashScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            splashScreen.style.display = 'none';
+                        }, 700);
+                    }, 400);
+                } else if (progress > 60) {
+                    statusText.innerText = statuses[2];
+                } else if (progress > 30) {
+                    statusText.innerText = statuses[1];
+                }
+                progressBar.style.width = progress + '%';
+            }, 150);
+        });
+
         // Mobile Sidebar Toggle & Active State Scroll Logic
         document.addEventListener('DOMContentLoaded', () => {
             const menuBtn = document.getElementById('menu-btn');
@@ -367,7 +428,7 @@
                     data.logs.forEach(log => {
                         const timeString = log.created_at;
                         const isResolved = log.is_resolved === 1 || log.is_resolved === true;
-                        
+
                         const statusBadge = isResolved 
                             ? `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] rounded font-bold">RESOLVED</span>`
                             : `<span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] rounded font-bold">PENDING</span>`;
