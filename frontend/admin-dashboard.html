@@ -34,7 +34,7 @@
             <div class="relative w-20 h-20 rounded-2xl bg-surface flex items-center justify-center border border-primary/40 shadow-[0_0_30px_rgba(0,255,102,0.2)] animate-pulse">
                 <svg class="w-12 h-12 animate-bounce" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style="animation-duration: 2s;">
                     <rect width='32' height='32' rx='8' fill='#09090b' stroke='#00ff66' stroke-width='2'/>
-                    <path d='M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z' fill='rgba(0,255,102,0.15)' stroke='#00ff66' stroke-width='1.5'/>
+                    <path d='M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z' fill='rgba(0,255,102,0.15)' stroke='%2300ff66' stroke-width='1.5'/>
                     <text x='16' y='17.5' font-family='sans-serif' font-weight='900' font-size='11' fill='#ffffff' text-anchor='middle'>FS</text>
                 </svg>
             </div>
@@ -313,7 +313,7 @@
                     progress = 100;
                     clearInterval(interval);
                     statusText.innerText = statuses[3];
-                    
+
                     setTimeout(() => {
                         splashScreen.style.opacity = '0';
                         setTimeout(() => {
@@ -400,7 +400,7 @@
                                     <div>
                                         <span class="text-white font-semibold">[${log.action_type}]</span> 
                                         <span class="text-gray-300">${log.description}</span>
-                                        <span class="block text-[10px] text-gray-500">Admin: ${log.admin_email}</span>
+                                        <span class="block text-[10px] text-gray-500">${log.admin_email}</span>
                                     </div>
                                 </div>
                                 <span class="text-gray-500 shrink-0 text-[10px]">${timeString}</span>
@@ -427,21 +427,11 @@
                     let html = '';
                     data.logs.forEach(log => {
                         const timeString = log.created_at;
-                        const isResolved = log.is_resolved === 1 || log.is_resolved === true;
-
-                        const statusBadge = isResolved 
-                            ? `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] rounded font-bold">RESOLVED</span>`
-                            : `<span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] rounded font-bold">PENDING</span>`;
-
-                        const toggleBtnText = isResolved ? 'Mark Pending' : 'Mark Resolved';
-                        const toggleBtnClass = isResolved 
-                            ? 'bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 border-gray-500/30' 
-                            : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
 
                         html += `
                             <div class="p-3 bg-background/60 border border-amber-500/20 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                                 <div class="flex items-center space-x-3">
-                                    <span class="w-2 h-2 rounded-full ${isResolved ? 'bg-emerald-400' : 'bg-amber-400'} shrink-0"></span>
+                                    <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
                                     <div>
                                         <span class="text-amber-400 font-semibold">[${log.action_type}]</span> 
                                         <span class="text-gray-300">${log.description}</span>
@@ -449,9 +439,8 @@
                                     </div>
                                 </div>
                                 <div class="shrink-0 flex items-center gap-3">
-                                    ${statusBadge}
-                                    <button onclick="toggleErrorStatus(${log.id}, ${isResolved ? 0 : 1})" class="px-2.5 py-1 border text-[10px] rounded transition-all cursor-pointer ${toggleBtnClass}">
-                                        ${toggleBtnText}
+                                    <button onclick="resolveSystemError(${log.id})" class="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] rounded transition-all cursor-pointer font-bold">
+                                        Mark Resolved
                                     </button>
                                 </div>
                             </div>
@@ -467,20 +456,20 @@
             }
         }
 
-        async function toggleErrorStatus(logId, newStatus) {
+        async function resolveSystemError(logId) {
             const currentAdminEmail = localStorage.getItem('userEmail') || 'fraudshield2026@gmail.com';
             try {
                 const res = await fetch('/api/admin/resolve-error', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ log_id: logId, is_resolved: newStatus, adminEmail: currentAdminEmail })
+                    body: JSON.stringify({ log_id: logId, adminEmail: currentAdminEmail })
                 });
                 const result = await res.json();
                 if (result.success) {
                     fetchErrorLogs(); 
                     fetchAuditLogs();
                 } else {
-                    alert('Failed to update status.');
+                    alert('Failed to resolve error.');
                 }
             } catch (e) {
                 alert('Server communication error.');
