@@ -49,22 +49,46 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Test Connection on startup
+// Test Connection on startup & auto-verify audit_logs table
 async function testConnection() {
     try {
         const connection = await pool.getConnection();
         console.log('✅ Database connected successfully!');
+        
+        // Auto-create audit_logs table with proper DEFAULT CURRENT_TIMESTAMP if missing
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS audit_logs (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                admin_email VARCHAR(255) NOT NULL,
+                action_type VARCHAR(100) NOT NULL,
+                description TEXT DEFAULT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('🛡️ audit_logs table verified/created successfully.');
+        
         connection.release();
     } catch (err) {
-        console.error('❌ Database connection failed:', err.message);
+        console.error('❌ Database connection or initialization failed:', err.message);
     }
 }
 testConnection();
 
 module.exports = pool;
 
+// Helper function to record an audit log automatically
+async function logAdminAction(adminEmail, actionType, description) {
+    try {
+        await pool.execute(
+            'INSERT INTO audit_logs (admin_email, action_type, description) VALUES (?, ?, ?)',
+            [adminEmail || 'system@fraudshield.ai', actionType, description]
+        );
+    } catch (error) {
+        console.error("Log Insertion Error:", error);
+    }
+}
 
-// Chat API Route for FraudShield AI Assistant (Updated to gemini-3.6-flash)
+// Chat API Route for FraudShield AI Assistant
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
@@ -78,9 +102,7 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        // Updated endpoint to use gemini-3.6-flash
         const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
-
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
 
         const response = await fetch(geminiEndpoint, {
@@ -101,7 +123,6 @@ app.post('/api/chat', async (req, res) => {
         }
 
         const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I am unable to process your request at the moment.";
-
         res.json({ success: true, reply: aiReply });
 
     } catch (error) {
@@ -110,17 +131,10 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-
-
-
-
-
-
 // --- Mailjet HTTP API Setup ---
 async function sendEmailViaMailjet(toEmail, subject, htmlContent) {
     const apiKey = process.env.MAILJET_API_KEY; 
     const secretKey = process.env.MAILJET_SECRET_KEY;
-
     const authHeader = 'Basic ' + Buffer.from(apiKey + ':' + secretKey).toString('base64');
 
     const payload = {
@@ -186,7 +200,6 @@ passport.use(new GoogleStrategy({
 
         const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
         if (rows.length > 0) {
-            // Check if user is banned during Google login
             if (rows[0].account_status === 'Banned') {
                 return done(null, false, { message: 'Account suspended.' });
             }
@@ -221,7 +234,6 @@ passport.use(new GitHubStrategy({
 
         const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
         if (rows.length > 0) {
-            // Check if user is banned during Github login
             if (rows[0].account_status === 'Banned') {
                 return done(null, false, { message: 'Account suspended.' });
             }
@@ -249,11 +261,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
 });
 
-// --- Register / Signup API (With Duplicate Email Check & Popup Message Support) ---
+// --- Register / Signup API ---
 app.post('/api/register', async (req, res) => {
     const { full_name, email, password } = req.body;
     try {
-        // Check if user already exists to throw a clean popup message
         const [existingUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
         if (existingUser.length > 0) {
             return res.status(400).json({ 
@@ -269,10 +280,6 @@ app.post('/api/register', async (req, res) => {
             `INSERT INTO users (user_id, full_name, email, password, otp, is_verified, account_status) VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [user_id, full_name, email, password, otp, false, 'Active']
         );
-
-        console.log("-----------------------------------------");
-        console.log(`🔑 DEBUG OTP FOR [${email}]: ${otp}`);
-        console.log("-----------------------------------------");
 
         try {
             const mailOptions = {
@@ -322,7 +329,7 @@ app.post('/api/verify-otp', async (req, res) => {
     }
 });
 
-// --- Login API (With Banned Account Check) ---
+// --- Login API ---
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -332,7 +339,6 @@ app.post('/api/login', async (req, res) => {
         const user = rows[0];
         if (password !== user.password) return res.status(400).json({ message: 'Invalid password' });
 
-        // Strict Banned Account Check returning 403 Forbidden
         if (user.account_status === 'Banned') {
             return res.status(403).json({ message: 'Account suspended.' });
         }
@@ -350,7 +356,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// --- Check User Status API (For Active Session Force-Logout Polling) ---
+// --- Check User Status API ---
 app.get('/api/check-user-status', async (req, res) => {
     const { email } = req.query;
     if (!email) return res.status(400).json({ message: 'Email required' });
@@ -378,8 +384,6 @@ app.post('/api/forgot-password', async (req, res) => {
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         await pool.execute('UPDATE users SET otp = ? WHERE email = ?', [otp, email]);
-
-        console.log(`🔑 PASSWORD RESET OTP FOR [${email}]: ${otp}`);
 
         try {
             const mailOptions = {
@@ -475,9 +479,12 @@ app.get('/api/admin/users', async (req, res) => {
 });
 
 app.post('/api/admin/update-status', async (req, res) => {
-    const { user_id, status } = req.body;
+    const { user_id, status, adminEmail } = req.body;
     try {
         await pool.query('UPDATE users SET account_status = ? WHERE user_id = ?', [status, user_id]);
+        
+        await logAdminAction(adminEmail || 'fraudshield2026@gmail.com', 'STATUS_UPDATE', `Updated user ID ${user_id} status to ${status}`);
+
         res.status(200).json({ success: true, message: 'Status updated successfully' });
     } catch (err) {
         res.status(500).json({ message: 'Failed to update status' });
@@ -506,8 +513,6 @@ app.get('/auth/github/callback',
         res.redirect(`/dashboard.html?oauth=true&name=${encodeURIComponent(req.user.full_name)}&role=${req.user.role}&email=${encodeURIComponent(req.user.email)}`); 
     }
 );
-
-
 
 // --- Profile: Change Password API ---
 app.post('/api/change-password', async (req, res) => {
@@ -578,7 +583,7 @@ app.post('/api/verify-update-otp', async (req, res) => {
     }
 });
 
-// // ==========================================
+// ==========================================
 // 1. DYNAMIC GEMINI AI APP ANALYSIS API
 // ==========================================
 app.post('/api/analyze', async (req, res) => {
@@ -588,7 +593,6 @@ app.post('/api/analyze', async (req, res) => {
     try {
         const userEmail = email || 'anonymous@fraudshield.com';
 
-        // Check Pro User Limits
         const [userRows] = await pool.query('SELECT is_pro FROM users WHERE email = ?', [userEmail]);
         const isPro = userRows.length > 0 && userRows[0].is_pro === 1;
 
@@ -604,7 +608,6 @@ app.post('/api/analyze', async (req, res) => {
             }
         }
 
-        // Parse App ID from URL or Search Term
         let appId = targetUrl.trim();
         if (appId.includes('play.google.com')) {
             appId = new URL(appId).searchParams.get('id') || appId;
@@ -614,7 +617,6 @@ app.post('/api/analyze', async (req, res) => {
             else return res.status(404).json({ success: false, message: 'App not found on Play Store.' });
         }
 
-        // Fetch Live App Metadata & Permissions from Google Play Store
         const appDetails = await gplay.app({ appId: appId });
         const appName = appDetails.title || appId;
         const appIcon = appDetails.icon || '';
@@ -623,7 +625,6 @@ app.post('/api/analyze', async (req, res) => {
         const appPermissions = appDetails.permissions || [];
         const appDescription = (appDetails.description || '').slice(0, 400);
 
-        // Fetch recent user reviews for sentiment/fraud context
         let reviewSnippets = [];
         try {
             const reviewsData = await gplay.reviews({ appId: appId, sort: 2, num: 30 });
@@ -634,7 +635,6 @@ app.post('/api/analyze', async (req, res) => {
             console.log("Could not fetch reviews, proceeding with metadata.");
         }
 
-        // Check Gemini API Key Configuration
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             return res.status(500).json({ success: false, message: "Gemini API key is not configured on the server." });
@@ -642,7 +642,6 @@ app.post('/api/analyze', async (req, res) => {
 
         const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
-        // Strict Dynamic Prompting to prevent generic templates
         const systemPrompt = `You are an elite, automated cybersecurity malware analyst and app threat intelligence engine. 
 Analyze the following real-time mobile application data strictly and generate a unique, granular, data-driven security audit report. Avoid generic or repeating templates. Every application must have distinct threat points based on its exact permissions, reviews, and developer background.
 
@@ -684,8 +683,6 @@ You MUST respond ONLY with a valid JSON object in this exact format, with no mar
         }
 
         let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        
-        // Clean markdown backticks if Gemini accidentally wraps JSON in them
         rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
 
         let aiReport;
@@ -693,7 +690,6 @@ You MUST respond ONLY with a valid JSON object in this exact format, with no mar
             aiReport = JSON.parse(rawText);
         } catch (parseErr) {
             console.error("Failed to parse Gemini JSON response:", rawText);
-            // Fallback safety JSON if parsing fails
             aiReport = {
                 riskScore: 45,
                 status: "Medium Risk",
@@ -705,6 +701,8 @@ You MUST respond ONLY with a valid JSON object in this exact format, with no mar
                 ]
             };
         }
+
+        await logAdminAction(userEmail, 'APP_SCAN', `Scanned application: ${appName} (${appId}) - Risk: ${aiReport.riskScore}%`);
 
         return res.status(200).json({
             success: true,
@@ -739,7 +737,6 @@ app.post('/api/save-scan', async (req, res) => {
         res.status(500).json({ success: false });
     }
 });
-
 
 // --- Get Scan History API ---
 app.get('/api/get-scans', async (req, res) => {
@@ -797,9 +794,12 @@ app.get('/api/admin/all-scans', async (req, res) => {
 
 // --- Admin: Delete Scan Log Endpoint ---
 app.post('/api/admin/delete-scan', async (req, res) => {
-    const { scan_id } = req.body;
+    const { scan_id, adminEmail } = req.body;
     try {
         await pool.query('DELETE FROM scan_history WHERE id = ?', [scan_id]);
+        
+        await logAdminAction(adminEmail || 'fraudshield2026@gmail.com', 'DELETE_SCAN', `Deleted scan log ID ${scan_id}`);
+
         res.status(200).json({ success: true, message: 'Scan log deleted successfully.' });
     } catch (err) {
         res.status(500).json({ success: false, message: 'Failed to delete log.' });
@@ -817,15 +817,18 @@ app.post('/api/admin/train-model', upload.single('dataset'), async (req, res) =>
     const targetFileName = originalExt === '.csv' ? 'latest_uploaded.csv' : 'latest_uploaded.json';
     const targetPath = path.join(__dirname, 'uploads/', targetFileName);
 
-    fs.rename(uploadedFilePath, targetPath, (err) => {
+    fs.rename(uploadedFilePath, targetPath, async (err) => {
         if (err) {
             return res.status(500).json({ success: false, message: 'Failed to process uploaded dataset file.' });
         }
 
-        exec('node trainModel.js', (error, stdout, stderr) => {
+        exec('node trainModel.js', async (error, stdout, stderr) => {
             if (error) {
                 return res.status(500).json({ success: false, message: 'Model training execution failed.' });
             }
+
+            await logAdminAction('fraudshield2026@gmail.com', 'TRAIN_MODEL', 'Successfully retrained AI threat detection model with new dataset.');
+
             return res.status(200).json({ 
                 success: true, 
                 message: 'AI Model successfully retrained and merged with new dataset!',
@@ -907,6 +910,8 @@ app.post('/api/verify-payment', async (req, res) => {
             [now, email]
         );
 
+        await logAdminAction(email, 'PRO_UPGRADE', `Upgraded account to Pro (${plan} plan)`);
+
         res.json({ success: true, message: 'Pro status activated', expiry: now });
     } catch (err) {
         console.error("Payment verification error:", err);
@@ -937,10 +942,16 @@ app.post('/api/user-status', async (req, res) => {
     }
 });
 
-// Fetch latest audit logs
+// Fetch latest audit logs with converted IST timestamp (+05:30)
 app.get('/api/admin/audit-logs', async (req, res) => {
     try {
-        const [logs] = await pool.execute('SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 20');
+        const [logs] = await pool.execute(`
+            SELECT id, admin_email, action_type, description, 
+            DATE_FORMAT(CONVERT_TZ(created_at, '+00:00', '+05:30'), '%Y-%m-%d %H:%i:%s') as created_at 
+            FROM audit_logs 
+            ORDER BY created_at DESC 
+            LIMIT 20
+        `);
         res.json({ success: true, logs });
     } catch (error) {
         console.error("Fetch Audit Logs Error:", error);
@@ -948,19 +959,7 @@ app.get('/api/admin/audit-logs', async (req, res) => {
     }
 });
 
-// Helper function to record an audit log from anywhere in backend
-async function logAdminAction(adminEmail, actionType, description) {
-    try {
-        await pool.execute(
-            'INSERT INTO audit_logs (admin_email, action_type, description) VALUES (?, ?, ?)',
-            [adminEmail, actionType, description]
-        );
-    } catch (error) {
-        console.error("Log Insertion Error:", error);
-    }
-}
-
-// Real-time Google Play Store Search Endpoint (Expanded Results)
+// Real-time Google Play Store Search Endpoint
 app.get('/api/playstore/search', async (req, res) => {
     try {
         const query = req.query.q || '';
@@ -968,7 +967,6 @@ app.get('/api/playstore/search', async (req, res) => {
             return res.json({ success: true, apps: [] });
         }
 
-        // Fetch up to 20 matching apps from the Google Play Store to display all alike names
         const results = await gplay.search({
             term: query,
             num: 20,
@@ -976,7 +974,6 @@ app.get('/api/playstore/search', async (req, res) => {
             country: 'in'
         });
 
-        // Map results to extract structured options for the dropdown
         const apps = results.map(app => ({
             app_name: app.title,
             developer_name: app.developer,
