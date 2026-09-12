@@ -974,6 +974,7 @@ app.get('/api/admin/audit-logs', async (req, res) => {
             WHERE action_type NOT LIKE '%ERROR%' 
               AND action_type NOT LIKE '%404%' 
               AND action_type NOT LIKE '%500%'
+              AND action_type NOT LIKE '%RESOLVED%'
             ORDER BY created_at DESC 
             LIMIT 20
         `);
@@ -983,6 +984,7 @@ app.get('/api/admin/audit-logs', async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch audit logs." });
     }
 });
+
 
 
 // Fetch Error Audit Logs specifically (404 / 500 errors)
