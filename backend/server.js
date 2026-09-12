@@ -1049,7 +1049,7 @@ app.get('/api/playstore/search', async (req, res) => {
     }
 });
 
-// --- ERROR HANDLING MIDDLEWARES (Place right before app.listen) ---
+// --- ERROR HANDLING MIDDLEWARES ---
 
 // 404 Not Found Middleware
 app.use((req, res, next) => {
@@ -1068,10 +1068,6 @@ app.use(async (err, req, res, next) => {
     } catch (logErr) {
         console.error("Failed to log 500 error to DB:", logErr);
     }
-    res.status(500).json({ success: false, message: 'Internal Server Error (500)' });
-});
-
-    logAdminAction('system@fraudshield.ai', '500_SERVER_ERROR', `Server Error on ${req.method} ${req.originalUrl}: ${err.message}`);
     res.status(500).json({ success: false, message: 'Internal Server Error (500)' });
 });
 
