@@ -19,9 +19,50 @@
     100% { top: 100%; opacity: 0; }
 }
 
+/* Mobile Phone Container */
 .phone-container {
     animation: float 5s ease-in-out infinite;
     filter: drop-shadow(0 0 30px rgba(0, 255, 102, 0.2));
+    /* Added to fix video background */
+    background-color: #121212; 
+    border-radius: 32px; 
+    overflow: hidden; 
+    position: relative;
+}
+
+/* Fixes the video inside the phone */
+.phone-container video {
+    background-color: #000000; 
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: inherit; 
+    position: relative;
+    z-index: 1; 
+}
+
+/* PC/Desktop Monitor Container */
+.pc-container {
+    background-color: #121212; 
+    border-radius: 12px; 
+    border: 6px solid #222; 
+    overflow: hidden; 
+    position: relative;
+    width: 100%;
+    max-width: 800px; 
+    aspect-ratio: 16 / 9; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 255, 102, 0.15);
+}
+
+/* Fixes the video inside the PC */
+.pc-container video {
+    background-color: #000000; 
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: inherit; 
+    position: relative;
+    z-index: 1; 
 }
 
 .radar-ring {
@@ -31,6 +72,7 @@
     border-radius: 50%;
     border: 1px solid rgba(0, 255, 102, 0.3);
     transform: translate(-50%, -50%);
+    z-index: 10; /* Ensures rings stay above the video */
 }
 
 /* Original larger radar rings */
@@ -45,6 +87,7 @@
     background: linear-gradient(to right, transparent, #00ff66, transparent);
     box-shadow: 0 0 10px #00ff66;
     animation: scan-line 3s linear infinite;
+    z-index: 10; /* Ensures scanner stays above the video */
 }
 
 /* Custom Scrollbar */
@@ -52,4 +95,3 @@
 ::-webkit-scrollbar-track { background: #09090b; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #555; }
-
