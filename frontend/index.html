@@ -416,6 +416,9 @@
 
         <!-- 4. ABOUT US SECTION -->
         <div class="px-6 lg:px-12 py-16 border-t border-gray-800/40 relative" id="about-section">
+            <div class="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"></div>
+            </div>
             <div class="flex flex-col xl:flex-row gap-12 relative z-10 w-full">
                 <!-- Left Side -->
                 <div class="xl:w-1/2 space-y-6 bg-surface/40 backdrop-blur-md p-8 rounded-3xl border border-gray-700/50 shadow-2xl">
@@ -446,33 +449,87 @@
                 </div>
                 <!-- Right Side -->
                 <div class="xl:w-1/2 w-full">
-                    <h3 class="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center">
+                    <h3 class="text-lg font-bold text-white mb-8 uppercase tracking-wider flex items-center">
                         <span class="w-8 h-px bg-primary mr-4"></span>
                         The Core Team
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-                        <div class="bg-surface/50 backdrop-blur-md border border-gray-700/50 rounded-2xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
-                            <div class="w-12 h-12 mx-auto rounded-full bg-background/50 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Atul&backgroundColor=transparent" alt="Atul Dubey" class="w-full h-full object-cover">
+                    
+                    <!-- NEW PROFESSIONAL TEAM GRID -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
+                        
+                        <!-- Team Member 1: Atul Dubey -->
+                        <div class="bg-surface/50 backdrop-blur-md border border-gray-700/50 rounded-3xl p-6 hover:border-primary/50 transition-all duration-500 transform hover:-translate-y-2 group shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_30px_rgba(0,255,102,0.15)] flex flex-col items-center">
+                            <div class="relative w-24 h-24 sm:w-28 sm:h-28 mb-5">
+                                <div class="absolute inset-0 rounded-full border border-primary/20 group-hover:border-primary/60 group-hover:scale-110 transition-all duration-500"></div>
+                                <div class="w-full h-full rounded-full overflow-hidden border-[3px] border-[#121214] relative z-10 bg-gray-800">
+                                    <img src=".images/atul.jpeg" alt="Atul Dubey" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="absolute bottom-0 right-0 w-7 h-7 bg-primary rounded-full border-[3px] border-[#121214] flex items-center justify-center z-20 shadow-lg">
+                                    <svg class="w-3.5 h-3.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
                             </div>
-                            <h4 class="text-white font-bold text-xs truncate">Atul Dubey</h4>
-                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1">Project Leader</p>
+                            <div class="text-center w-full">
+                                <h4 class="text-white font-bold text-sm sm:text-base tracking-wide group-hover:text-primary transition-colors">Atul Dubey</h4>
+                                <p class="text-primary text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 mb-3">Project Leader</p>
+                                <div class="w-full h-px bg-gray-700/50 my-3 group-hover:bg-primary/30 transition-colors"></div>
+                                <div class="flex justify-center items-center space-x-3">
+                                    <a href="#" class="text-gray-500 hover:text-white transition-colors" title="LinkedIn">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                    </a>
+                                    <a href="#" class="text-gray-500 hover:text-white transition-colors" title="GitHub">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-surface/50 backdrop-blur-md border border-gray-700/50 rounded-2xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
-                            <div class="w-12 h-12 mx-auto rounded-full bg-background/50 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shreeya&backgroundColor=transparent" alt="Shreeya Dubey" class="w-full h-full object-cover">
+
+                        <!-- Team Member 2: Shreeya Dubey -->
+                        <div class="bg-surface/50 backdrop-blur-md border border-gray-700/50 rounded-3xl p-6 hover:border-primary/50 transition-all duration-500 transform hover:-translate-y-2 group shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_30px_rgba(0,255,102,0.15)] flex flex-col items-center">
+                            <div class="relative w-24 h-24 sm:w-28 sm:h-28 mb-5">
+                                <div class="absolute inset-0 rounded-full border border-primary/20 group-hover:border-primary/60 group-hover:scale-110 transition-all duration-500"></div>
+                                <div class="w-full h-full rounded-full overflow-hidden border-[3px] border-[#121214] relative z-10 bg-gray-800">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Shreeya&backgroundColor=transparent" alt="Shreeya Dubey" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
                             </div>
-                            <h4 class="text-white font-bold text-xs truncate">Shreeya Dubey</h4>
-                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1">Software Eng.</p>
+                            <div class="text-center w-full">
+                                <h4 class="text-white font-bold text-sm sm:text-base tracking-wide group-hover:text-primary transition-colors">Shreeya Dubey</h4>
+                                <p class="text-gray-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 mb-3">AI Engineer</p>
+                                <div class="w-full h-px bg-gray-700/50 my-3 group-hover:bg-primary/30 transition-colors"></div>
+                                <div class="flex justify-center items-center space-x-3">
+                                    <a href="#" class="text-gray-500 hover:text-white transition-colors" title="LinkedIn">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                    </a>
+                                    <a href="#" class="text-gray-500 hover:text-white transition-colors" title="GitHub">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-surface/50 backdrop-blur-md border border-gray-700/50 rounded-2xl p-4 text-center hover:border-primary/40 transition-colors group shadow-[0_4px_15px_rgba(0,0,0,0.2)] flex flex-col justify-center">
-                            <div class="w-12 h-12 mx-auto rounded-full bg-background/50 mb-3 overflow-hidden border-2 border-transparent group-hover:border-primary transition-all">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ayush&backgroundColor=transparent" alt="Ayush Prajapati" class="w-full h-full object-cover">
+
+                        <!-- Team Member 3: Ayush Prajapati -->
+                        <div class="bg-surface/50 backdrop-blur-md border border-gray-700/50 rounded-3xl p-6 hover:border-primary/50 transition-all duration-500 transform hover:-translate-y-2 group shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_30px_rgba(0,255,102,0.15)] flex flex-col items-center">
+                            <div class="relative w-24 h-24 sm:w-28 sm:h-28 mb-5">
+                                <div class="absolute inset-0 rounded-full border border-primary/20 group-hover:border-primary/60 group-hover:scale-110 transition-all duration-500"></div>
+                                <div class="w-full h-full rounded-full overflow-hidden border-[3px] border-[#121214] relative z-10 bg-gray-800">
+                                    <img src=".images/ayush.jpeg" alt="Ayush Prajapati" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
                             </div>
-                            <h4 class="text-white font-bold text-xs truncate">Ayush Prajapati</h4>
-                            <p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1">Software Eng.</p>
+                            <div class="text-center w-full">
+                                <h4 class="text-white font-bold text-sm sm:text-base tracking-wide group-hover:text-primary transition-colors">Ayush Prajapati</h4>
+                                <p class="text-gray-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 mb-3">Backend Dev.</p>
+                                <div class="w-full h-px bg-gray-700/50 my-3 group-hover:bg-primary/30 transition-colors"></div>
+                                <div class="flex justify-center items-center space-x-3">
+                                    <a href="#" class="text-gray-500 hover:text-white transition-colors" title="LinkedIn">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                    </a>
+                                    <a href="#" class="text-gray-500 hover:text-white transition-colors" title="GitHub">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
                     <div class="mt-8 pt-6 border-t border-gray-700/50">
                         <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-3">Powered By Technology</p>
                         <div class="flex flex-wrap gap-2">
@@ -485,6 +542,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- PART 2: Core Principles / Values -->
             <div class="mt-20 relative z-10 w-full">
                 <h3 class="text-lg font-bold text-white mb-8 uppercase tracking-wider flex items-center justify-center text-center">
                     <span class="w-12 h-px bg-gray-600 mr-4"></span>
@@ -492,26 +551,26 @@
                     <span class="w-12 h-px bg-gray-600 ml-4"></span>
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-surface/40 backdrop-blur-md border border-gray-700/50 rounded-2xl p-6 text-center hover:bg-surface/60 transition-colors shadow-[0_4px_15px_rgba(0,0,0,0.15)]">
-                        <div class="w-10 h-10 mx-auto rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center justify-center mb-4">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    <div class="bg-surface/40 backdrop-blur-md border border-gray-700/50 rounded-3xl p-8 text-center hover:bg-surface/60 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_15px_rgba(0,0,0,0.15)] group">
+                        <div class="w-12 h-12 mx-auto rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center justify-center mb-5 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         </div>
-                        <h4 class="text-white font-bold text-sm mb-2 uppercase">100% Privacy First</h4>
-                        <p class="text-gray-400 text-[11px] leading-relaxed">We never store your personal data. Our scans are completely anonymous and your search history remains strictly confidential.</p>
+                        <h4 class="text-white font-bold text-base mb-3 uppercase tracking-wide">100% Privacy First</h4>
+                        <p class="text-gray-400 text-xs leading-relaxed">We never store your personal data. Our scans are completely anonymous and your search history remains strictly confidential.</p>
                     </div>
-                    <div class="bg-surface/40 backdrop-blur-md border border-gray-700/50 rounded-2xl p-6 text-center hover:bg-surface/60 transition-colors shadow-[0_4px_15px_rgba(0,0,0,0.15)]">
-                        <div class="w-10 h-10 mx-auto rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center justify-center mb-4">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <div class="bg-surface/40 backdrop-blur-md border border-gray-700/50 rounded-3xl p-8 text-center hover:bg-surface/60 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_15px_rgba(0,0,0,0.15)] group">
+                        <div class="w-12 h-12 mx-auto rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center justify-center mb-5 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         </div>
-                        <h4 class="text-white font-bold text-sm mb-2 uppercase">Real-Time Processing</h4>
-                        <p class="text-gray-400 text-[11px] leading-relaxed">Our custom NLP models analyze thousands of reviews in milliseconds to deliver instant verdicts.</p>
+                        <h4 class="text-white font-bold text-base mb-3 uppercase tracking-wide">Real-Time Processing</h4>
+                        <p class="text-gray-400 text-xs leading-relaxed">Our custom NLP models analyze thousands of reviews in milliseconds to deliver instant verdicts.</p>
                     </div>
-                    <div class="bg-surface/40 backdrop-blur-md border border-gray-700/50 rounded-2xl p-6 text-center hover:bg-surface/60 transition-colors shadow-[0_4px_15px_rgba(0,0,0,0.15)]">
-                        <div class="w-10 h-10 mx-auto rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center justify-center mb-4">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    <div class="bg-surface/40 backdrop-blur-md border border-gray-700/50 rounded-3xl p-8 text-center hover:bg-surface/60 transition-all duration-300 transform hover:-translate-y-1.5 shadow-[0_4px_15px_rgba(0,0,0,0.15)] group">
+                        <div class="w-12 h-12 mx-auto rounded-xl border border-primary/20 bg-primary/10 text-primary flex items-center justify-center mb-5 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(0,255,102,0.2)] transition-all">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
                         </div>
-                        <h4 class="text-white font-bold text-sm mb-2 uppercase">Community Driven</h4>
-                        <p class="text-gray-400 text-[11px] leading-relaxed">Built by students, for the internet. Our machine learning models get smarter every day by learning from community feedback.</p>
+                        <h4 class="text-white font-bold text-base mb-3 uppercase tracking-wide">Community Driven</h4>
+                        <p class="text-gray-400 text-xs leading-relaxed">Built by students, for the internet. Our machine learning models get smarter every day by learning from community feedback.</p>
                     </div>
                 </div>
             </div>
