@@ -1,6 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
 
-/* Custom Animations for the Mobile Phone Section */
+/* Global Reset & Base */
+body, html {
+    /* Set to transparent so the fixed background video shows through */
+    background-color: transparent; 
+    color: #ffffff; 
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Base black fallback behind the video */
+.video-backdrop {
+    background-color: #000000;
+}
+
+/* Custom Animations */
 @keyframes float {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
@@ -23,7 +40,6 @@
 .phone-container {
     animation: float 5s ease-in-out infinite;
     filter: drop-shadow(0 0 30px rgba(0, 255, 102, 0.2));
-    /* Added to fix video background */
     background-color: #121212; 
     border-radius: 32px; 
     overflow: hidden; 
@@ -65,6 +81,7 @@
     z-index: 1; 
 }
 
+/* Radar and Scanner Effects */
 .radar-ring {
     position: absolute;
     top: 50%;
@@ -72,10 +89,9 @@
     border-radius: 50%;
     border: 1px solid rgba(0, 255, 102, 0.3);
     transform: translate(-50%, -50%);
-    z-index: 10; /* Ensures rings stay above the video */
+    z-index: 10;
 }
 
-/* Original larger radar rings */
 .ring-1 { width: 250px; height: 250px; animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
 .ring-2 { width: 250px; height: 250px; animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 1s; }
 .ring-3 { width: 250px; height: 250px; animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite 2s; }
@@ -87,11 +103,11 @@
     background: linear-gradient(to right, transparent, #00ff66, transparent);
     box-shadow: 0 0 10px #00ff66;
     animation: scan-line 3s linear infinite;
-    z-index: 10; /* Ensures scanner stays above the video */
+    z-index: 10;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #09090b; }
+::-webkit-scrollbar-track { background: rgba(9, 9, 11, 0.5); backdrop-filter: blur(10px); }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #555; }
