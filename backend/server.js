@@ -92,7 +92,9 @@ async function logAdminAction(email, actionType, description) {
     }
 }
 
-// Chat API Route for FraudShield AI Assistant
+// ==========================================
+// Chat API Route (OpenAI gpt-4o-mini Integration)
+// ==========================================
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
@@ -101,21 +103,25 @@ app.post('/api/chat', async (req, res) => {
             return res.status(400).json({ success: false, reply: "Message is required." });
         }
 
-        const apiKey = process.env.GEMINI_API_KEY;
+        const apiKey = process.env.OPENAI_API_KEY;
         if (!apiKey) {
-            return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
+            return res.status(500).json({ success: false, reply: "OpenAI API key is not configured on the server." });
         }
 
-        // UPDATED TO 3.8 FLASH MODEL
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+        const openAiEndpoint = `https://api.openai.com/v1/chat/completions`;
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
 
-        const response = await fetch(geminiEndpoint, {
+        const response = await fetch(openAiEndpoint, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
             body: JSON.stringify({
-                contents: [
-                    { role: "user", parts: [{ text: systemPrompt + "\n\nUser Question: " + message }] }
+                model: "gpt-4o-mini",
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    { role: "user", content: message }
                 ]
             })
         });
@@ -123,11 +129,11 @@ app.post('/api/chat', async (req, res) => {
         const data = await response.json();
 
         if (!response.ok) {
-            console.error("Gemini API Error Response:", data);
+            console.error("OpenAI API Error Response:", data);
             return res.status(500).json({ success: false, reply: data.error?.message || "AI service error. Please try again." });
         }
 
-        const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I am unable to process your request at the moment.";
+        const aiReply = data.choices?.[0]?.message?.content || "I am unable to process your request at the moment.";
         res.json({ success: true, reply: aiReply });
 
     } catch (error) {
@@ -589,7 +595,7 @@ app.post('/api/verify-update-otp', async (req, res) => {
 });
 
 // ==========================================
-// 1. DYNAMIC HYBRID AI APP ANALYSIS API (Local Fallback + Low Token Config)
+// 1. DYNAMIC HYBRID AI APP ANALYSIS API (Local Fallback + ChatGPT Integration)
 // ==========================================
 app.post('/api/analyze', async (req, res) => {
     const { targetUrl, email } = req.body;
@@ -665,24 +671,23 @@ app.post('/api/analyze', async (req, res) => {
                     localRiskScore = 85;
                 }
             } else {
-                console.log("⚠️ Local classifier.json not found. Will use default fallback scores if Gemini fails.");
+                console.log("⚠️ Local classifier.json not found. Will use default fallback scores if ChatGPT fails.");
             }
         } catch (localErr) {
             console.error("Local Model execution error:", localErr);
         }
 
         // ---------------------------------------------------------
-        // STEP 2: SEND TO GEMINI (With Graceful Local Fallback & Quota Savings)
+        // STEP 2: SEND TO OPENAI (With Graceful Local Fallback & Quota Savings)
         // ---------------------------------------------------------
         let aiReport;
         
         try {
-            const apiKey = process.env.GEMINI_API_KEY;
-            if (!apiKey) throw new Error("Gemini API key is not configured.");
+            const apiKey = process.env.OPENAI_API_KEY;
+            if (!apiKey) throw new Error("OpenAI API key is not configured.");
 
-            const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+            const openAiEndpoint = `https://api.openai.com/v1/chat/completions`;
             
-            // Prompt ko chota kiya gaya hai aur input tokens kam karne ke liye reviews trim kiye gaye hain
             const systemPrompt = `You are an automated malware analyst. Analyze this app data and local AI verdict. Keep it brief.
 App Name: ${appName}
 Developer: ${appDeveloper}
@@ -695,41 +700,43 @@ Recent Reviews: ${JSON.stringify(reviewSnippets).slice(0, 300)}
 Respond ONLY with a valid JSON:
 {"riskScore": [integer 5-98], "status": ["Safe" or "Medium Risk" or "High Risk"], "colorClass": ["text-primary" or "text-amber-400" or "text-red-500"], "threats": ["Short threat 1", "Short threat 2"]}`;
 
-            const response = await fetch(geminiEndpoint, {
+            const response = await fetch(openAiEndpoint, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    contents: [{ role: "user", parts: [{ text: systemPrompt }] }],
-                    // Yeh config Gemini ko deep thinking se rokega aur tokens bachayega
-                    generationConfig: {
-                        temperature: 0.1,
-                        maxOutputTokens: 150,
-                        topK: 10
-                    }
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o-mini",
+                    messages: [
+                        { role: "user", content: systemPrompt }
+                    ],
+                    temperature: 0.1,
+                    max_tokens: 150
                 })
             });
 
             const data = await response.json();
 
-            // Agar Gemini quota limit ya error de, toh hum khud error throw karenge
+            // Agar ChatGPT quota limit ya error de, toh hum khud error throw karenge
             if (!response.ok) {
-                throw new Error(data.error?.message || "Gemini API rejected the request.");
+                throw new Error(data.error?.message || "OpenAI API rejected the request.");
             }
 
-            let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+            let rawText = data.choices?.[0]?.message?.content || "";
             rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
             aiReport = JSON.parse(rawText);
 
         } catch (apiError) {
-            console.warn("⚠️ Gemini API Overloaded or Failed. Fallback to Local AI Activated:", apiError.message);
+            console.warn("⚠️ OpenAI API Overloaded or Failed. Fallback to Local AI Activated:", apiError.message);
             
-            // FALLBACK REPORT: Jab Gemini fail hoga tab ye light-weight report user ko jayegi
+            // FALLBACK REPORT: Jab OpenAI fail hoga tab ye light-weight report user ko jayegi
             aiReport = {
                 riskScore: localRiskScore,
                 status: localModelVerdict,
                 colorClass: localRiskScore > 70 ? "text-red-500" : (localRiskScore > 40 ? "text-amber-400" : "text-primary"),
                 threats: [
-                    "⚠️ Cloud AI quota exceeded. Analysis generated exclusively by FraudShield Local Engine.",
+                    "⚠️ Cloud AI error or quota exceeded. Analysis generated exclusively by FraudShield Local Engine.",
                     `🧠 Local Model classified this application as: ${localModelVerdict}`,
                     `Analyzed ${appPermissions.length} application permissions and local datasets for anomalies.`
                 ]
