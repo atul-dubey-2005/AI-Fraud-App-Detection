@@ -106,7 +106,7 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        // UPDATED TO 3.8 FLASH MODEL TO AVOID QUOTA/DEMAND ERRORS
+        // UPDATED TO 3.8 FLASH MODEL
         const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
 
@@ -589,7 +589,7 @@ app.post('/api/verify-update-otp', async (req, res) => {
 });
 
 // ==========================================
-// 1. DYNAMIC HYBRID AI APP ANALYSIS API (Local Fallback System)
+// 1. DYNAMIC HYBRID AI APP ANALYSIS API (Local Fallback + Low Token Config)
 // ==========================================
 app.post('/api/analyze', async (req, res) => {
     const { targetUrl, email } = req.body;
@@ -672,7 +672,7 @@ app.post('/api/analyze', async (req, res) => {
         }
 
         // ---------------------------------------------------------
-        // STEP 2: SEND TO GEMINI (With Graceful Local Fallback)
+        // STEP 2: SEND TO GEMINI (With Graceful Local Fallback & Quota Savings)
         // ---------------------------------------------------------
         let aiReport;
         
@@ -681,28 +681,37 @@ app.post('/api/analyze', async (req, res) => {
             if (!apiKey) throw new Error("Gemini API key is not configured.");
 
             const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
-            const systemPrompt = `You are an elite cybersecurity malware analyst. Analyze this mobile app data and the verdict from our local trained AI model.
+            
+            // Prompt ko chota kiya gaya hai aur input tokens kam karne ke liye reviews trim kiye gaye hain
+            const systemPrompt = `You are an automated malware analyst. Analyze this app data and local AI verdict. Keep it brief.
 App Name: ${appName}
 Developer: ${appDeveloper}
 Play Store Rating: ${appScore} / 5
 Requested Permissions: ${JSON.stringify(appPermissions)}
-Recent User Review Feedback: ${JSON.stringify(reviewSnippets)}
+Recent Reviews: ${JSON.stringify(reviewSnippets).slice(0, 300)}
 
-*** LOCAL AI MODEL VERDICT: [ ${localModelVerdict} ] ***
-Take this local AI verdict into strong consideration.
+*** LOCAL VERDICT: [ ${localModelVerdict} ] ***
 
-You MUST respond ONLY with a valid JSON object:
-{"riskScore": [integer 5-98], "status": ["Safe" or "Medium Risk" or "High Risk"], "colorClass": ["text-primary" or "text-amber-400" or "text-red-500"], "threats": ["Threat 1", "Threat 2", "Threat 3"]}`;
+Respond ONLY with a valid JSON:
+{"riskScore": [integer 5-98], "status": ["Safe" or "Medium Risk" or "High Risk"], "colorClass": ["text-primary" or "text-amber-400" or "text-red-500"], "threats": ["Short threat 1", "Short threat 2"]}`;
 
             const response = await fetch(geminiEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: systemPrompt }] }] })
+                body: JSON.stringify({ 
+                    contents: [{ role: "user", parts: [{ text: systemPrompt }] }],
+                    // Yeh config Gemini ko deep thinking se rokega aur tokens bachayega
+                    generationConfig: {
+                        temperature: 0.1,
+                        maxOutputTokens: 150,
+                        topK: 10
+                    }
+                })
             });
 
             const data = await response.json();
 
-            // Agar Gemini quota limit ya error de, toh hum khud error throw karenge taaki catch block local model use kare
+            // Agar Gemini quota limit ya error de, toh hum khud error throw karenge
             if (!response.ok) {
                 throw new Error(data.error?.message || "Gemini API rejected the request.");
             }
@@ -714,7 +723,7 @@ You MUST respond ONLY with a valid JSON object:
         } catch (apiError) {
             console.warn("⚠️ Gemini API Overloaded or Failed. Fallback to Local AI Activated:", apiError.message);
             
-            // FALLBACK REPORT: Jab Gemini nahi chalega tab ye report user ko jayegi
+            // FALLBACK REPORT: Jab Gemini fail hoga tab ye light-weight report user ko jayegi
             aiReport = {
                 riskScore: localRiskScore,
                 status: localModelVerdict,
