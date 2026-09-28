@@ -106,7 +106,8 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+        // UPDATED TO 3.1 PRO MODEL
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro:generateContent?key=${apiKey}`;
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
 
         const response = await fetch(geminiEndpoint, {
@@ -644,7 +645,8 @@ app.post('/api/analyze', async (req, res) => {
             return res.status(500).json({ success: false, message: "Gemini API key is not configured on the server." });
         }
 
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+        // UPDATED TO 3.1 PRO MODEL
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro:generateContent?key=${apiKey}`;
 
         const systemPrompt = `You are an elite, automated cybersecurity malware analyst and app threat intelligence engine. 
 Analyze the following real-time mobile application data strictly and generate a unique, granular, data-driven security audit report. Avoid generic or repeating templates. Every application must have distinct threat points based on its exact permissions, reviews, and developer background.
@@ -819,7 +821,7 @@ app.post('/api/admin/train-model', upload.single('dataset'), async (req, res) =>
     const originalExt = path.extname(req.file.originalname).toLowerCase();
 
     const targetFileName = originalExt === '.csv' ? 'latest_uploaded.csv' : 'latest_uploaded.json';
-    
+
     // Ensure uploads directory exists
     const uploadsDir = path.join(__dirname, 'uploads/');
     if (!fs.existsSync(uploadsDir)){
@@ -985,8 +987,6 @@ app.get('/api/admin/audit-logs', async (req, res) => {
     }
 });
 
-
-
 // Fetch Error Audit Logs specifically (404 / 500 errors)
 app.get('/api/admin/error-logs', async (req, res) => {
     try {
@@ -1005,7 +1005,6 @@ app.get('/api/admin/error-logs', async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch error logs." });
     }
 });
-
 
 // Resolve & Delete Error Log from Database
 app.post('/api/admin/resolve-error', async (req, res) => {
