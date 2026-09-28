@@ -107,7 +107,8 @@ app.post('/api/chat', async (req, res) => {
         }
 
         // UPDATED TO 1.5 PRO MODEL
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent?key=${apiKey}`;
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+
 
 
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
@@ -648,7 +649,8 @@ app.post('/api/analyze', async (req, res) => {
         }
 
         // UPDATED TO 1.5 PRO MODEL
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview:generateContent?key=${apiKey}`;
+        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+
 
 
 
