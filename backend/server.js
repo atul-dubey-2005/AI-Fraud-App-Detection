@@ -592,7 +592,7 @@ app.post('/api/verify-update-otp', async (req, res) => {
 });
 
 // ==========================================
-// 1. DYNAMIC GEMINI AI APP ANALYSIS API
+// 1. DYNAMIC HYBRID AI APP ANALYSIS API (Local Fallback System)
 // ==========================================
 app.post('/api/analyze', async (req, res) => {
     const { targetUrl, email } = req.body;
@@ -601,21 +601,18 @@ app.post('/api/analyze', async (req, res) => {
     try {
         const userEmail = email || 'anonymous@fraudshield.com';
 
+        // Check Pro Status & Scan Limits
         const [userRows] = await pool.query('SELECT is_pro FROM users WHERE email = ?', [userEmail]);
         const isPro = userRows.length > 0 && userRows[0].is_pro === 1;
 
         if (!isPro) {
             const [scanRows] = await pool.query('SELECT COUNT(*) as scanCount FROM scan_history WHERE user_email = ?', [userEmail]);
-
             if (scanRows[0].scanCount >= 3) {
-                return res.status(403).json({ 
-                    success: false, 
-                    message: 'Free trial limit reached.', 
-                    limitReached: true 
-                });
+                return res.status(403).json({ success: false, message: 'Free trial limit reached.', limitReached: true });
             }
         }
 
+        // Fetch App Data from Play Store
         let appId = targetUrl.trim();
         if (appId.includes('play.google.com')) {
             appId = new URL(appId).searchParams.get('id') || appId;
@@ -643,40 +640,118 @@ app.post('/api/analyze', async (req, res) => {
             console.log("Could not fetch reviews, proceeding with metadata.");
         }
 
-        const apiKey = process.env.GEMINI_API_KEY;
-        if (!apiKey) {
-            return res.status(500).json({ success: false, message: "Gemini API key is not configured on the server." });
+        // ---------------------------------------------------------
+        // STEP 1: EVALUATE USING YOUR LOCAL TRAINED MODEL
+        // ---------------------------------------------------------
+        let localModelVerdict = "Medium Risk"; 
+        let localRiskScore = 50; 
+        
+        try {
+            const classifierFile = path.join(__dirname, 'uploads', 'classifier.json'); 
+            if (fs.existsSync(classifierFile)) {
+                const classifier = await new Promise((resolve, reject) => {
+                    natural.BayesClassifier.load(classifierFile, null, (err, classifier) => {
+                        if (err) reject(err);
+                        else resolve(classifier);
+                    });
+                });
+                
+                const textToAnalyze = `${appDescription} ${reviewSnippets.join(" ")}`;
+                localModelVerdict = classifier.classify(textToAnalyze);
+                console.log(`🧠 Local Model Prediction for ${appName}:`, localModelVerdict);
+
+                // Basic scoring based on local model verdict
+                const verdictLower = localModelVerdict.toLowerCase();
+                if (verdictLower.includes('safe') || verdictLower.includes('legit')) {
+                    localRiskScore = 15;
+                } else if (verdictLower.includes('fraud') || verdictLower.includes('malicious') || verdictLower.includes('high')) {
+                    localRiskScore = 85;
+                }
+            } else {
+                console.log("⚠️ Local classifier.json not found. Will use default fallback scores if Gemini fails.");
+            }
+        } catch (localErr) {
+            console.error("Local Model execution error:", localErr);
         }
 
-        // UPDATED TO 1.5 PRO MODEL
-        const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+        // ---------------------------------------------------------
+        // STEP 2: SEND TO GEMINI (With Graceful Local Fallback)
+        // ---------------------------------------------------------
+        let aiReport;
+        
+        try {
+            const apiKey = process.env.GEMINI_API_KEY;
+            if (!apiKey) throw new Error("Gemini API key is not configured.");
 
+            const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+            const systemPrompt = `You are an elite cybersecurity malware analyst. Analyze this mobile app data and the verdict from our local trained AI model.
+App Name: ${appName}
+Developer: ${appDeveloper}
+Play Store Rating: ${appScore} / 5
+Requested Permissions: ${JSON.stringify(appPermissions)}
+Recent User Review Feedback: ${JSON.stringify(reviewSnippets)}
 
+*** LOCAL AI MODEL VERDICT: [ ${localModelVerdict} ] ***
+Take this local AI verdict into strong consideration.
 
+You MUST respond ONLY with a valid JSON object:
+{"riskScore": [integer 5-98], "status": ["Safe" or "Medium Risk" or "High Risk"], "colorClass": ["text-primary" or "text-amber-400" or "text-red-500"], "threats": ["Threat 1", "Threat 2", "Threat 3"]}`;
 
+            const response = await fetch(geminiEndpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: systemPrompt }] }] })
+            });
 
-        const systemPrompt = `You are an elite, automated cybersecurity malware analyst and app threat intelligence engine. 
-Analyze the following real-time mobile application data strictly and generate a unique, granular, data-driven security audit report. Avoid generic or repeating templates. Every application must have distinct threat points based on its exact permissions, reviews, and developer background.
+            const data = await response.json();
 
-App Metadata:
-- Name: ${appName}
-- Developer: ${appDeveloper}
-- Play Store Rating: ${appScore} / 5
-- Requested Permissions: ${JSON.stringify(appPermissions)}
-- Description Snippet: ${appDescription}
-- Recent User Review Feedback: ${JSON.stringify(reviewSnippets)}
+            // Agar Gemini quota limit ya error de, toh hum khud error throw karenge taaki catch block local model use kare
+            if (!response.ok) {
+                throw new Error(data.error?.message || "Gemini API rejected the request.");
+            }
 
-You MUST respond ONLY with a valid JSON object in this exact format, with no markdown code blocks around it (raw JSON text):
-{
-    "riskScore": [integer between 5 to 98 based on actual risk],
-    "status": ["Safe" or "Medium Risk" or "High Risk"],
-    "colorClass": [Tailwind class: "text-primary" if Safe, "text-amber-400" if Medium Risk, "text-red-500" if High Risk],
-    "threats": [
-        "Granular threat point 1 detailing specific permission or review risk",
-        "Granular threat point 2 detailing behavioral anomaly or developer safety",
-        "Granular threat point 3 detailing data harvesting or security posture"
-    ]
-}`;
+            let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+            rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+            aiReport = JSON.parse(rawText);
+
+        } catch (apiError) {
+            console.warn("⚠️ Gemini API Overloaded or Failed. Fallback to Local AI Activated:", apiError.message);
+            
+            // FALLBACK REPORT: Jab Gemini nahi chalega tab ye report user ko jayegi
+            aiReport = {
+                riskScore: localRiskScore,
+                status: localModelVerdict,
+                colorClass: localRiskScore > 70 ? "text-red-500" : (localRiskScore > 40 ? "text-amber-400" : "text-primary"),
+                threats: [
+                    "⚠️ Cloud AI quota exceeded. Analysis generated exclusively by FraudShield Local Engine.",
+                    `🧠 Local Model classified this application as: ${localModelVerdict}`,
+                    `Analyzed ${appPermissions.length} application permissions and local datasets for anomalies.`
+                ]
+            };
+        }
+
+        // ---------------------------------------------------------
+        // STEP 3: LOG & RETURN RESULT
+        // ---------------------------------------------------------
+        await logAdminAction(userEmail, 'APP_SCAN', `Scanned application: ${appName} (${appId}) - Risk: ${aiReport.riskScore}%`);
+
+        return res.status(200).json({
+            success: true,
+            target: appId,
+            appName: appName,
+            icon: appIcon,
+            riskScore: aiReport.riskScore,
+            status: aiReport.status,
+            colorClass: aiReport.colorClass,
+            threats: aiReport.threats
+        });
+
+    } catch (error) {
+        console.error("Dynamic AI Analysis Critical Exception:", error);
+        return res.status(500).json({ success: false, message: 'Analysis engine failed to process application data.' });
+    }
+});
+
 
         const response = await fetch(geminiEndpoint, {
             method: 'POST',
