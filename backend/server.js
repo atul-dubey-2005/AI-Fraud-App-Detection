@@ -106,11 +106,8 @@ app.post('/api/chat', async (req, res) => {
             return res.status(500).json({ success: false, reply: "Gemini API key is not configured on the server." });
         }
 
-        // UPDATED TO 1.5 PRO MODEL
+        // UPDATED TO 3.8 FLASH MODEL TO AVOID QUOTA/DEMAND ERRORS
         const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
-
-
-
         const systemPrompt = "You are FraudShield AI Assistant, an elite, professional cybersecurity expert built into the FraudShield AI platform. Your purpose is to assist users with application security, fraud risk analysis, threat intelligence, and platform navigation with clarity, precision, and authority.";
 
         const response = await fetch(geminiEndpoint, {
@@ -733,63 +730,6 @@ You MUST respond ONLY with a valid JSON object:
         // ---------------------------------------------------------
         // STEP 3: LOG & RETURN RESULT
         // ---------------------------------------------------------
-        await logAdminAction(userEmail, 'APP_SCAN', `Scanned application: ${appName} (${appId}) - Risk: ${aiReport.riskScore}%`);
-
-        return res.status(200).json({
-            success: true,
-            target: appId,
-            appName: appName,
-            icon: appIcon,
-            riskScore: aiReport.riskScore,
-            status: aiReport.status,
-            colorClass: aiReport.colorClass,
-            threats: aiReport.threats
-        });
-
-    } catch (error) {
-        console.error("Dynamic AI Analysis Critical Exception:", error);
-        return res.status(500).json({ success: false, message: 'Analysis engine failed to process application data.' });
-    }
-});
-
-
-        const response = await fetch(geminiEndpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [
-                    { role: "user", parts: [{ text: systemPrompt }] }
-                ]
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error("Gemini API Error Response:", data);
-            return res.status(500).json({ success: false, message: data.error?.message || "AI service error." });
-        }
-
-        let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-
-        let aiReport;
-        try {
-            aiReport = JSON.parse(rawText);
-        } catch (parseErr) {
-            console.error("Failed to parse Gemini JSON response:", rawText);
-            aiReport = {
-                riskScore: 45,
-                status: "Medium Risk",
-                colorClass: "text-amber-400",
-                threats: [
-                    `Analyzed ${appPermissions.length} permission hooks requested by ${appDeveloper}.`,
-                    `Evaluated store rating of ${appScore}/5 against baseline anomaly matrices.`,
-                    `Monitor network egress traffic for potential telemetry sharing.`
-                ]
-            };
-        }
-
         await logAdminAction(userEmail, 'APP_SCAN', `Scanned application: ${appName} (${appId}) - Risk: ${aiReport.riskScore}%`);
 
         return res.status(200).json({
