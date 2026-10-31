@@ -46,7 +46,13 @@ const pool = mysql.createPool({
     port: process.env.MYSQLPORT || process.env.DB_PORT || 3306,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    ...(process.env.DB_SSL_CA ? {
+        ssl: {
+            ca: process.env.DB_SSL_CA.replace(/\\n/g, '\n'),
+            rejectUnauthorized: true
+        }
+    } : {})
 });
 
 // Test Connection on startup & auto-verify audit_logs table
@@ -200,7 +206,9 @@ passport.deserializeUser(async (email, done) => {
 // ==========================================
 // PASSPORT: GOOGLE STRATEGY
 // ==========================================
-passport.use(new GoogleStrategy({
+const googleOAuthEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_CALLBACK_URL);
+const githubOAuthEnabled = Boolean(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET && process.env.GITHUB_CALLBACK_URL);
+if (googleOAuthEnabled) passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK_URL
@@ -233,7 +241,7 @@ passport.use(new GoogleStrategy({
 // ==========================================
 // PASSPORT: GITHUB STRATEGY
 // ==========================================
-passport.use(new GitHubStrategy({
+if (githubOAuthEnabled) passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: process.env.GITHUB_CALLBACK_URL,
@@ -503,9 +511,9 @@ app.post('/api/admin/update-status', async (req, res) => {
 });
 
 // --- OAUTH ROUTES ---
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google', googleOAuthEnabled ? passport.authenticate('google', { scope: ['profile', 'email'] }) : (req, res) => res.status(503).send('Google login is not configured.'));
 app.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/login.html?error=Account_suspended' }),
+    googleOAuthEnabled ? passport.authenticate('google', { failureRedirect: '/login.html?error=Account_suspended' }) : (req, res) => res.status(503).send('Google login is not configured.'),
     (req, res) => { 
         if (req.user && req.user.account_status === 'Banned') {
             return res.redirect('/login.html?error=Account_suspended');
@@ -514,9 +522,9 @@ app.get('/auth/google/callback',
     }
 );
 
-app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+app.get('/auth/github', githubOAuthEnabled ? passport.authenticate('github', { scope: ['user:email'] }) : (req, res) => res.status(503).send('GitHub login is not configured.'));
 app.get('/auth/github/callback', 
-    passport.authenticate('github', { failureRedirect: '/login.html?error=Account_suspended' }),
+    githubOAuthEnabled ? passport.authenticate('github', { failureRedirect: '/login.html?error=Account_suspended' }) : (req, res) => res.status(503).send('GitHub login is not configured.'),
     (req, res) => { 
         if (req.user && req.user.account_status === 'Banned') {
             return res.redirect('/login.html?error=Account_suspended');
