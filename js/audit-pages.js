@@ -13,6 +13,39 @@
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     })[char]);
 
+    function parseReportDetails(value) {
+        if (!value) return null;
+        if (typeof value === 'string') {
+            try { value = JSON.parse(value); } catch { return null; }
+        }
+        if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+        const analysis = value.analysis && typeof value.analysis === 'object' ? value.analysis : {};
+        const metadata = value.metadata && typeof value.metadata === 'object' ? value.metadata : {};
+        const list = (items) => Array.isArray(items)
+            ? items.filter((entry) => typeof entry === 'string' && entry.trim())
+            : [];
+        return {
+            source: String(value.source || ''),
+            capturedAt: value.capturedAt || null,
+            metadata,
+            description: String(value.description || ''),
+            permissions: list(value.permissions),
+            reviewSamples: Array.isArray(value.reviewSamples)
+                ? value.reviewSamples.filter((review) => review && typeof review.text === 'string' && review.text.trim()).slice(0, 8)
+                : [],
+            analysis: {
+                summary: String(analysis.summary || ''),
+                riskFactors: list(analysis.riskFactors),
+                recordedFindings: list(analysis.recordedFindings),
+                positiveSignals: list(analysis.positiveSignals),
+                reviewInsights: list(analysis.reviewInsights),
+                recommendations: list(analysis.recommendations),
+                confidence: String(analysis.confidence || 'Limited'),
+                assessmentSource: String(analysis.assessmentSource || '')
+            }
+        };
+    }
+
     function normalizeScan(item) {
         const threats = Array.isArray(item.threats)
             ? item.threats.filter((entry) => typeof entry === 'string' && entry.trim())
@@ -26,6 +59,7 @@
             riskScore: Math.max(0, Math.min(100, Number(item.riskScore) || 0)),
             status: String(item.status || 'Unknown'),
             threats,
+            reportDetails: parseReportDetails(item.reportDetails),
             date: String(item.date || 'Date unavailable'),
             scannedAt: item.scannedAt || null
         };
@@ -66,8 +100,14 @@
         const sort = sortInput?.value || 'newest';
 
         let filtered = state.scans.filter((item) => {
+            const details = item.reportDetails;
             const haystack = [
-                item.appName, item.target, item.status, item.date, ...item.threats
+                item.appName, item.target, item.status, item.date, ...item.threats,
+                details?.metadata?.developer,
+                details?.metadata?.category,
+                ...(details?.permissions || []),
+                ...(details?.analysis?.riskFactors || []),
+                ...(details?.analysis?.reviewInsights || [])
             ].join(' ').toLowerCase();
             if (query && !haystack.includes(query)) return false;
             if (filter !== 'all' && riskCategory(item.status) !== filter) return false;
@@ -258,6 +298,8 @@
             if (!response.ok || !result.success) {
                 throw new Error(result.message || 'Could not load saved scans.');
             }
+            const migrationNotice = byId('reportDetailsMigrationNotice');
+            if (migrationNotice) migrationNotice.classList.toggle('hidden', !result.reportDetailsMigrationRequired);
             state.scans = Array.isArray(result.history) ? result.history.map(normalizeScan) : [];
             render();
         } catch (error) {
@@ -345,31 +387,12 @@
         return constructor;
     }
 
-    function pdfText(doc, text, x, y, width, fontSize = 10, lineHeight = 5) {
-        doc.setFontSize(fontSize);
-        doc.setFont('helvetica', 'normal');
-        const lines = doc.splitTextToSize(String(text || ''), width);
-        doc.text(lines, x, y);
-        return y + (lines.length * lineHeight);
-    }
-
     function pdfStatusColor(status) {
         const category = riskCategory(status);
         if (category === 'safe') return [0, 145, 88];
         if (category === 'medium') return [190, 125, 0];
         if (category === 'high') return [190, 45, 55];
         return [90, 100, 115];
-    }
-
-    function addPdfFooter(doc, pageNumber, totalPages) {
-        doc.setDrawColor(222, 228, 234);
-        doc.setLineWidth(0.3);
-        doc.line(18, 282, 192, 282);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(115, 125, 136);
-        doc.text('FraudShield AI  |  Automated application risk assessment', 18, 289);
-        doc.text(`Page ${pageNumber} of ${totalPages}`, 192, 289, { align: 'right' });
     }
 
     function drawPdfPageHeader(doc, section, recordNumber, totalRecords) {
@@ -380,180 +403,326 @@
         doc.setFontSize(9);
         doc.text('FRAUDSHIELD AI', 18, 13);
         doc.setTextColor(255, 255, 255);
-        doc.setFontSize(15);
-        doc.text(section, 18, 24);
+        doc.setFontSize(14);
+        doc.text(String(section).slice(0, 54), 18, 24);
         doc.setTextColor(190, 205, 218);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.text(`Record ${recordNumber} of ${totalRecords}`, 192, 24, { align: 'right' });
     }
 
-    function drawPdfReport(doc, item, recordNumber, totalRecords, startPage, totalPages) {
+    function startPdfPage(doc, context, section, firstPage = false) {
+        if (!firstPage) doc.addPage('a4', 'portrait');
+        context.section = section;
+        drawPdfPageHeader(doc, section, context.recordNumber, context.totalRecords);
+        return 47;
+    }
+
+    function ensurePdfSpace(doc, y, requiredHeight, context) {
+        if (y + requiredHeight <= 271) return y;
+        return startPdfPage(doc, context, `${context.section} — CONTINUED`);
+    }
+
+    function writePdfParagraph(doc, text, x, y, width, fontSize, lineHeight, context, color = [48, 59, 72]) {
+        const content = String(text == null || text === '' ? 'Not captured in the app listing.' : text);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(fontSize);
+        const lines = doc.splitTextToSize(content, width);
+        let offset = 0;
+
+        while (offset < lines.length) {
+            if (y + lineHeight > 271) y = startPdfPage(doc, context, `${context.section} — CONTINUED`);
+            const availableLines = Math.max(1, Math.floor((271 - y) / lineHeight));
+            const count = Math.min(availableLines, lines.length - offset);
+            doc.setTextColor(...color);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(fontSize);
+            doc.text(lines.slice(offset, offset + count), x, y);
+            y += count * lineHeight;
+            offset += count;
+            if (offset < lines.length) y = startPdfPage(doc, context, `${context.section} — CONTINUED`);
+        }
+        return y;
+    }
+
+    function writePdfSectionTitle(doc, title, y, context) {
+        y = ensurePdfSpace(doc, y, 13, context);
+        doc.setTextColor(13, 27, 42);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text(String(title).toUpperCase(), 18, y);
+        doc.setDrawColor(220, 226, 232);
+        doc.setLineWidth(0.25);
+        doc.line(18, y + 2.5, 192, y + 2.5);
+        return y + 9;
+    }
+
+    function writePdfBullet(doc, text, y, context, color = [0, 160, 98]) {
+        y = ensurePdfSpace(doc, y, 9, context);
+        doc.setFillColor(...color);
+        doc.circle(21, y - 1, 1.1, 'F');
+        y = writePdfParagraph(doc, text, 27, y + 1, 162, 9, 4.5, context) + 3;
+        return y;
+    }
+
+    function writePdfMetadataGrid(doc, pairs, y, context) {
+        const leftX = 18;
+        const rightX = 107;
+        const cellWidth = 85;
+        for (let index = 0; index < pairs.length; index += 2) {
+            const row = pairs.slice(index, index + 2);
+            const wrapped = row.map((pair) => {
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8.5);
+                return doc.splitTextToSize(String(pair[1] || 'Not captured'), 76);
+            });
+            const rowHeight = Math.max(17, ...wrapped.map((lines) => 8 + lines.length * 4.1));
+            y = ensurePdfSpace(doc, y, rowHeight + 3, context);
+
+            row.forEach((pair, cellIndex) => {
+                const x = cellIndex === 0 ? leftX : rightX;
+                doc.setFillColor(246, 248, 250);
+                doc.setDrawColor(230, 234, 238);
+                doc.roundedRect(x, y - 4, cellWidth, rowHeight, 2, 2, 'FD');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(7.5);
+                doc.setTextColor(105, 116, 128);
+                doc.text(String(pair[0]).toUpperCase(), x + 4, y + 1);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8.5);
+                doc.setTextColor(35, 47, 60);
+                doc.text(wrapped[cellIndex], x + 4, y + 7);
+            });
+            y += rowHeight + 4;
+        }
+        return y;
+    }
+
+    function pdfDate(value) {
+        if (!value) return 'Not captured';
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? String(value) : parsed.toLocaleString();
+    }
+
+    function pdfValue(value, fallback = 'Not captured in listing') {
+        return value === null || value === undefined || value === '' ? fallback : String(value);
+    }
+
+    function formatMetadataPairs(metadata = {}) {
+        const price = metadata.free === true
+            ? 'Free'
+            : metadata.price != null
+                ? `Paid listing (${metadata.priceCurrency || 'currency not captured'} ${metadata.price})`
+                : 'Not captured';
+        const yesNo = (value) => typeof value === 'boolean' ? (value ? 'Yes' : 'No') : 'Not captured';
+        return [
+            ['Developer / publisher', pdfValue(metadata.developer)],
+            ['Google Play rating', metadata.rating != null ? `${metadata.rating} / 5` : 'Not captured'],
+            ['Rating count', metadata.ratingCount != null ? Number(metadata.ratingCount).toLocaleString() : 'Not captured'],
+            ['Install range', pdfValue(metadata.installs)],
+            ['Minimum installs (store figure)', metadata.minInstalls != null ? Number(metadata.minInstalls).toLocaleString() : 'Not captured'],
+            ['Maximum installs (store figure)', metadata.maxInstalls != null ? Number(metadata.maxInstalls).toLocaleString() : 'Not captured'],
+            ['Category', pdfValue(metadata.category)],
+            ['Price', price],
+            ['Content rating', pdfValue(metadata.contentRating)],
+            ['App version', pdfValue(metadata.version)],
+            ['Android requirement', pdfValue(metadata.androidVersion)],
+            ['First released', pdfValue(metadata.released)],
+            ['Last updated', pdfDate(metadata.lastUpdated)],
+            ['Contains ads', yesNo(metadata.containsAds)],
+            ['In-app purchases', yesNo(metadata.offersInAppPurchases)],
+            ['Developer website', pdfValue(metadata.developerWebsite)],
+            ['Privacy policy', pdfValue(metadata.privacyPolicy)]
+        ];
+    }
+
+    function drawPdfReport(doc, item, recordNumber, totalRecords, firstPage) {
         const navy = [13, 27, 42];
         const muted = [95, 108, 122];
         const light = [244, 247, 250];
         const accent = [0, 160, 98];
+        const details = item.reportDetails || {};
+        const metadata = details.metadata || {};
+        const analysis = details.analysis || {};
         const appName = item.appName || item.target || 'Unknown App';
         const target = item.target || 'Package ID unavailable';
         const statusColor = pdfStatusColor(item.status);
         const score = Math.max(0, Math.min(100, Number(item.riskScore) || 0));
+        const context = { recordNumber, totalRecords, section: 'EXECUTIVE SUMMARY' };
+        let y = startPdfPage(doc, context, 'EXECUTIVE SUMMARY', firstPage);
 
-        // Page 1: executive summary and scan metadata.
-        if (startPage > 1) doc.addPage('a4', 'portrait');
-        drawPdfPageHeader(doc, 'APPLICATION SECURITY REPORT', recordNumber, totalRecords);
-
+        // Page 1: scan identity, score, summary and evidence coverage.
         doc.setTextColor(35, 47, 60);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(21);
+        doc.setFontSize(20);
         const titleLines = doc.splitTextToSize(appName, 174);
-        doc.text(titleLines, 18, 53);
-        let y = 53 + (titleLines.length * 9);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(...muted);
-        doc.text('Package identifier', 18, y + 1);
-        y = pdfText(doc, target, 18, y + 7, 174, 9, 4.5) + 7;
+        doc.text(titleLines, 18, y + 5);
+        y += Math.max(13, titleLines.length * 8 + 5);
+        y = writePdfParagraph(doc, `Package identifier: ${target}`, 18, y, 174, 9, 4.5, context, muted) + 5;
 
         doc.setFillColor(...light);
-        doc.roundedRect(18, y, 174, 42, 4, 4, 'F');
+        doc.roundedRect(18, y, 174, 39, 4, 4, 'F');
         doc.setTextColor(...muted);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(8);
-        doc.text('RISK SCORE', 27, y + 11);
+        doc.text('AUTOMATED RISK SCORE', 27, y + 10);
         doc.setTextColor(...navy);
-        doc.setFontSize(27);
-        doc.text(String(score), 27, y + 30);
-        doc.setFontSize(10);
+        doc.setFontSize(25);
+        doc.text(String(score), 27, y + 28);
+        doc.setFontSize(9);
         doc.setTextColor(...muted);
-        doc.text('/ 100', 47, y + 30);
+        doc.text('/ 100', 48, y + 28);
         doc.setFillColor(...statusColor);
-        doc.roundedRect(126, y + 10, 55, 10, 3, 3, 'F');
+        doc.roundedRect(123, y + 9, 58, 10, 3, 3, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(8);
-        doc.text(String(item.status || 'Unknown').toUpperCase(), 153.5, y + 16.5, { align: 'center' });
-
+        doc.text(String(item.status || 'Unknown').toUpperCase(), 152, y + 15.5, { align: 'center' });
         doc.setFillColor(220, 226, 232);
-        doc.roundedRect(27, y + 34, 154, 2.5, 1, 1, 'F');
+        doc.roundedRect(27, y + 32, 154, 2, 1, 1, 'F');
         doc.setFillColor(...statusColor);
-        doc.roundedRect(27, y + 34, Math.max(2, 154 * score / 100), 2.5, 1, 1, 'F');
-        y += 55;
+        doc.roundedRect(27, y + 32, Math.max(2, 154 * score / 100), 2, 1, 1, 'F');
+        y += 48;
 
-        doc.setTextColor(...navy);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
-        doc.text('SCAN DETAILS', 18, y);
-        y += 8;
-
-        const details = [
+        y = writePdfSectionTitle(doc, 'Scan record', y, context);
+        y = writePdfMetadataGrid(doc, [
             ['Scan date', item.date || 'Date unavailable'],
-            ['Record ID', item.id ? `#${item.id}` : 'Not available'],
-            ['Classification', item.status || 'Unknown'],
-            ['Report generated', new Date().toLocaleString()]
+            ['Scan record ID', item.id ? `#${item.id}` : 'Not available'],
+            ['Data source', details.source || 'Not stored with this scan'],
+            ['Listing captured', pdfDate(details.capturedAt)]
+        ], y, context);
+
+        y = writePdfSectionTitle(doc, 'Executive assessment', y + 2, context);
+        const summary = analysis.summary || (
+            details.source
+                ? 'No expanded AI summary was stored for this scan. Review the captured listing information and findings in the following sections.'
+                : 'This is an older scan record. Only its score, classification and short findings were saved; app listing metadata and review samples were not retained at scan time.'
+        );
+        y = writePdfParagraph(doc, summary, 18, y, 174, 9.5, 4.8, context) + 5;
+        y = writePdfParagraph(doc, `Assessment confidence: ${analysis.confidence || 'Limited / not recorded'}`, 18, y, 174, 8.5, 4.3, context, muted) + 4;
+        y = writePdfParagraph(doc, `Assessment method: ${analysis.assessmentSource || 'Saved risk score and classification; expanded method details were not stored.'}`, 18, y, 174, 8.5, 4.3, context, muted);
+
+        // App profile, Play Store metadata, description and declared permissions.
+        y = startPdfPage(doc, context, 'APP PROFILE & LISTING DATA');
+        y = writePdfMetadataGrid(doc, formatMetadataPairs(metadata).concat([
+            ['Declared permissions captured', String((details.permissions || []).length)],
+            ['Public review samples saved', String((details.reviewSamples || []).length)],
+            ['Description characters captured', String((details.description || '').length)]
+        ]), y, context);
+
+        y = writePdfSectionTitle(doc, 'Store description', y + 2, context);
+        y = writePdfParagraph(doc, details.description || 'The app description was not captured for this scan. Older scan records cannot recover the original description.', 18, y, 174, 8.5, 4.2, context) + 5;
+
+        y = writePdfSectionTitle(doc, `Declared permissions (${(details.permissions || []).length})`, y, context);
+        if (Array.isArray(details.permissions) && details.permissions.length) {
+            details.permissions.forEach((permission) => {
+                y = writePdfBullet(doc, permission, y, context, [80, 110, 145]);
+            });
+        } else {
+            y = writePdfParagraph(doc, 'No permission list was captured in the saved listing data. This does not mean the installed app requests no permissions.', 18, y, 174, 8.5, 4.2, context, muted);
+        }
+
+        // Assessment evidence and distinctions between risk and positive signals.
+        y = startPdfPage(doc, context, 'SECURITY ASSESSMENT & EVIDENCE');
+        y = writePdfSectionTitle(doc, 'Risk factors recorded', y, context);
+        const riskFactors = analysis.riskFactors?.length
+            ? analysis.riskFactors
+            : (!item.reportDetails ? item.threats : []);
+        if (riskFactors && riskFactors.length) {
+            riskFactors.forEach((finding) => { y = writePdfBullet(doc, finding, y, context, [190, 45, 55]); });
+        } else {
+            y = writePdfParagraph(doc, 'No specific risk factors were recorded by the expanded assessment. This is not a guarantee that the app is safe.', 18, y, 174, 8.5, 4.2, context, muted) + 4;
+        }
+
+        if (analysis.assessmentSource && /fallback|unavailable/i.test(analysis.assessmentSource) && analysis.recordedFindings?.length) {
+            y = writePdfSectionTitle(doc, 'Scan processing notes', y + 2, context);
+            analysis.recordedFindings.forEach((note) => { y = writePdfBullet(doc, note, y, context, [190, 125, 0]); });
+        }
+
+        y = writePdfSectionTitle(doc, 'Positive signals / reassuring evidence', y + 2, context);
+        if (analysis.positiveSignals?.length) {
+            analysis.positiveSignals.forEach((signal) => { y = writePdfBullet(doc, signal, y, context, accent); });
+        } else {
+            y = writePdfParagraph(doc, 'No positive signals were recorded. This is not proof that the app is unsafe; it means no separate reassuring evidence was saved.', 18, y, 174, 8.5, 4.2, context, muted) + 4;
+        }
+
+        y = writePdfSectionTitle(doc, 'Public review themes', y + 2, context);
+        if (analysis.reviewInsights?.length) {
+            analysis.reviewInsights.forEach((insight) => { y = writePdfBullet(doc, insight, y, context, [65, 115, 180]); });
+        } else {
+            y = writePdfParagraph(doc, 'No review-theme summary was stored for this scan. See the captured review samples, if available, in the next section.', 18, y, 174, 8.5, 4.2, context, muted);
+        }
+
+        // Review evidence and next steps.
+        y = startPdfPage(doc, context, 'REVIEW SAMPLES & RECOMMENDATIONS');
+        y = writePdfSectionTitle(doc, `Captured public review samples (${(details.reviewSamples || []).length})`, y, context);
+        if (Array.isArray(details.reviewSamples) && details.reviewSamples.length) {
+            details.reviewSamples.forEach((review, index) => {
+                const reviewMeta = [];
+                if (review.rating != null) reviewMeta.push(`Rating: ${review.rating}/5`);
+                if (review.date) reviewMeta.push(`Date: ${pdfDate(review.date)}`);
+                if (review.helpfulVotes != null) reviewMeta.push(`Helpful votes: ${review.helpfulVotes}`);
+                y = ensurePdfSpace(doc, y, 15, context);
+                doc.setFillColor(247, 249, 251);
+                doc.setDrawColor(226, 232, 238);
+                doc.roundedRect(18, y - 4, 174, 13, 2, 2, 'FD');
+                doc.setTextColor(...navy);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(8);
+                doc.text(`REVIEW SAMPLE ${index + 1}`, 23, y + 1.5);
+                if (reviewMeta.length) {
+                    doc.setTextColor(...muted);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(7);
+                    doc.text(reviewMeta.join('  |  ').slice(0, 160), 23, y + 7);
+                }
+                y += 14;
+                y = writePdfParagraph(doc, review.text, 23, y, 164, 8.3, 4.1, context) + 5;
+            });
+        } else {
+            y = writePdfParagraph(doc, 'No public review text was saved with this scan. The PDF does not recreate or infer missing historical reviews.', 18, y, 174, 8.5, 4.2, context, muted) + 5;
+        }
+
+        y = writePdfSectionTitle(doc, 'Recommended next steps', y + 2, context);
+        const recommendations = analysis.recommendations?.length ? analysis.recommendations : [
+            'Confirm the app name, package identifier and publisher against the official Google Play listing.',
+            'Review each requested permission and grant only access needed for the app to function.',
+            'Check the developer website and privacy policy before sharing personal or financial information.',
+            'Read recent public reviews and look for repeated, specific complaints rather than relying on one review.'
         ];
-        details.forEach(([label, value], index) => {
-            const rowY = y + index * 13;
-            doc.setDrawColor(230, 234, 238);
-            doc.line(18, rowY + 4, 192, rowY + 4);
+        recommendations.forEach((recommendation) => { y = writePdfBullet(doc, recommendation, y, context, accent); });
+
+        y = writePdfSectionTitle(doc, 'Scope, limitations & interpretation', y + 2, context);
+        const limitation = 'This report reflects information captured from the Google Play listing and the automated assessment at scan time. Store metadata and public reviews can change. A risk score is an assessment indicator, not a probability of fraud. This scan does not independently inspect the APK binary, execute the app, test device runtime behaviour, verify code signatures, inspect live network traffic or prove that a vulnerability exists. Missing historical fields cannot be reconstructed after the scan.';
+        y = writePdfParagraph(doc, limitation, 18, y, 174, 8, 4, context, muted) + 4;
+        writePdfParagraph(doc, 'Use this report as an informational aid. For high-impact decisions, perform an independent mobile application security review.', 18, y, 174, 8, 4, context, muted);
+    }
+
+    function addPdfFooters(doc) {
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
+            doc.setPage(pageNumber);
+            doc.setDrawColor(222, 228, 234);
+            doc.setLineWidth(0.3);
+            doc.line(18, 282, 192, 282);
             doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9);
-            doc.setTextColor(...muted);
-            doc.text(label, 20, rowY);
-            doc.setFont('helvetica', 'bold');
-            doc.setTextColor(45, 55, 67);
-            doc.text(doc.splitTextToSize(String(value), 105), 82, rowY);
-        });
-        y += 66;
-
-        doc.setTextColor(...navy);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
-        doc.text('EXECUTIVE SUMMARY', 18, y);
-        y += 8;
-        doc.setFillColor(247, 249, 251);
-        doc.roundedRect(18, y - 4, 174, 36, 3, 3, 'F');
-        const summary = `The saved FraudShield scan classified ${appName} as ${item.status || 'Unknown'} with a risk score of ${score} out of 100. Review the recorded findings and the assessment limitations on the following page before making an installation or security decision.`;
-        doc.setTextColor(55, 65, 78);
-        const summaryLines = doc.splitTextToSize(summary, 158);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.text(summaryLines, 26, y + 5);
-
-        addPdfFooter(doc, startPage, totalPages);
-
-        // Page 2: findings, practical next steps and assessment limitations.
-        doc.addPage('a4', 'portrait');
-        drawPdfPageHeader(doc, 'FINDINGS & RECOMMENDATIONS', recordNumber, totalRecords);
-        y = 50;
-
-        doc.setTextColor(...navy);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('RECORDED FINDINGS', 18, y);
-        y += 9;
-
-        const findings = item.threats.length
-            ? item.threats
-            : ['No individual findings were stored in this scan record.'];
-        findings.forEach((finding, index) => {
-            const lines = doc.splitTextToSize(`${index + 1}. ${finding}`, 158);
-            const boxHeight = Math.max(17, 9 + lines.length * 5);
-            doc.setFillColor(247, 249, 251);
-            doc.setDrawColor(226, 232, 238);
-            doc.roundedRect(18, y - 5, 174, boxHeight, 3, 3, 'FD');
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9);
-            doc.setTextColor(48, 59, 72);
-            doc.text(lines, 26, y + 3);
-            y += boxHeight + 5;
-        });
-
-        y += 3;
-        doc.setTextColor(...navy);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('GENERAL NEXT STEPS', 18, y);
-        y += 9;
-
-        const recommendations = [
-            'Confirm the application name, package identifier and publisher against its official store listing.',
-            'Review requested permissions and grant only the access needed for the app to work.',
-            'Do not share passwords, banking credentials or one-time passwords with an app or person you do not trust.'
-        ];
-        recommendations.forEach((recommendation, index) => {
-            doc.setFillColor(...accent);
-            doc.circle(21, y - 1, 1.4, 'F');
-            y = pdfText(doc, recommendation, 27, y + 1, 162, 9, 4.7) + 5;
-        });
-
-        y += 2;
-        doc.setTextColor(...navy);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
-        doc.text('ASSESSMENT SCOPE & LIMITATIONS', 18, y);
-        y += 7;
-        const limitation = 'This PDF is generated from the scan record stored by FraudShield AI. It reports the saved score, classification and findings only. It does not independently retest the application, inspect live network traffic, verify the publisher, or certify that the application is safe or malicious.';
-        y = pdfText(doc, limitation, 18, y, 174, 8.5, 4.4);
-
-        doc.setTextColor(...muted);
-        doc.setFont('helvetica', 'italic');
-        doc.setFontSize(7.5);
-        doc.text('Use this report as an informational aid, not as a substitute for an independent security review.', 18, Math.min(274, y + 8));
-
-        addPdfFooter(doc, startPage + 1, totalPages);
+            doc.setFontSize(8);
+            doc.setTextColor(115, 125, 136);
+            doc.text('FraudShield AI  |  Application risk assessment based on saved scan evidence', 18, 289);
+            doc.text(`Page ${pageNumber} of ${totalPages}`, 192, 289, { align: 'right' });
+        }
+        if (totalPages) doc.setPage(totalPages);
     }
 
     function buildPdf(items) {
         const JsPDF = getJsPdfConstructor();
         const doc = new JsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
-        const totalPages = items.length * 2;
         items.forEach((item, index) => {
-            const firstPage = index * 2 + 1;
-            drawPdfReport(doc, item, index + 1, items.length, firstPage, totalPages);
+            drawPdfReport(doc, item, index + 1, items.length, index === 0);
         });
+        addPdfFooters(doc);
         doc.setProperties({
-            title: 'FraudShield AI Application Security Reports',
-            subject: 'Saved application scan assessments',
+            title: 'FraudShield AI Detailed Application Security Reports',
+            subject: 'Application metadata, saved scan assessment, permissions and public review evidence',
             author: 'FraudShield AI',
             creator: 'FraudShield AI'
         });

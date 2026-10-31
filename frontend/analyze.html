@@ -409,7 +409,9 @@ CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
 
             // 1. LocalStorage update
             let history = JSON.parse(localStorage.getItem('fs_history') || '[]');
-            history.unshift(currentScanData);
+            const localHistoryEntry = { ...currentScanData };
+            delete localHistoryEntry.reportDetails;
+            history.unshift(localHistoryEntry);
             localStorage.setItem('fs_history', JSON.stringify(history));
 
             // 2. Sync to Database (MySQL) with explicit appName mapping for Reports page compatibility
@@ -426,7 +428,8 @@ CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
                         riskScore: currentScanData.riskScore,
                         status: currentScanData.status,
                         colorClass: currentScanData.colorClass,
-                        threats: currentScanData.threats
+                        threats: currentScanData.threats,
+                        reportDetails: currentScanData.reportDetails || null
                     })
                 });
             } catch (err) {

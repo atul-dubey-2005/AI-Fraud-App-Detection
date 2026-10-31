@@ -101,6 +101,10 @@
             </div>
         </header>
 
+        <div id="reportDetailsMigrationNotice" class="hidden mx-4 lg:mx-8 mt-4 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200" role="status">
+            Detailed PDF data is not enabled in the database yet. Run <code>database/migrations/2026-10-31_add_scan_report_details.sql</code> in your Aiven MySQL database, then perform new scans. Older scans cannot be backfilled with metadata that was never saved.
+        </div>
+
         <!-- Main Workspace -->
         <main class="p-4 lg:p-8 space-y-6 lg:space-y-8 flex-grow max-w-7xl mx-auto w-full">
 
