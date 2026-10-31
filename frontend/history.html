@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2309090b' stroke='%2300ff66' stroke-width='2'/><path d='M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z' fill='rgba(0,255,102,0.15)' stroke='%2300ff66' stroke-width='1.5'/><text x='16' y='17.5' font-family='sans-serif' font-weight='900' font-size='11' fill='%23ffffff' text-anchor='middle'>FS</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Audit Logs - FraudShield AI</title>
+    <link rel="stylesheet" href="/css/audit-pages.css">
     <script src="/js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>if (localStorage.getItem('userLoggedIn') !== 'true') window.location.href = 'login.html';</script>
@@ -26,7 +27,7 @@
     </script>
     <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
 </head>
-<body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-primary selection:text-black overflow-x-hidden">
+<body data-audit-page="history" class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-primary selection:text-black overflow-x-hidden">
 
     <!-- Mobile Header Bar -->
     <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-surfaceBorder flex justify-between items-center p-4 lg:hidden">
@@ -94,7 +95,9 @@
                 <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Payload Timeline</span>
                 <h1 class="text-base lg:text-lg font-bold text-white tracking-tight">App Audit History Logs</h1>
             </div>
-            <div id="clearHistoryContainer"></div>
+            <div class="flex items-center gap-2">
+                <div id="clearHistoryContainer"></div>
+            </div>
         </header>
 
         <!-- Main Workspace -->
@@ -147,13 +150,30 @@
                 </div>
             </div>
 
-            <!-- SEARCH BAR WIDGET -->
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <!-- Search, risk filter and sorting -->
+            <section class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_180px_190px_auto] gap-3">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <input type="search" id="searchHistoryInput" placeholder="Search app name, package ID, status or finding..." class="audit-control pl-12 pr-4 shadow-lg">
                 </div>
-                <input type="text" id="searchHistoryInput" onkeyup="filterHistory()" placeholder="Search app name, package name, or status in history logs..." class="w-full bg-surface border border-surfaceBorder rounded-2xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors shadow-lg">
-            </div>
+                <select id="historyStatusFilter" class="audit-control" aria-label="Filter history by risk">
+                    <option value="all">All risk levels</option>
+                    <option value="safe">Low risk / Safe</option>
+                    <option value="medium">Medium risk</option>
+                    <option value="high">High risk</option>
+                </select>
+                <select id="historySort" class="audit-control" aria-label="Sort history">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                    <option value="risk-high">Highest risk</option>
+                    <option value="risk-low">Lowest risk</option>
+                    <option value="name">App name A–Z</option>
+                </select>
+                <button id="refreshAuditData" type="button" class="audit-control md:w-auto px-5 font-bold hover:border-primary/60 hover:text-primary">Refresh</button>
+            </section>
+            <p id="historyResultCount" class="text-xs text-gray-500 -mt-4" aria-live="polite">Loading scan history…</p>
 
             <!-- History Table Container -->
             <div class="bg-surface border border-surfaceBorder rounded-3xl overflow-hidden shadow-2xl">
@@ -165,7 +185,7 @@
                                 <th class="px-6 py-4">App Name & Target ID</th>
                                 <th class="px-6 py-4">Risk Index</th>
                                 <th class="px-6 py-4">Security Classification</th>
-                                <th class="px-6 py-4 text-right">Actions</th>
+                                <th class="px-6 py-4 text-right">Details / Actions</th>
                             </tr>
                         </thead>
                         <tbody id="historyTableBody" class="divide-y divide-surfaceBorder/60">
@@ -178,156 +198,21 @@
         </main>
     </div>
 
-    <!-- Script Logic with Real-time Search -->
-    <script>
-        // Mobile Sidebar Toggle Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const menuBtn = document.getElementById('menu-btn');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+    <!-- Scan details dialog -->
+    <div id="auditDetailModal" class="audit-modal hidden" aria-hidden="true">
+        <div class="audit-modal-backdrop" data-close-detail></div>
+        <section class="audit-modal-panel" role="dialog" aria-modal="true" aria-labelledby="auditDetailTitle">
+            <div class="audit-modal-header">
+                <div>
+                    <p class="text-[10px] font-mono uppercase tracking-[.18em] text-primary mb-1">Saved scan record</p>
+                    <h2 id="auditDetailTitle" class="text-lg font-bold text-white">Scan details</h2>
+                </div>
+                <button type="button" class="audit-modal-close" data-close-detail aria-label="Close details">✕</button>
+            </div>
+            <div id="auditDetailContent" class="audit-modal-body"></div>
+        </section>
+    </div>
 
-            function toggleMenu() {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
-            }
-
-            if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
-            if (overlay) overlay.addEventListener('click', toggleMenu);
-
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth < 1024) {
-                        toggleMenu();
-                    }
-                });
-            });
-        });
-
-        let historyData = [];
-
-        async function fetchHistoryLogs() {
-            try {
-                const userEmail = localStorage.getItem('userEmail') || '';
-                const response = await fetch(`/api/get-scans?email=${encodeURIComponent(userEmail)}`);
-                const result = await response.json();
-
-                if (result.success) {
-                    historyData = result.history;
-                    updateMetricsAndRender();
-                }
-            } catch (err) {
-                console.error('Failed to fetch history logs from MySQL:', err);
-            }
-        }
-
-        function updateMetricsAndRender() {
-            const tbody = document.getElementById('historyTableBody');
-
-            // Update Top Metrics
-            document.getElementById('totalScansCount').innerText = historyData.length;
-
-            const safeCount = historyData.filter(h => h.status.toLowerCase() === 'low risk' || h.status.toLowerCase() === 'safe').length;
-            const mediumCount = historyData.filter(h => h.status.toLowerCase() === 'medium risk').length;
-            const highCount = historyData.filter(h => h.status.toLowerCase() === 'high risk' || h.status.toLowerCase() === 'threat' || h.status.toLowerCase() === 'malicious').length;
-
-            document.getElementById('safeScansCount').innerText = safeCount;
-            document.getElementById('mediumScansCount').innerText = mediumCount;
-            document.getElementById('threatScansCount').innerText = highCount;
-
-            const clearContainer = document.getElementById('clearHistoryContainer');
-            if (clearContainer) {
-                if (historyData.length > 0) {
-                    clearContainer.innerHTML = `
-                        <button onclick="clearAllHistory()" class="text-xs font-bold text-red-400 hover:text-white border border-red-500/30 hover:bg-red-500/20 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl transition-all">
-                            CLEAR ALL
-                        </button>
-                    `;
-                } else {
-                    clearContainer.innerHTML = '';
-                }
-            }
-
-            renderHistory(historyData);
-        }
-
-        function renderHistory(dataToRender) {
-            const tbody = document.getElementById('historyTableBody');
-            if (!tbody) return;
-
-            if (dataToRender.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="px-6 py-20 text-center text-gray-500">
-                            <div class="flex flex-col items-center justify-center space-y-3">
-                                <div class="w-14 h-14 rounded-2xl bg-surfaceBorder/50 flex items-center justify-center text-gray-500">
-                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </div>
-                                <h4 class="text-white font-bold text-base">No Matching History Logs Found</h4>
-                                <p class="text-xs">Try adjusting your search query.</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            tbody.innerHTML = '';
-            dataToRender.forEach((item) => {
-                const originalIndex = historyData.indexOf(item);
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-surfaceBorder/30 transition-colors group";
-
-                const displayName = item.appName || item.target;
-                const packageIdSubtext = item.appName ? `<span class="text-[10px] font-mono text-gray-500 block truncate mt-0.5">${item.target}</span>` : '';
-
-                tr.innerHTML = `
-                    <td class="px-6 py-4 font-mono text-xs text-gray-400 whitespace-nowrap">${item.date}</td>
-                    <td class="px-6 py-4 font-mono text-white font-medium max-w-[280px]">
-                        <div class="truncate" title="${displayName}">${displayName}</div>
-                        ${packageIdSubtext}
-                    </td>
-                    <td class="px-6 py-4 font-mono font-bold ${item.colorClass}">${item.riskScore} <span class="text-[10px] text-gray-600">/100</span></td>
-                    <td class="px-6 py-4">
-                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase font-bold border ${item.colorClass.replace('text', 'border')}/40 ${item.colorClass} bg-background/50">${item.status}</span>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button onclick="deleteLog(${originalIndex})" class="p-2 bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-lg transition-all" title="Delete Log">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function filterHistory() {
-            const query = document.getElementById('searchHistoryInput').value.toLowerCase().trim();
-            const filtered = historyData.filter(item => 
-                (item.appName && item.appName.toLowerCase().includes(query)) ||
-                item.target.toLowerCase().includes(query) || 
-                item.status.toLowerCase().includes(query) || 
-                (item.threats && item.threats.some(t => t.toLowerCase().includes(query)))
-            );
-            renderHistory(filtered);
-        }
-
-        function deleteLog(index) {
-            if(confirm("Are you sure you want to remove this log?")) {
-                historyData.splice(index, 1);
-                updateMetricsAndRender();
-            }
-        }
-
-        function clearAllHistory() {
-            if(confirm("Are you sure you want to clear all app audit logs?")) {
-                historyData = [];
-                updateMetricsAndRender();
-            }
-        }
-
-        // Initialize data load on page startup
-        fetchHistoryLogs();
-    </script>
+    <script src="/js/audit-pages.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,142 @@
+/* Shared History / Reports controls and modal presentation */
+.audit-control {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid #292936;
+    border-radius: 14px;
+    background: #101017;
+    color: #e5e7eb;
+    padding: 0 14px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .18s ease, box-shadow .18s ease;
+}
+.audit-control:focus {
+    border-color: rgba(0,255,102,.65);
+    box-shadow: 0 0 0 3px rgba(0,255,102,.08);
+}
+.audit-control option { background: #101017; color: #e5e7eb; }
+.audit-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+}
+.audit-modal.hidden { display: none; }
+.audit-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.78);
+    backdrop-filter: blur(7px);
+}
+.audit-modal-panel {
+    position: relative;
+    z-index: 1;
+    width: min(760px, 100%);
+    max-height: min(88vh, 900px);
+    overflow: auto;
+    border: 1px solid #292936;
+    border-radius: 22px;
+    background: #101017;
+    box-shadow: 0 24px 90px rgba(0,0,0,.55);
+}
+.audit-modal-panel-wide {
+    width: min(1000px, 100%);
+    height: min(88vh, 900px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.audit-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px;
+    border-bottom: 1px solid #292936;
+}
+.audit-modal-body { padding: 22px; overflow: auto; }
+.audit-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    color: #9ca3af;
+    background: rgba(255,255,255,.05);
+}
+.audit-modal-close:hover { color: #fff; background: rgba(255,255,255,.1); }
+.audit-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+.audit-detail-cell {
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid #292936;
+    border-radius: 13px;
+    background: rgba(255,255,255,.025);
+}
+.audit-detail-label {
+    margin-bottom: 6px;
+    color: #81818f;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+.audit-detail-value {
+    color: #f3f4f6;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+.audit-finding {
+    padding: 12px 14px;
+    border: 1px solid #292936;
+    border-radius: 12px;
+    background: rgba(255,255,255,.025);
+    color: #d1d5db;
+    font-size: 13px;
+    line-height: 1.55;
+}
+.audit-card-icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    overflow: hidden;
+    border: 1px solid #30303b;
+    border-radius: 12px;
+    background: #171720;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.audit-card-icon img { width: 100%; height: 100%; object-fit: cover; }
+.audit-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 0 12px;
+    border: 1px solid #30303b;
+    border-radius: 10px;
+    color: #d1d5db;
+    font-size: 11px;
+    font-weight: 700;
+    transition: .18s ease;
+}
+.audit-action-btn:hover { border-color: #00ff66; color: #00ff66; background: rgba(0,255,102,.06); }
+.audit-action-btn-danger:hover { border-color: #ef4444; color: #f87171; background: rgba(239,68,68,.08); }
+#pdfPreviewFrame { display: block; flex: 1; min-height: 0; width: 100%; height: auto; border: 0; background: #e5e7eb; }
+@media (max-width: 640px) {
+    .audit-detail-grid { grid-template-columns: 1fr; }
+    .audit-modal { padding: 8px; }
+    .audit-modal-panel { max-height: 94vh; border-radius: 16px; }
+    .audit-modal-panel-wide { height: 94vh; }
+}

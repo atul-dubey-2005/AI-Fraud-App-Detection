@@ -1,8 +1,8 @@
-require('dotenv').config({ path: '../.env' });
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
-const path = require('path');
 const crypto = require('crypto');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -1375,29 +1375,58 @@ app.post('/api/save-scan', async (req, res) => {
     }
 });
 
-// --- Get Scan History API ---
+// --- Get the signed-in user's scan history ---
 app.get('/api/get-scans', async (req, res) => {
-    const email = req.query.email;
+    const email = String(req.query.email || '').trim();
+
+    if (!email || email.length > 255) {
+        return res.status(400).json({
+            success: false,
+            message: 'A valid email is required to fetch scan history.'
+        });
+    }
+
     try {
-        let query = 'SELECT * FROM scan_history';
-        let params = [];
+        // Do not mix anonymous records into every user's private history.
+        const [rows] = await pool.query(
+            'SELECT id, user_email, target_url, app_name, app_icon, risk_score, status, color_class, threats, scanned_at FROM scan_history WHERE user_email = ? ORDER BY scanned_at DESC',
+            [email]
+        );
 
-        if (email) {
-            query += ' WHERE user_email = ? OR user_email = ?';
-            params = [email, 'anonymous@fraudshield.com'];
-        }
-        query += ' ORDER BY scanned_at DESC';
+        const formattedScans = rows.map(row => {
+            let parsedThreats = row.threats;
 
-        const [rows] = await pool.query(query, params);
+            if (typeof parsedThreats === 'string') {
+                try {
+                    parsedThreats = JSON.parse(parsedThreats);
+                } catch (parseError) {
+                    parsedThreats = [];
+                }
+            }
 
-        const formattedScans = rows.map(row => ({
-            target: row.target_url,
-            riskScore: row.risk_score,
-            status: row.status,
-            colorClass: row.color_class,
-            threats: typeof row.threats === 'string' ? JSON.parse(row.threats) : row.threats,
-            date: new Date(row.scanned_at).toLocaleString()
-        }));
+            if (!Array.isArray(parsedThreats)) {
+                parsedThreats = [];
+            }
+
+            const scannedAt = row.scanned_at ? new Date(row.scanned_at) : null;
+
+            return {
+                id: row.id,
+                appName: row.app_name || row.target_url || 'Unknown App',
+                target: row.target_url || '',
+                icon: row.app_icon || '',
+                riskScore: Number(row.risk_score) || 0,
+                status: row.status || 'Unknown',
+                colorClass: row.color_class || '',
+                threats: parsedThreats,
+                date: scannedAt && !Number.isNaN(scannedAt.getTime())
+                    ? scannedAt.toLocaleString()
+                    : 'Date unavailable',
+                scannedAt: scannedAt && !Number.isNaN(scannedAt.getTime())
+                    ? scannedAt.toISOString()
+                    : null
+            };
+        });
 
         res.status(200).json({ success: true, history: formattedScans });
     } catch (err) {
@@ -1411,16 +1440,29 @@ app.get('/api/admin/all-scans', async (req, res) => {
     try {
         const [scans] = await pool.query('SELECT * FROM scan_history ORDER BY scanned_at DESC');
 
-        const formattedScans = scans.map(row => ({
-            id: row.id,
-            userEmail: row.user_email,
-            target: row.target_url,
-            riskScore: row.risk_score,
-            status: row.status,
-            colorClass: row.color_class,
-            threats: typeof row.threats === 'string' ? JSON.parse(row.threats) : row.threats,
-            date: new Date(row.scanned_at).toLocaleString()
-        }));
+        const formattedScans = scans.map(row => {
+            let parsedThreats = row.threats;
+            if (typeof parsedThreats === 'string') {
+                try {
+                    parsedThreats = JSON.parse(parsedThreats);
+                } catch (parseError) {
+                    parsedThreats = [];
+                }
+            }
+
+            return {
+                id: row.id,
+                userEmail: row.user_email,
+                appName: row.app_name || row.target_url || 'Unknown App',
+                target: row.target_url || '',
+                icon: row.app_icon || '',
+                riskScore: Number(row.risk_score) || 0,
+                status: row.status || 'Unknown',
+                colorClass: row.color_class || '',
+                threats: Array.isArray(parsedThreats) ? parsedThreats : [],
+                date: row.scanned_at ? new Date(row.scanned_at).toLocaleString() : 'Date unavailable'
+            };
+        });
 
         res.status(200).json({ success: true, scans: formattedScans });
     } catch (err) {
@@ -1526,10 +1568,14 @@ app.get('/api/dashboard-stats', async (req, res) => {
         const totalUsers = userRows[0].total;
 
         const [trendingRows] = await pool.query(`
-            SELECT target_url as app_name, app_icon, status, COUNT(*) as scan_count 
-            FROM scan_history 
-            GROUP BY target_url, app_icon, status 
-            ORDER BY scan_count DESC 
+            SELECT
+                COALESCE(NULLIF(app_name, ''), target_url) AS app_name,
+                app_icon,
+                status,
+                COUNT(*) AS scan_count
+            FROM scan_history
+            GROUP BY COALESCE(NULLIF(app_name, ''), target_url), app_icon, status
+            ORDER BY scan_count DESC
             LIMIT 3
         `);
 

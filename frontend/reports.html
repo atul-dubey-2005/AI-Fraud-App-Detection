@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2309090b' stroke='%2300ff66' stroke-width='2'/><path d='M16 5 L24 9 V15 C24 20 20 24.5 16 26 C12 24.5 8 20 8 15 V9 Z' fill='rgba(0,255,102,0.15)' stroke='%2300ff66' stroke-width='1.5'/><text x='16' y='17.5' font-family='sans-serif' font-weight='900' font-size='11' fill='%23ffffff' text-anchor='middle'>FS</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Audit Reports - FraudShield AI</title>
+    <link rel="stylesheet" href="/css/audit-pages.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/script.js"></script>
     <script>if (localStorage.getItem('userLoggedIn') !== 'true') window.location.href = 'login.html';</script>
@@ -26,7 +27,7 @@
     </script>
     <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');</style>
 </head>
-<body class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-primary selection:text-black overflow-x-hidden">
+<body data-audit-page="reports" class="bg-background text-gray-300 min-h-screen flex flex-col lg:flex-row selection:bg-primary selection:text-black overflow-x-hidden">
 
     <!-- Mobile Header Bar -->
     <div class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13] border-b border-surfaceBorder flex justify-between items-center p-4 lg:hidden">
@@ -94,7 +95,10 @@
                 <span class="text-xs font-mono text-gray-500 uppercase tracking-widest">Application Vault</span>
                 <h1 class="text-base lg:text-lg font-bold text-white tracking-tight">App Audit Reports</h1>
             </div>
-            <div id="clearReportsContainer"></div>
+            <div class="flex flex-wrap items-center justify-end gap-2">
+                <button id="exportFilteredPdf" type="button" class="text-[10px] font-bold text-black bg-primary hover:bg-primary-dark px-3 py-2 rounded-xl transition-all">EXPORT FILTERED PDF</button>
+                <div id="clearReportsContainer"></div>
+            </div>
         </header>
 
         <!-- Main Workspace -->
@@ -147,13 +151,30 @@
                 </div>
             </div>
 
-            <!-- SEARCH BAR WIDGET -->
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <!-- Search, risk filter and sorting -->
+            <section class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_180px_190px_auto] gap-3">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <input type="search" id="searchInput" placeholder="Search app name, package ID, status or finding..." class="audit-control pl-12 pr-4 shadow-lg">
                 </div>
-                <input type="text" id="searchInput" onkeyup="filterReports()" placeholder="Search package name (e.g., com.bank) or store link..." class="w-full bg-surface border border-surfaceBorder rounded-2xl py-4 pl-12 pr-4 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors shadow-lg">
-            </div>
+                <select id="reportsStatusFilter" class="audit-control" aria-label="Filter reports by risk">
+                    <option value="all">All risk levels</option>
+                    <option value="safe">Low risk / Safe</option>
+                    <option value="medium">Medium risk</option>
+                    <option value="high">High risk</option>
+                </select>
+                <select id="reportsSort" class="audit-control" aria-label="Sort reports">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                    <option value="risk-high">Highest risk</option>
+                    <option value="risk-low">Lowest risk</option>
+                    <option value="name">App name A–Z</option>
+                </select>
+                <button id="refreshAuditData" type="button" class="audit-control md:w-auto px-5 font-bold hover:border-primary/60 hover:text-primary">Refresh</button>
+            </section>
+            <p id="reportsResultCount" class="text-xs text-gray-500 -mt-4" aria-live="polite">Loading reports…</p>
 
             <!-- Reports Grid Container -->
             <div id="reportsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -163,227 +184,37 @@
         </main>
     </div>
 
-    <!-- Script Logic with Real-time Search & Multi-Risk Support -->
-    <script>
-        // Mobile Sidebar Toggle Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const menuBtn = document.getElementById('menu-btn');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const sidebarLinks = document.querySelectorAll('#sidebar nav a');
+    <!-- Scan details dialog -->
+    <div id="auditDetailModal" class="audit-modal hidden" aria-hidden="true">
+        <div class="audit-modal-backdrop" data-close-detail></div>
+        <section class="audit-modal-panel" role="dialog" aria-modal="true" aria-labelledby="auditDetailTitle">
+            <div class="audit-modal-header">
+                <div>
+                    <p class="text-[10px] font-mono uppercase tracking-[.18em] text-primary mb-1">Saved scan record</p>
+                    <h2 id="auditDetailTitle" class="text-lg font-bold text-white">Scan details</h2>
+                </div>
+                <button type="button" class="audit-modal-close" data-close-detail aria-label="Close details">✕</button>
+            </div>
+            <div id="auditDetailContent" class="audit-modal-body"></div>
+        </section>
+    </div>
 
-            function toggleMenu() {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
-            }
+    <!-- PDF preview dialog -->
+    <div id="pdfPreviewModal" class="audit-modal hidden" aria-hidden="true">
+        <div class="audit-modal-backdrop" data-close-pdf></div>
+        <section class="audit-modal-panel audit-modal-panel-wide" role="dialog" aria-modal="true" aria-labelledby="pdfPreviewTitle">
+            <div class="audit-modal-header">
+                <div>
+                    <p class="text-[10px] font-mono uppercase tracking-[.18em] text-primary mb-1">A4 document preview</p>
+                    <h2 id="pdfPreviewTitle" class="text-lg font-bold text-white">Security audit report</h2>
+                </div>
+                <button type="button" class="audit-modal-close" data-close-pdf aria-label="Close PDF preview">✕</button>
+            </div>
+            <iframe id="pdfPreviewFrame" title="PDF report preview"></iframe>
+        </section>
+    </div>
 
-            if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
-            if (overlay) overlay.addEventListener('click', toggleMenu);
-
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth < 1024) {
-                        toggleMenu();
-                    }
-                });
-            });
-        });
-
-        let reportsData = [];
-
-        async function fetchReportsData() {
-            try {
-                const userEmail = localStorage.getItem('userEmail') || '';
-                const response = await fetch(`/api/get-scans?email=${encodeURIComponent(userEmail)}`);
-                const result = await response.json();
-
-                if (result.success) {
-                    reportsData = result.history;
-                    updateMetricsAndRenderReports();
-                }
-            } catch (err) {
-                console.error('Failed to fetch audit reports from MySQL:', err);
-            }
-        }
-
-        function updateMetricsAndRenderReports() {
-            const grid = document.getElementById('reportsGrid');
-            if (!grid) return;
-
-            document.getElementById('totalReportsCount').innerText = reportsData.length;
-
-            const safeCount = reportsData.filter(r => r.status.toLowerCase() === 'low risk' || r.status.toLowerCase() === 'safe').length;
-            const mediumCount = reportsData.filter(r => r.status.toLowerCase() === 'medium risk').length;
-            const highCount = reportsData.filter(r => r.status.toLowerCase() === 'high risk' || r.status.toLowerCase() === 'threat' || r.status.toLowerCase() === 'malicious').length;
-
-            document.getElementById('safeReportsCount').innerText = safeCount;
-            document.getElementById('mediumReportsCount').innerText = mediumCount;
-            document.getElementById('threatReportsCount').innerText = highCount;
-
-            const clearContainer = document.getElementById('clearReportsContainer');
-            if (clearContainer) {
-                if (reportsData.length > 0) {
-                    clearContainer.innerHTML = `
-                        <button onclick="clearAllReports()" class="text-xs font-bold text-red-400 hover:text-white border border-red-500/30 hover:bg-red-500/20 px-3 py-1.5 lg:px-4 lg:py-2 rounded-xl transition-all">
-                            CLEAR ALL
-                        </button>
-                    `;
-                } else {
-                    clearContainer.innerHTML = '';
-                }
-            }
-
-            renderReports(reportsData);
-        }
-
-        function renderReports(dataToRender) {
-            const grid = document.getElementById('reportsGrid');
-            if (!grid) return;
-
-            if (dataToRender.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full py-20 px-6 text-center bg-surface border border-surfaceBorder rounded-3xl flex flex-col items-center justify-center space-y-4">
-                        <div class="w-16 h-16 rounded-2xl bg-surfaceBorder/50 flex items-center justify-center text-gray-500">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-white font-bold text-lg">No Matching App Audits Found</h3>
-                            <p class="text-gray-500 text-sm mt-1">Try adjusting your search or inspect a new package.</p>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = '';
-            dataToRender.forEach((item) => {
-                const originalIndex = reportsData.indexOf(item);
-                const card = document.createElement('div');
-                card.className = "p-6 bg-surface border border-surfaceBorder rounded-3xl flex flex-col justify-between hover:border-gray-700 transition-all shadow-xl relative overflow-hidden group";
-
-                const threatsHtml = item.threats && item.threats.length > 0 
-                    ? item.threats.map(t => `<li class="truncate text-xs text-gray-400">• ${t}</li>`).join('') 
-                    : '<li class="text-xs text-gray-500">No dangerous permissions or flags.</li>';
-
-                const displayName = item.appName || item.target;
-                const packageIdSubtext = item.appName ? `<span class="text-[10px] font-mono text-gray-500 block truncate mt-0.5">${item.target}</span>` : '';
-
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-[10px] uppercase font-mono text-gray-500">${item.date}</span>
-                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase font-bold border ${item.colorClass.replace('text', 'border')}/40 ${item.colorClass} bg-background/50">${item.status}</span>
-                        </div>
-                        <div class="mb-3">
-                            <h3 class="text-white font-mono text-sm font-semibold truncate" title="${displayName}">${displayName}</h3>
-                            ${packageIdSubtext}
-                        </div>
-                        
-                        <div class="flex items-baseline justify-between mb-4 bg-background/40 p-4 rounded-2xl border border-gray-800/60">
-                            <div>
-                                <span class="text-3xl font-black ${item.colorClass}">${item.riskScore}</span>
-                                <span class="text-xs text-gray-500 font-normal font-mono"> / 100 Risk</span>
-                            </div>
-                        </div>
-
-                        <div class="mb-6 space-y-1">
-                            <p class="text-[10px] uppercase font-mono text-gray-500 font-bold">Threats & Analysis Summary:</p>
-                            <ul class="space-y-1 bg-background/20 p-2.5 rounded-xl border border-gray-900">
-                                ${threatsHtml}
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center space-x-2 pt-2">
-                        <button onclick="downloadReport(${originalIndex})" class="flex-grow text-xs font-bold text-black bg-primary hover:bg-primary-dark py-3 rounded-xl transition-all shadow-[0_0_15px_rgba(0,255,102,0.15)] flex items-center justify-center space-x-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            <span>DOWNLOAD .TXT</span>
-                        </button>
-                        <button onclick="deleteReport(${originalIndex})" class="p-3 bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-xl transition-all" title="Delete Report">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                        </button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterReports() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            const filtered = reportsData.filter(item => 
-                (item.appName && item.appName.toLowerCase().includes(query)) ||
-                item.target.toLowerCase().includes(query) || 
-                item.status.toLowerCase().includes(query) || 
-                (item.threats && item.threats.some(t => t.toLowerCase().includes(query)))
-            );
-            renderReports(filtered);
-        }
-
-        function downloadReport(index) {
-            const item = reportsData[index];
-
-            const threatsFormatted = item.threats && item.threats.length > 0 
-                ? item.threats.map((t, i) => `   [${i + 1}] ${t}`).join('\n\n') 
-                : '   [0] No critical threat signatures or anomalies detected in current logs.';
-
-            const reportText = `====================================================================
-               FRAUDSHIELD AI - ENTERPRISE APP SECURITY AUDIT
-====================================================================
-
-[ AUDIT METADATA ]
-• Target Application : ${item.appName || item.target}
-• Package Identifier : ${item.target}
-• Timestamp          : ${item.date}
-• Audit Status       : ${item.status.toUpperCase()}
-• Risk Index Score   : ${item.riskScore} / 100 (Evaluated via Neural Engine v4.2)
-
---------------------------------------------------------------------
-[ EXECUTIVE SUMMARY ]
-This application was subjected to an automated heuristic and sentiment-
-based behavioral analysis using 100+ recent Play Store feedback vectors.
-The computed Risk Index of ${item.riskScore}/100 categorizes this software 
-as a '${item.status}' asset within the FraudShield registry.
-
---------------------------------------------------------------------
-[ DETECTED THREAT VECTORS & SIGNATURES ]
-${threatsFormatted}
-
---------------------------------------------------------------------
-[ RECOMMENDED MITIGATION STRATEGIES ]
-1. Refrain from inputting sensitive credentials, banking details, or OTPs if high-risk indicators are present.
-2. Verify package signing certificates and developer credentials directly through official distribution channels.
-3. Monitor network egress traffic for unauthorized background telemetry or data harvesting.
-
-====================================================================
-CONFIDENTIAL & PROPRIETARY • GENERATED SECURELY BY FRAUDSHIELD AI ENGINE
-====================================================================`;
-
-            const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Security_Audit_Report_${(item.appName || item.target).replace(/[^a-z0-9]/gi, '_')}_${item.riskScore}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function deleteReport(index) {
-            if(confirm("Are you sure you want to remove this audit report?")) {
-                reportsData.splice(index, 1);
-                updateMetricsAndRenderReports();
-            }
-        }
-
-        function clearAllReports() {
-            if(confirm("Are you sure you want to clear all audit reports?")) {
-                reportsData = [];
-                updateMetricsAndRenderReports();
-            }
-        }
-
-        fetchReportsData();
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="/js/audit-pages.js" defer></script>
 </body>
 </html>
