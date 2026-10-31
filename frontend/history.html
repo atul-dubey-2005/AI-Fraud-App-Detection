@@ -46,7 +46,7 @@
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden lg:hidden transition-opacity"></div>
 
     <!-- Sidebar Navigation -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-surfaceBorder flex flex-col justify-between p-6 transform -translate-x-full lg:translate-x-0 lg:static lg:h-screen transition-transform duration-300 ease-in-out">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-surfaceBorder flex flex-col justify-between p-6 transform -translate-x-full lg:translate-x-0 lg:fixed lg:top-0 lg:bottom-0 lg:left-0 lg:h-screen lg:overflow-y-auto lg:overscroll-contain lg:shadow-[12px_0_36px_rgba(0,0,0,0.18)] transition-transform duration-300 ease-in-out">
         <div class="space-y-8">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30 shadow-[0_0_20px_rgba(0,255,102,0.15)]">
@@ -87,7 +87,7 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-grow flex flex-col min-w-0 pt-16 lg:pt-0">
+    <div class="flex-grow flex flex-col min-w-0 pt-16 lg:pt-0 lg:ml-64">
 
         <!-- Header -->
         <header class="h-20 border-b border-surfaceBorder bg-surface/60 backdrop-blur-md px-6 lg:px-8 flex items-center justify-between sticky top-16 lg:top-0 z-40">
